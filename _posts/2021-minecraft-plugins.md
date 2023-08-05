@@ -2,7 +2,7 @@
 layout: post
 title: Minecraft Plugins
 subtitle: Java / Kotlin
-thumbnail-img: /assets/img/bgsu-icon.jpg
+thumbnail-img: /assets/img/minecraft-icon.png
 tags: []
 ---
 
