@@ -3,7 +3,6 @@ layout: post
 title: Minecraft Plugins
 subtitle: Java / Kotlin
 thumbnail-img: /assets/img/bgsu-icon.jpg
-date: 2023-05-01
 tags: []
 ---
 
