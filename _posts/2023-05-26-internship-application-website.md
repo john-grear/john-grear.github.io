@@ -2,9 +2,9 @@
 layout: post
 title: BGSU Internship Application Website
 subtitle: Capstone course group project
-cover-img: /assets/img/path.jpg
-thumbnail-img: /assets/img/thumb.png
-share-img: /assets/img/path.jpg
+cover-img: /assets/img/bgsu-internship-student-page.png
+thumbnail-img: /assets/img/bgsu-icon.jpg
+share-img: /assets/img/bgsu-internship-student-page.png
 tags: []
 ---
 
