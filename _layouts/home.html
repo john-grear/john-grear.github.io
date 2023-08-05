@@ -49,7 +49,7 @@ layout: page
       <p class="post-meta">
         {% assign date_format = site.date_format | default: "%B %-d, %Y" %}
         <!-- {{ post.date | date: date_format }} -->
-        {{ pose.date-range | date: date_format }}
+        {{ pose.date-range }}
       </p>
 
       {% if thumbnail != "" %}
