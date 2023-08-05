@@ -14,5 +14,5 @@ Our efforts focused on refining the website's functionality and user experience.
 
 Once BGSU adopts the website, it may become accessible through their official platform; however, kindly note that I do not possess ownership of the repository's code. As of April 2023, the website remains unused but eagerly awaits its implementation to streamline the internship registration process for future students.
 
-![BGSU Internship Main Page](https://beautifuljekyll.com/assets/img/bgsu-internship-main-page.png){: .mx-auto.d-block :}
-![BGSU Internship Student Dashboard](https://beautifuljekyll.com/assets/img/bgsu-internship-student-page.png){: .mx-auto.d-block :}
+![BGSU Internship Main Page](https://john-grear.github.io/assets/img/bgsu-internship-main-page.png){: .mx-auto.d-block :}
+![BGSU Internship Student Dashboard](https://john-grear.github.io/assets/img/bgsu-internship-student-page.png){: .mx-auto.d-block :}
