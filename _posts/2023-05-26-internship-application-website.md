@@ -1,7 +1,7 @@
 ---
 layout: post
 title: BGSU Internship Application Website
-subtitle: Capstone course group project
+subtitle: Capstone group project - Laravel PHP
 thumbnail-img: /assets/img/bgsu-icon.jpg
 tags: []
 ---
