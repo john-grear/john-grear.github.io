@@ -1,12 +1,16 @@
 # My Portfolio
 
-Welcome to my portfolio! I'm a recent graduate of Bowling Green State University, where I earned a Bachelor's degree in Computer Science in April 2023. This site serves as a shortcut to my resume and showcases some of my projects.
+Welcome to my portfolio! I'm a recent graduate of Bowling Green State University, where I earned a Bachelor's degree in Computer Science in April 2023.
 
 ## About Me
 
 I am currently working for AskVTI in Toledo, Ohio. I am always looking to broaden my horizons and strive to be a better person and software developer. I really want to travel the world, so any opportunities that would allow that would be a dream!
 
-I enjoy playing video games, cooking new foods, and posing theoretical questions about foreign concepts. One of my favorite concepts is that nothing that humans have created really exists, such as a number line and counting in base 10. For example, amount exists but numbers do not. Therefore, 0.3333 + 0.3333 + 0.3333 doesn't equal 1, ever; it will only ever get closer. Rounding is a concept created for the use of whole numbers, but the question is posed with floating point numbers, thus rounding shouldn't be used.
+I enjoy playing video games, cooking new foods, and posing theoretical questions about foreign concepts.
+
+My favorite video games are Minecraft, Pokemon, and NES games like Mega Man and Kibry's Adventure.
+
+One of my favorite concepts is that nothing that humans have created really exists, such as a number line and counting in base 10. For example, amount exists but numbers do not. Therefore, 0.3333 + 0.3333 + 0.3333 doesn't equal 1, ever; it will only ever get closer. Rounding is a concept created for the use of whole numbers, but the question is posed with floating point numbers, thus rounding shouldn't be used.
 
 ## Education
 
@@ -14,7 +18,7 @@ I enjoy playing video games, cooking new foods, and posing theoretical questions
 - 2 years towards Bachelor of Computer Science
 
 ### Bowling Green State University
-- Bachelor of Computer Science, April 2023
+- Bachelor of Science in Computer Science, April 2023
 
 ## Projects
 
