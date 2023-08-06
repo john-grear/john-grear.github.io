@@ -3,7 +3,8 @@ layout: post
 title: Minecraft Plugins
 subtitle: Java / Kotlin
 thumbnail-img: /assets/img/minecraft-icon.png
-date-range: "August 1, 2023 - August 5, 2023"
+start_date: 2018-04-03
+end_date: 2021-12-05
 tags: []
 ---
 
@@ -21,6 +22,3 @@ Some of the plugins that I created were:
 
 The plugins without links were never uploaded to github as I was just starting out in software development and was working alone.
 Also, my server was named Pandamonium and the theme was pandas... so that's why some of my plugins are named Pandamonium-Crates, etc.
-
-<!-- ![BGSU Internship Main Page](https://john-grear.github.io/assets/img/bgsu-internship-main-page.png){: .mx-auto.d-block :} -->
-<!-- ![BGSU Internship Student Dashboard](https://john-grear.github.io/assets/img/bgsu-internship-student-page.png){: .mx-auto.d-block :} -->
