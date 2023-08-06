@@ -3,6 +3,8 @@ layout: post
 title: BGSU Internship Application Website
 subtitle: Capstone group project - Laravel PHP
 thumbnail-img: /assets/img/bgsu-icon.jpg
+start_date: 2023-01
+end_date: 2023-05
 tags: []
 ---
 

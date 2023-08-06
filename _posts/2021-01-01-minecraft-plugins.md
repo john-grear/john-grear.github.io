@@ -3,8 +3,8 @@ layout: post
 title: Minecraft Plugins
 subtitle: Java / Kotlin
 thumbnail-img: /assets/img/minecraft-icon.png
-start_date: 2018-04-03
-end_date: 2021-12-05
+start_date: 2018-04
+end_date: 2021-12
 tags: []
 ---
 
