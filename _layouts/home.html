@@ -48,8 +48,10 @@ layout: page
 
       <p class="post-meta">
         {% assign date_format = site.date_format | default: "%B %-d, %Y" %}
-        <!-- {{ post.date | date: date_format }} -->
-        {{ post.start_date | date: date_format }} - {{ post.end_date | date: date_format }}
+        {{ post.start_date | date: date_format }}
+        {{ if post.end_date }}
+          - {{ post.end_date | date: date_format }}
+        {{ endif }}
       </p>
 
       {% if thumbnail != "" %}
