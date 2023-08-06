@@ -4,8 +4,8 @@ title: Dungeons of Doom
 subtitle: Android / Kotlin
 cover-img: /assets/img/path.jpg
 thumbnail-img: /assets/img/dungeons-of-doom.jpg
-start_date: 2023-01-01
-end_date: 2022-05-01
+start_date: 2023-01
+end_date: 2022-05
 tags: []
 ---
 
