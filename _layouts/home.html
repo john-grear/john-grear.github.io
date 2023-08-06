@@ -55,7 +55,7 @@ layout: page
 
         {% if start_date_match %}
           {% assign year = post.start_date | split: "-" | first %}
-          {% assign month = post.start_date | split: "-" | last %}
+          {% assign month = post.start_date | split: "-" | last | plus: 0 %}
           {{ month | date: "%B" }} {{ year }}
         {% else %}
           {{ post.start_date | date: date_format }}
@@ -64,7 +64,7 @@ layout: page
         {% if post.end_date %}
           {% if end_date_match %}
             {% assign year = post.end_date | split: "-" | first %}
-            {% assign month = post.end_date | split: "-" | last %}
+            {% assign month = post.end_date | split: "-" | last | plus: 0 %}
             - {{ month | date: "%B" }} {{ year }}
           {% else %}
             - {{ post.end_date | date: date_format }}
