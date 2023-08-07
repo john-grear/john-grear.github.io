@@ -56,8 +56,7 @@ layout: page
         {% if start_date_match %}
           {% assign year = post.start_date | slice: 0, 4 %}
           {% assign month = post.start_date | slice: 5, 7 %}
-          {% assign month_name = Date::MONTHNAMES[month.to_i] %}
-          {{ month_name }} {{ year }}
+          {{ convert_month(month) }} {{ year }}
         {% else %}
           {{ post.start_date | date: date_format }}
         {% endif %}
@@ -71,6 +70,15 @@ layout: page
             - {{ post.end_date | date: date_format }}
           {% endif %}
         {% endif %}
+
+        <% def convert_month(month_number)
+           month_names = [
+             nil, "January", "February", "March", "April", "May", "June",
+             "July", "August", "September", "October", "November", "December"
+           ]
+           month_name = month_names[month_number.to_i]
+           month_name.nil? ? "Invalid Month" : month_name
+         end %>
       </p>
 
       {% if thumbnail != "" %}
