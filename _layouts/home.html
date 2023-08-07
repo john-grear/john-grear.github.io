@@ -56,7 +56,8 @@ layout: page
         {% if start_date_match %}
           {% assign year = post.start_date | slice: 0, 4 %}
           {% assign month = post.start_date | slice: 5, 7 %}
-          {{ '2000-01-01' | date: '%B' | replace: 'January', month }} {{ year }}
+          {% assign month_name = Date::MONTHNAMES[month.to_i] %}
+          {{ month_name }} {{ year }}
         {% else %}
           {{ post.start_date | date: date_format }}
         {% endif %}
@@ -65,7 +66,7 @@ layout: page
           {% if end_date_match %}
             {% assign year = post.end_date | slice: 0, 4 %}
             {% assign month = post.end_date | slice: 5, 7 %}
-            - {{ '2000-01-01' | date: '%B' | replace: 'January', month }} {{ year }}
+            - {{ month }} {{ year }}
           {% else %}
             - {{ post.end_date | date: date_format }}
           {% endif %}
