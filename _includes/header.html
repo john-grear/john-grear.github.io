@@ -42,7 +42,7 @@
 
           {% if include.type == "post" %}
             <span class="post-meta">
-              {% for post in posts %}
+              <!-- {% for post in posts %}
                 {% if post.title == page.title %}
                   {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
                   {% assign end_date_match = post.end_date | match: yyyy_mm_pattern %}
@@ -60,7 +60,7 @@
                       - {{ post.end_date | date: date_format }}
                     {% endif %}
                   {% endif %}
-              {% endfor %}
+              {% endfor %} -->
             </span>
             {% if page.last-updated %}
               <span class="post-meta">
@@ -96,7 +96,7 @@
 
           {% if include.type == "post" %}
             <span class="post-meta">
-              {% for post in posts %}
+              <!-- {% for post in posts %}
                 {% if post.title == page.title %}
                   {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
                   {% assign end_date_match = post.end_date | match: yyyy_mm_pattern %}
@@ -114,7 +114,7 @@
                       - {{ post.end_date | date: date_format }}
                     {% endif %}
                   {% endif %}
-              {% endfor %}
+              {% endfor %} -->
             </span>
             {% if page.last-updated %}
               <span class="post-meta">
