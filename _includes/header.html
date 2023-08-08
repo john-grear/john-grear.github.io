@@ -42,6 +42,7 @@
 
           {% if include.type == "post" %}
             <span class="post-meta">
+              {{ include }}
               {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
               {% assign end_date_match = post.end_date | match: yyyy_mm_pattern %}
 
@@ -93,6 +94,7 @@
 
           {% if include.type == "post" %}
             <span class="post-meta">
+              {{ include }}
               {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
               {% assign end_date_match = post.end_date | match: yyyy_mm_pattern %}
 
