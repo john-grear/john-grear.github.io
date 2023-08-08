@@ -52,12 +52,9 @@ layout: page
         {% assign yyyy_mm_pattern = '^\d{4}-\d{2}$' %}
         {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
         {% assign end_date_match = post.end_date | match: yyyy_mm_pattern %}
-        {% assign monthNames = [null, "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
 
         {% if start_date_match %}
-          {% assign year = post.start_date | slice: 0, 4 %}
-          {% assign month = post.start_date | slice: 5, 7 %}
-          {{ monthNames[month] }} {{ year }}
+          {{ post.start_date | date: month_year_date_format }}
         {% else %}
           {{ post.start_date | date: date_format }}
         {% endif %}
