@@ -62,9 +62,7 @@ layout: page
 
         {% if post.end_date %}
           {% if end_date_match %}
-            {% assign year = post.end_date | slice: 0, 4 %}
-            {% assign month = post.end_date | slice: 5, 7 %}
-            - {{ month }} {{ year }}
+            - {{ post.end_date | date: month_year_date_format }}
           {% else %}
             - {{ post.end_date | date: date_format }}
           {% endif %}

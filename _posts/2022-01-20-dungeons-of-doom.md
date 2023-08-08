@@ -3,8 +3,8 @@ layout: post
 title: Dungeons of Doom
 subtitle: Android / Kotlin
 thumbnail-img: /assets/img/dungeons-of-doom.jpg
-start_date: 2022-01
-end_date: 2022-05
+start_date: 2022-01-00
+end_date: 2022-05-00
 tags: []
 ---
 
