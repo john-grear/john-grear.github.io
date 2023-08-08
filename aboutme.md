@@ -1,16 +1,13 @@
 ---
 layout: page
 title: About me
-subtitle: Why you'd want to go on a date with me
+subtitle: Who Am I?
 ---
 
-My name is Inigo Montoya. I have the following qualities:
+I am always looking to broaden my horizons and strive to be a better person and software developer. I really want to travel the world, so any opportunities that would allow that would be a dream!
 
-- I rock a great mustache
-- I'm extremely loyal to my family
+I enjoy playing video games, cooking new foods, and posing theoretical questions about foreign concepts.
 
-What else do you need?
+My favorite video games are Minecraft, Pokemon, and NES games like Mega Man and Kibry's Adventure.
 
-### My story
-
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](https://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
+One of my favorite concepts is that nothing that humans have created really exists, such as a number line and counting in base 10. For example, amount exists but numbers do not. Therefore, 0.3333 + 0.3333 + 0.3333 doesn't equal 1, ever; it will only ever get closer. Rounding is a concept created for the use of whole numbers, but the question is posed with floating point numbers, thus rounding shouldn't be used.
