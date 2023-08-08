@@ -48,6 +48,7 @@ layout: page
 
       <p class="post-meta">
         {% assign date_format = site.date_format | default: "%B %-d, %Y" %}
+        {% assign month_year_date_format = site.month_year_date_format | default: "%B %Y" %}
 
         {% assign yyyy_mm_pattern = '^\d{4}-\d{2}-01$' %}
         {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
