@@ -8,6 +8,8 @@ I am always looking to broaden my horizons and strive to be a better person and 
 
 I enjoy playing video games, cooking new foods, and posing theoretical questions about foreign concepts.
 
+<img src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5" width="200"/>
+
 ![Nintendo's Mega Man 5](/assets/img/megaman.jpg)
 
 My favorite video games are Minecraft, Pokemon, and NES games like Mega Man and Kibry's Adventure.
