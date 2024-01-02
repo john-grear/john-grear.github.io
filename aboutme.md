@@ -8,13 +8,11 @@ I am always looking to broaden my horizons and strive to be a better person and 
 
 I enjoy playing video games, cooking new foods, and posing theoretical questions about foreign concepts.
 
-<img src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5" width="200"/>
-
-![Nintendo's Mega Man 5](/assets/img/megaman.jpg)
+<img src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5" class="center"/>
 
 My favorite video games are Minecraft, Pokemon, and NES games like Mega Man and Kibry's Adventure.
 
-![Homemade Ramen](/assets/img/ramen.png)
+<img src="/assets/img/ramen.png" alt="Homemade Ramen" class="center"/>
 
 I love cooking and trying foods from all over the world. Some of my favorite foods to cook are fettucine alfredo and breads of all kind (which I guess is also technically baking haha).
 
