@@ -41,30 +41,6 @@
           {% endif %}
 
           {% if include.type == "post" %}
-          {% comment %}
-            <!-- Date Formatting Not Working for Posts -->
-            <!-- <span class="post-meta">
-              {% for post in posts %}
-                {% if post.title == page.title %}
-                  {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
-                  {% assign end_date_match = post.end_date | match: yyyy_mm_pattern %}
-
-                  {% if start_date_match %}
-                    {{ post.start_date | date: month_year_date_format }}
-                  {% else %}
-                    {{ post.start_date | date: date_format }}
-                  {% endif %}
-
-                  {% if post.end_date %}
-                    {% if end_date_match %}
-                      - {{ post.end_date | date: month_year_date_format }}
-                    {% else %}
-                      - {{ post.end_date | date: date_format }}
-                    {% endif %}
-                  {% endif %}
-              {% endfor %}
-            </span> -->
-          {% endcomment %}
             {% if page.last-updated %}
               <span class="post-meta">
                 <span class="d-none d-md-inline middot">&middot;</span>
@@ -98,30 +74,6 @@
           {% endif %}
 
           {% if include.type == "post" %}
-          {% comment %}
-            <!-- Date Formatting Not Working for Posts -->
-            <!-- <span class="post-meta">
-              {% for post in posts %}
-                {% if post.title == page.title %}
-                  {% assign start_date_match = post.start_date | match: yyyy_mm_pattern %}
-                  {% assign end_date_match = post.end_date | match: yyyy_mm_pattern %}
-
-                  {% if start_date_match %}
-                    {{ post.start_date | date: month_year_date_format }}
-                  {% else %}
-                    {{ post.start_date | date: date_format }}
-                  {% endif %}
-
-                  {% if post.end_date %}
-                    {% if end_date_match %}
-                      - {{ post.end_date | date: month_year_date_format }}
-                    {% else %}
-                      - {{ post.end_date | date: date_format }}
-                    {% endif %}
-                  {% endif %}
-              {% endfor %}
-            </span> -->
-          {% endcomment %}
             {% if page.last-updated %}
               <span class="post-meta">
                 <span class="d-none d-md-inline middot">&middot;</span>
