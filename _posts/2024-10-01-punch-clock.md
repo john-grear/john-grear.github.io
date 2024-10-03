@@ -7,6 +7,7 @@ start_date: 2024-09-01
 tags: []
 ---
 
+THIS IS NOT UPDATING ANYTHING
 I wanted to dip my feet into cross-platform development and figured Flutter would be a good framework to start with. So far I have had a lot of fun working with one language and seeing the differences between web, Windows, and Android (I haven't tested iOS yet).
 
 This is a simple punch clock that calls to an API to securely pass info to and from a Postgres SQL database. Currently, you can clock in and out at will, no limit, except for logical scenarios like already being clocked in, etc. I tried to make it as efficient as possible so that the website wouldn't be bogged down. The longest part was either working with the calendar on the second page or moving it to production as this was a huge step having never touched Flutter beforehand.
