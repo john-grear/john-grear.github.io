@@ -4,7 +4,7 @@ Welcome to my portfolio! I'm a recent graduate of Bowling Green State University
 
 ## About Me
 
-I am currently working for AskVTI in Toledo, Ohio. I am always looking to broaden my horizons and strive to be a better person and software developer. I really want to travel the world, so any opportunities that would allow that would be a dream!
+I am always looking to broaden my horizons and strive to be a better person and software developer. I really want to travel the world, so any opportunities that would allow that would be a dream!
 
 I enjoy playing video games, cooking new foods, and posing theoretical questions about foreign concepts.
 
