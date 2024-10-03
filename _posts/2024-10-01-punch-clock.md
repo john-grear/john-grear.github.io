@@ -13,7 +13,4 @@ This is a simple punch clock that calls to an API to securely pass info to and f
 
 I really loved working on this small project, and maybe I'll do more with it in the future. I am likely going to use Flutter again to make more apps that would benefit a lot from utilizing cross-platform functionality. If you have any inputs, please let me know!
 
-<!-- [Punch Clock App]({{ "/punch----clock/" | relative_url }}) -->
-[Temp](https://punch-clock.john-grear.github.io/)
-
 NOTE: Currently all users use first user in table. Punches may exist if someone else has used the app within the same day. Will likely add user auth down the line just to clear up loose ends, if nothing else.
