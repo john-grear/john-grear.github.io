@@ -15,4 +15,4 @@ I really loved working on this small project, and maybe I'll do more with it in 
 
 NOTE: Currently all users use first user in table. Punches may exist if someone else has used the app within the same day. Will likely add user auth down the line just to clear up loose ends, if nothing else.
 
-[Punch Clock App](https://john-grear.github.io/punch-clock/)
+[Punch Clock App](https://john-grear.github.io/punch-clock)
