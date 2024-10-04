@@ -11,7 +11,6 @@ title: Experience
 - Configured technology to client request for Apache2 sites and Edgio CDN
 - Developed fulfillment service app for real time product distribution using Shopify APIs
 
-
 # The McAlear Group
 <img src="/assets/img/mcalear-group.png" alt="The McAlear Group" class="center"/>
 - Software Developer Intern | Aug. 2022 – Dec. 2022
