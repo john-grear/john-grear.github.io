@@ -7,7 +7,7 @@ subtitle: Who Am I?
 <body class="spawn">
     <div class="mega-man"></div>
 
-    <script type="module" src="assets/scripts/index.js"></script>
+    <script type="module" src="../assets/scripts/index.js"></script>
 
 </body>
 
