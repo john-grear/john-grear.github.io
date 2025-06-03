@@ -4,30 +4,30 @@ title: About me
 subtitle: Who Am I?
 ---
 
-<p class="ground" style="top: -390px; width: 350px;">
+<p class="ground center" style="top: -390px; width: 350px;">
     I am always looking to broaden my horizons and strive to be a better person and software developer. I really want to travel the world, so any opportunities that would allow that would be a dream!
 </p>
 
 <br />
 
-<p class="ground" style="top: -130px; width: 350px;">
+<p class="ground center" style="top: -130px; width: 350px;">
     I enjoy playing video games, cooking new foods, and solving puzzles.
 </p>
 
-<body class="spawn">
+<body class="spawn center">
     <div class="mega-man"></div>
 
     <script type="module" src="../assets/scripts/index.js"></script>
 
 </body>
 
-<img class="ground" src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5" class="center"/>
+<img class="ground center" src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5"  style="top: -390px" />
 
 <p class="ground">
     My favorite video games are Minecraft, Pokemon, and NES games like Mega Man and Kibry's Adventure.
 </p>
 
-<img class="ground" src="/assets/img/ramen.png" alt="Homemade Ramen" class="center"/>
+<img class="ground center" src="/assets/img/ramen.png" alt="Homemade Ramen"  style="top: -390px"  />
 
 <p class="ground" style="top: -130px; width: 350px;">
     I love cooking and trying foods from all over the world. Some of my favorite foods to cook are fettucine alfredo and breads of all kind (which I guess is also technically baking haha).
