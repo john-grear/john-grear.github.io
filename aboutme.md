@@ -14,7 +14,7 @@ subtitle: Who Am I?
     I enjoy playing video games, cooking new foods, and solving puzzles.
 </p>
 
-{% include megaman.html %}
+% include megaman.html %}
 
 <img class="ground" src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5" />
 
