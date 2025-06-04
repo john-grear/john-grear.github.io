@@ -41,6 +41,7 @@ document.addEventListener("keydown", (event) => {
       break;
     case " ":
     case "z":
+      event.preventDefault();
       activeKeys.jump = true;
       break;
     case "Shift":
