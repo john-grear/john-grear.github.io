@@ -14,7 +14,7 @@ subtitle: Who Am I?
     I enjoy playing video games, cooking new foods, and solving puzzles.
 </p>
 
-<body class="spawn center">
+<body class="spawn center" style="height: 500px; width: 500px;">
     <div class="mega-man"></div>
 
     <script type="module" src="../assets/scripts/index.js"></script>
