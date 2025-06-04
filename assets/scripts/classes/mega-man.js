@@ -457,6 +457,8 @@ export default class MegaMan {
       this.element.getBoundingClientRect()
     );
 
+    console.log(this.element.getBoundingClientRect());
+
     this.charge = 0;
   }
 
