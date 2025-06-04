@@ -4,25 +4,25 @@ title: About me
 subtitle: Who Am I?
 ---
 
-<p class="ground center" style="width: 350px;">
+<p class="ground" style="width: 350px;">
     I am always looking to broaden my horizons and strive to be a better person and software developer. I really want to travel the world, so any opportunities that would allow that would be a dream!
 </p>
 
 <br />
 
-<p class="ground center" style="width: 350px;">
+<p class="ground" style="width: 350px;">
     I enjoy playing video games, cooking new foods, and solving puzzles.
 </p>
 
 {% include megaman.html %}
 
-<img class="ground center" src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5" />
+<img class="ground" src="/assets/img/megaman.jpg" alt="Nintendo's Mega Man 5" />
 
 <p class="ground">
     My favorite video games are Minecraft, Pokemon, and NES games like Mega Man and Kirby's Adventure.
 </p>
 
-<img class="ground center" src="/assets/img/ramen.png" alt="Homemade Ramen" />
+<img class="ground" src="/assets/img/ramen.png" alt="Homemade Ramen" />
 
 <p class="ground" style="width: 350px;">
     I love cooking and trying foods from all over the world. Some of my favorite foods to cook are fettucine alfredo and breads of all kind (which I guess is also technically baking haha).
