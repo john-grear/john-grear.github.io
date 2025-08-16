@@ -59,13 +59,7 @@
 </script>
 
 <template>
-  <Menubar
-    class="mb-25 sticky top-0 !w-full"
-    :class="{
-      'h-23': scrollY == 0,
-      'h-15': scrollY > 0,
-    }"
-  >
+  <Menubar class="mb-25 h-15 sticky top-0 !w-full">
     <template #start>
       <RouterLink to="/" class="p-button p-component p-button-text font-bold">
         <i class="pi pi-address-book" />
