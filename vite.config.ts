@@ -1,7 +1,6 @@
+import { PrimeVueResolver } from '@primevue/auto-import-resolver';
 import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
-import path from 'path';
-import { PrimeVueResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
 
@@ -15,4 +14,12 @@ export default defineConfig({
       dts: true,
     }),
   ],
+  server: {
+    port: 54766,
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 });

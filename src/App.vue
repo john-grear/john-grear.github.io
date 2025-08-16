@@ -1,22 +1,22 @@
 <script setup lang="ts">
-  import MainPage from './pages/MainPage.vue';
+  import { initToastService } from '@/services/useToastService';
+
+  import MainMenubar from '@/components/MainHeader.vue';
+
+  initToastService();
 </script>
 
 <template>
-  <MainPage msg="Vite + Vue" />
-</template>
+  <Toast group="" />
+  <DynamicDialog modal blockScroll />
 
-<style scoped>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.vue:hover {
-    filter: drop-shadow(0 0 2em #42b883aa);
-  }
-</style>
+  <div class="min-h-screen">
+    <MainMenubar />
+
+    <div class="flex flex-grow flex-col items-center">
+      <RouterView />
+    </div>
+
+    <MainFooter />
+  </div>
+</template>

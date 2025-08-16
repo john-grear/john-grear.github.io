@@ -6,8 +6,18 @@
   "tabWidth": 2,
   "useTabs": false,
   "vueIndentScriptAndStyle": true,
-  "importOrder": ["^vue$", "^primevue", "^primeicons", "^[./]"],
+  "importOrder": [
+    "^vue",
+    "^primevue",
+    "^primeicons",
+    "^@/assets",
+    "^@/components",
+    "^@/composables",
+    "^@/utils",
+    "^[./]"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"]
+  "tailwindStylesheet": "./src/style.css",
+  "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"]
 }

@@ -6,7 +6,8 @@ import eslintPluginVue from 'eslint-plugin-vue';
 
 export default [
   {
-    files: ['src/**/*.{js,ts,vue}'],
+    files: ['src/**/*.{ts,mts,js,mjs,tsx,vue}'],
+    ignore: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
     languageOptions: {
       parser: parserTs,
       parserOptions: {
