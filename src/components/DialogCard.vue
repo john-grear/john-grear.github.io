@@ -1,15 +1,12 @@
 <script setup lang="ts">
-  import { useWindowSize } from '@vueuse/core';
-
-  import { computed, watch } from 'vue';
+  import { useIsSmallWindow } from '@/services/useIsSmallWindow';
 
   defineProps<{
     image?: string | undefined;
     gitLink?: string | undefined;
   }>();
 
-  const { width } = useWindowSize();
-  const isSmallWindow = computed(() => width.value < 1200);
+  const { isSmallWindow } = useIsSmallWindow();
 </script>
 
 <template>

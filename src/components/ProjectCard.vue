@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { useDialogService } from '@/services/useDialogService';
-  import { useWindowSize } from '@vueuse/core';
+  import { useIsSmallWindow } from '@/services/useIsSmallWindow';
 
-  import { type Component, computed } from 'vue';
+  import { type Component } from 'vue';
 
   const props = defineProps<{
     header: string;
@@ -31,8 +31,7 @@
     });
   };
 
-  const { width } = useWindowSize();
-  const isSmallWindow = computed(() => width.value < 1200);
+  const { isSmallWindow } = useIsSmallWindow();
 </script>
 
 <template>

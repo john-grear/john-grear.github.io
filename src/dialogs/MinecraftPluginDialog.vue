@@ -53,15 +53,15 @@
           </p>
           <br />
 
-          <video :src="endershiftTestingMp4" class="h-60" controls>
+          <video :src="endershiftTestingMp4" class="max-w-150 w-[80%]" controls>
             <p>Your browser doesn't support HTML video. What browser are you using?</p>
           </video>
         </TabPanel>
         <TabPanel value="1">
           <p>
-            <a href="https://github.com/john-grear/pandamonium-crates" target="_blank"
-              >Pandamonium Crates</a
-            >
+            <a href="https://github.com/john-grear/pandamonium-crates" target="_blank">
+              Pandamonium Crates
+            </a>
             - This is a standard crates plugin. Created a custom crate key item that can be given by
             a command or through daily rewards. There is also a command to create new crates, change
             rewards and rates, etc. Everything is also configurable through a GUI in game or yml
@@ -70,9 +70,9 @@
         </TabPanel>
         <TabPanel value="2">
           <p>
-            <a href="https://github.com/john-grear/pandamonium-games" target="_blank"
-              >Pandamonium Games</a
-            >
+            <a href="https://github.com/john-grear/pandamonium-games" target="_blank">
+              Pandamonium Games
+            </a>
             - Started working on a base game plugin that could facilitate the common functionalities
             of most games (scoreboards, teams, points, etc.), while using that to make certain games
             like HideAndSeek, PantyRaid (capture the flag but with armor on an armor stand), and a
@@ -81,8 +81,8 @@
         </TabPanel>
         <TabPanel value="3">
           <p>
-            <a href="https://github.com/john-grear/dungeon-maze" target="_blank">Dungeon Maze</a> -
-            Takes an area, parses all preplaced blocks and applies different effects like
+            <a href="https://github.com/john-grear/dungeon-maze" target="_blank">Dungeon Maze</a>
+            - Takes an area, parses all preplaced blocks and applies different effects like
             regeneration, traps that automatically reset, prevents block breaking and placing (apart
             from light sources that break after 2 minutes) inside the maze, gives rewards at the
             end, enables a hard mode after initial completion, and takes you back to your spawnpoint
@@ -100,3 +100,13 @@
     </Tabs>
   </DialogCard>
 </template>
+
+<style lang="css" scoped>
+  ::v-deep(.p-tab) {
+    white-space: unset;
+  }
+
+  ::v-deep(.p-tablist-tab-list) {
+    position: static;
+  }
+</style>
