@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useDialogService } from '@/services/useDialogService';
 
-  import { Component } from 'vue';
+  import type { Component } from 'vue';
 
   const props = defineProps<{
     header: string;
