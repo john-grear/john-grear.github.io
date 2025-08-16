@@ -1,22 +1,43 @@
 <script setup lang="ts">
+  import { useWindowSize } from '@vueuse/core';
+
+  import { computed, watch } from 'vue';
+
   defineProps<{
     image?: string | undefined;
     gitLink?: string | undefined;
   }>();
+
+  const { width } = useWindowSize();
+  const isSmallWindow = computed(() => width.value < 1200);
 </script>
 
 <template>
   <Card v-bind="$attrs">
     <template #content>
-      <div v-if="image" class="flex gap-8">
-        <img class="!w-40 select-none object-contain" :src="image" />
-        <div class="flex !w-full flex-col items-center justify-center gap-10">
+      <div v-if="isSmallWindow">
+        <div v-if="image" class="flex flex-col items-center gap-8">
+          <img class="!w-40 select-none object-contain" :src="image" />
+          <div class="flex !w-full flex-col items-center justify-center gap-10">
+            <slot />
+          </div>
+        </div>
+
+        <div v-else class="flex flex-col items-center gap-8">
           <slot />
         </div>
       </div>
+      <div v-else>
+        <div v-if="image" class="flex gap-8">
+          <img class="!w-40 select-none object-contain" :src="image" />
+          <div class="flex !w-full flex-col items-center justify-center gap-10">
+            <slot />
+          </div>
+        </div>
 
-      <div v-else class="flex gap-8">
-        <slot />
+        <div v-else class="flex gap-8">
+          <slot />
+        </div>
       </div>
     </template>
 
