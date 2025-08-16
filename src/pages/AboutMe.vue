@@ -17,28 +17,36 @@
   <Header header="About Me" subheader="Who Am I?" />
 
   <CustomCard>
-    I am always looking to broaden my horizons and strive to be a better person and software
-    developer. I really want to travel the world, so any opportunities that would allow that would
-    be a dream! I enjoy playing video games, cooking new foods, and solving puzzles.
+    <p>
+      I am always looking to broaden my horizons and strive to be a better person and software
+      developer. I really want to travel the world, so any opportunities that would allow that would
+      be a dream! I enjoy playing video games, cooking new foods, and solving puzzles.
+    </p>
   </CustomCard>
 
   <img :src="megamanGIF" alt="Mega Man 5" class="w-[40%] !rounded-2xl" />
 
   <CustomCard>
-    My favorite video games are Minecraft, Hollow Knight, Neva, Pokemon, and NES games like Mega Man
-    and Kirby's Adventure.
+    <p>
+      My favorite video games are Minecraft, Hollow Knight, Neva, Pokemon, and NES games like Mega
+      Man and Kirby's Adventure.
+    </p>
   </CustomCard>
 
   <CustomCard>
-    I love cooking and trying foods from all over the world. Some of my favorite foods to cook are
-    fettucine alfredo and breads of all kind (which I guess is also technically baking haha). I love
-    solving puzzles and challenging myself.
+    <p>
+      I love cooking and trying foods from all over the world. Some of my favorite foods to cook are
+      fettucine alfredo and breads of all kind (which I guess is also technically baking haha). I
+      love solving puzzles and challenging myself.
+    </p>
   </CustomCard>
 
   <CustomCard>
-    I started collecting Rubik's Cubes back in junior high school and sat in my room for days
-    figuring out how to solve my first 3x3. Now I have over 20 and I still try to get to them all
-    occasionally. I also love collecting playing cards to remember places that I've been to.
+    <p>
+      I started collecting Rubik's Cubes back in junior high school and sat in my room for days
+      figuring out how to solve my first 3x3. Now I have over 20 and I still try to get to them all
+      occasionally. I also love collecting playing cards to remember places that I've been to.
+    </p>
   </CustomCard>
 
   <div class="relative mt-5 flex items-center justify-center gap-[-6rem]">
@@ -65,12 +73,14 @@
   </div>
 
   <CustomCard>
-    I’ve got a pretty wild sock collection—easily over 100 pairs at this point. It all started back
-    in junior high when I got tired of plain white socks and decided to switch things up. Now I’ve
-    got socks with everything from food prints to movie and video game characters. Honestly, it
-    makes getting dressed a little more fun each morning. If you’re thinking of upgrading your sock
-    game, I’d recommend checking out Wal-Mart—they’ve got sets of six crew socks for around $10,
-    which is where I usually stock up.
+    <p>
+      I’ve got a pretty wild sock collection—easily over 100 pairs at this point. It all started
+      back in junior high when I got tired of plain white socks and decided to switch things up. Now
+      I’ve got socks with everything from food prints to movie and video game characters. Honestly,
+      it makes getting dressed a little more fun each morning. If you’re thinking of upgrading your
+      sock game, I’d recommend checking out Wal-Mart—they’ve got sets of six crew socks for around
+      $10, which is where I usually stock up.
+    </p>
   </CustomCard>
 
   <SockDialog v-model="socksDialogVisible" :img-src="youLikeSocksJpg" />

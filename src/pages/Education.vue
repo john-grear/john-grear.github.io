@@ -9,8 +9,8 @@
   <br />
 
   <!-- Wright State University -->
-  <h2 class="text-3xl font-bold">Wright State University</h2>
-  <img :src="wsuImage" alt="Wright State University" class="!w-100 mt-4 rounded-lg shadow-md" />
+  <p class="subheader font-bold">Wright State University</p>
+  <img :src="wsuImage" alt="Wright State University" class="mt-4 w-[35%] rounded-lg" />
 
   <CustomCard>
     <p>
@@ -36,12 +36,8 @@
   </CustomCard>
 
   <!-- Bowling Green State University -->
-  <h2 class="text-3xl font-bold">Bowling Green State University</h2>
-  <img
-    :src="bgsuImage"
-    alt="Bowling Green State University"
-    class="!w-100 mt-4 rounded-lg shadow-md"
-  />
+  <p class="subheader mt-4 font-bold">Bowling Green State University</p>
+  <img :src="bgsuImage" alt="Bowling Green State University" class="w-[35%] rounded-lg" />
 
   <CustomCard>
     <p>

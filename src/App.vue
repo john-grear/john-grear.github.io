@@ -20,3 +20,11 @@
     <MainFooter />
   </div>
 </template>
+
+<style scoped>
+  @reference "./main.css";
+
+  p {
+    @apply text-sm md:text-xl lg:text-3xl;
+  }
+</style>

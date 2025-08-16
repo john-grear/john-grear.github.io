@@ -61,3 +61,15 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+p {
+  @apply text-sm md:text-base;
+}
+
+p.subheader {
+  @apply text-base md:text-xl lg:text-2xl;
+}
+
+p.header {
+  @apply text-2xl md:text-3xl lg:text-6xl;
+}

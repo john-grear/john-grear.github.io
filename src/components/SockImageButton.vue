@@ -40,7 +40,7 @@
   <img
     :src="src"
     :alt="alt"
-    class="size-60 cursor-pointer select-none transition-transform hover:-translate-y-2 hover:rotate-0"
+    class="size-[20%] cursor-pointer select-none transition-transform hover:-translate-y-2 hover:rotate-0"
     :class="class"
     @click="handleClick"
     @mouseover="startSockDialogTimer"

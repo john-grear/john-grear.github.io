@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { useDialogService } from '@/services/useDialogService';
+  import { useWindowSize } from '@vueuse/core';
 
-  import type { Component } from 'vue';
+  import { type Component, computed } from 'vue';
 
   const props = defineProps<{
     header: string;
@@ -29,15 +30,18 @@
       gitLink: props.gitLink,
     });
   };
+
+  const { width } = useWindowSize();
+  const isSmallWindow = computed(() => width.value < 1200);
 </script>
 
 <template>
   <CustomCard class="hover-card transition-transform duration-200" @click="openDialog">
-    <div class="flex">
+    <div class="flex" :class="{ 'flex-col items-center': isSmallWindow }">
       <img class="me-6 !w-40 select-none object-contain" :src="props.image" />
       <div class="mx-auto flex flex-col">
-        <p class="text-center text-xl font-bold">{{ props.header }}</p>
-        <p class="text-center text-lg">{{ subheader }}</p>
+        <p class="subheader text-center font-bold">{{ props.header }}</p>
+        <p class="text-center">{{ subheader }}</p>
         <hr class="border-1 w-15 mx-auto my-4 rounded-[0.1875rem] border-inherit" />
 
         <p>{{ props.shortDescription }}</p>
