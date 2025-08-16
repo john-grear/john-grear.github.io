@@ -27,7 +27,7 @@
       earlier plugins. That being said I did record this short demo of my Ender Shift plugin below.
     </p>
 
-    <Tabs value="0">
+    <Tabs value="0" class="w-full">
       <TabList>
         <Tab value="0">Ender Shift</Tab>
         <Tab value="1">Pandamonium Crates</Tab>
