@@ -23,7 +23,7 @@
       should redo my portfolio, so I rewrote it.
     </p>
 
-    <img class="!h-50 me-6 select-none self-center object-contain" :src="oldmegamanpng" />
+    <img class="!h-50 me-6 select-none object-contain" :src="oldmegamanpng" />
 
     <p>
       I took the sprites from
