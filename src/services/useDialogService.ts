@@ -69,7 +69,7 @@ export const useDialogService = () => {
         ...props,
       },
       templates: {
-        header: () => h('h1', { class: 'text-xl font-bold mb-0' }, header),
+        header: () => h('p', { class: 'header font-bold mb-0' }, header),
         ...templates,
       },
       emits: {
@@ -98,8 +98,8 @@ export const useDialogService = () => {
         ...templates,
         header: () =>
           h('div', [
-            h('h1', { class: 'text-xl font-bold mb-0' }, header),
-            subheader ? h('p', { class: 'text-lg text-gray-500 ms-3' }, subheader) : '',
+            h('p', { class: 'header font-bold mb-0' }, header),
+            subheader ? h('p', { class: 'subheader text-gray-500 ms-3' }, subheader) : '',
           ]),
         // footer: () => (footerTemplate.value ? footerTemplate.value() : null),
       },
