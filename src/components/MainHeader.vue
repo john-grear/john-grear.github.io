@@ -93,6 +93,8 @@
           <i :class="link.icon" />
           {{ link.label }}
         </RouterLink>
+
+        <DarkModeButton />
       </div>
       <div v-else class="flex">
         <Button
@@ -121,6 +123,8 @@
             },
           }"
         />
+
+        <DarkModeButton />
       </div>
     </template>
   </Menubar>

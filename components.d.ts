@@ -11,6 +11,7 @@ declare module 'vue' {
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
     CustomCard: typeof import('./src/components/CustomCard.vue')['default']
+    DarkModeButton: typeof import('./src/components/DarkModeButton.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
     DialogCard: typeof import('./src/components/DialogCard.vue')['default']
     DynamicDialog: typeof import('primevue/dynamicdialog')['default']
