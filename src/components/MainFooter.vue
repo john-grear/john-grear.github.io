@@ -41,7 +41,7 @@
   <Menubar class="mt-10 flex !h-full !w-full flex-col">
     <template #start>
       <div class="flex !w-full flex-col items-center">
-        <div class="mt-5 flex gap-3">
+        <div class="mt-2 flex gap-3">
           <a
             v-for="link in links"
             :key="link.to"
@@ -56,7 +56,7 @@
           </a>
         </div>
 
-        <div class="mt-5 flex gap-3">
+        <div class="mt-2 flex gap-3">
           <span>John Grear</span>
           <span>•</span>
           <span>2025</span>
