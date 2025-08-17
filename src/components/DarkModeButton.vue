@@ -1,13 +1,22 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue';
+  import { onMounted, ref } from 'vue';
+
+  const isDarkModeEnabled = () => document.documentElement.classList.contains('dark-mode');
+
+  const darkModeIcon = ref('pi pi-sun');
+
+  const setDarkModeSunIcon = () => (darkModeIcon.value = 'pi pi-sun');
+  const setDarkModeMoonIcon = () => (darkModeIcon.value = 'pi pi-moon');
 
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark-mode');
-    // Optionally, save the preference to localStorage
-    if (document.documentElement.classList.contains('dark-mode')) {
+
+    if (isDarkModeEnabled()) {
       localStorage.setItem('theme', 'dark');
+      setDarkModeSunIcon();
     } else {
       localStorage.setItem('theme', 'light');
+      setDarkModeMoonIcon();
     }
   };
 
@@ -19,16 +28,20 @@
       if (!prefersDark) return;
 
       document.documentElement.classList.add('dark-mode');
+      setDarkModeSunIcon();
       return;
     }
 
     if (localStorage.getItem('theme') === 'dark') {
       document.documentElement.classList.add('dark-mode');
+      setDarkModeSunIcon();
+    } else {
+      setDarkModeMoonIcon();
     }
   });
 </script>
 
 <template>
   <!-- Dark Mode Button -->
-  <Button icon="pi pi-sun" class="p-button-text" @click="toggleDarkMode" />
+  <Button :icon="darkModeIcon" class="p-button-text" @click="toggleDarkMode" />
 </template>
