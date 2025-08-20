@@ -8,7 +8,7 @@
 
 <template>
   <Toast group="" />
-  <DynamicDialog modal blockScroll />
+  <DynamicDialog modal block-scroll />
 
   <div class="min-h-screen">
     <MainMenubar />
