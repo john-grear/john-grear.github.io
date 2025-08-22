@@ -28,7 +28,7 @@
   />
 
   <ProjectCard
-    header="BGSU Internship / Mentorship Application"
+    header="BGSU Internship Application"
     start-date="Spring 2023"
     :tools="['Laravel', 'PHP', 'SQLite']"
     short-description="Group project for my capstone course at BGSU to clean up existing project and prepare it for use by BGSU's internship/mentorship team."

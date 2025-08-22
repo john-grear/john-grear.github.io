@@ -1,41 +1,34 @@
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
+  import {
+    disableDarkMode,
+    enableDarkMode,
+    isDarkMode,
+    toggleDarkMode,
+  } from '@/services/useDarkMode';
 
-  const isDarkModeEnabled = () => document.documentElement.classList.contains('dark-mode');
+  import { onMounted, ref } from 'vue';
 
   const darkModeIcon = ref('pi pi-sun');
 
   const setDarkModeSunIcon = () => (darkModeIcon.value = 'pi pi-sun');
   const setDarkModeMoonIcon = () => (darkModeIcon.value = 'pi pi-moon');
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark-mode');
+  const toggle = () => {
+    toggleDarkMode();
 
-    if (isDarkModeEnabled()) {
-      localStorage.setItem('theme', 'dark');
-      setDarkModeSunIcon();
-    } else {
-      localStorage.setItem('theme', 'light');
-      setDarkModeMoonIcon();
-    }
+    isDarkMode.value ? setDarkModeMoonIcon() : setDarkModeSunIcon();
   };
 
   // On component mount, check for saved preference
   onMounted(() => {
-    if (!localStorage.getItem('theme')) {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const darkModeLastUsed = localStorage.getItem('theme') == 'dark';
+    const darkThemePreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-      if (!prefersDark) return;
-
-      document.documentElement.classList.add('dark-mode');
-      setDarkModeSunIcon();
-      return;
-    }
-
-    if (localStorage.getItem('theme') === 'dark') {
-      document.documentElement.classList.add('dark-mode');
+    if (darkThemePreference || darkModeLastUsed) {
+      enableDarkMode();
       setDarkModeSunIcon();
     } else {
+      disableDarkMode();
       setDarkModeMoonIcon();
     }
   });
@@ -43,5 +36,5 @@
 
 <template>
   <!-- Dark Mode Button -->
-  <Button :icon="darkModeIcon" class="p-button-text" @click="toggleDarkMode" />
+  <Button :icon="darkModeIcon" class="p-button-text" @click="toggle" />
 </template>

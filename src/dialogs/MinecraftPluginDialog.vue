@@ -14,28 +14,38 @@
 
 <template>
   <DialogCard :image="data.image" :git-link="data.gitLink">
-    <p>{{ data.shortDescription }}</p>
+    <SimpleCard>
+      <p>{{ data.shortDescription }}</p>
 
-    <p>
-      This was my first set of projects that I worked on. I started working on these as I started
-      college. I would use things that I was learning in my classes. I started in Java but later
-      swapped to using Kotlin after I gained more proficiency.
-    </p>
+      <p>
+        This was my first set of projects that I worked on. I started working on these as I started
+        college. I would use things that I was learning in my classes. I started in Java but later
+        swapped to using Kotlin after I gained more proficiency.
+      </p>
 
-    <p>
-      The code is obviously old and not to my current standards; I didn't even use git for my
-      earlier plugins. That being said I did record this short demo of my Ender Shift plugin below.
-    </p>
+      <p>
+        The code is obviously old and not to my current standards; I didn't even use git for my
+        earlier plugins. That being said I did record this short demo of my Ender Shift plugin
+        below.
+      </p>
+    </SimpleCard>
 
     <Tabs value="0" class="w-full">
-      <TabList>
+      <TabList
+        class="rounded-t-[var(--p-card-border-radius)]"
+        :pt="{
+          tabList: {
+            class: '!bg-[var(--p-card-background)] px-1',
+          },
+        }"
+      >
         <Tab value="0">Ender Shift</Tab>
         <Tab value="1">Pandamonium Crates</Tab>
         <Tab value="2">Pandamonium Games</Tab>
         <Tab value="3">Dungeon Maze</Tab>
       </TabList>
-      <TabPanels>
-        <TabPanel value="0" class="flex flex-col items-center">
+      <TabPanels class="rounded-b-[var(--p-card-border-radius)] !bg-[var(--p-card-background)]">
+        <TabPanel value="0" class="flex flex-col items-center gap-4">
           <p>
             Tracks the placement of item frames and ender pearls being placed inside them. If four
             are placed on any side of an obsidian block, that block position gets stored in a yml
@@ -45,13 +55,11 @@
             shift point directly above or below the player, they can jump or shift (respectively) to
             immediately move to the shift points in that direction.
           </p>
-          <br />
 
           <p>
             Inspired by the Elevator and Travel Anchor blocks from the OpenBlocks and Ender IO mods
             respectively.
           </p>
-          <br />
 
           <video :src="endershiftTestingMp4" class="max-w-150 w-[80%]" controls>
             <p>Your browser doesn't support HTML video. What browser are you using?</p>
@@ -79,7 +87,7 @@
             fighting game with different classes. None of these worked out, but it was an attempt.
           </p>
         </TabPanel>
-        <TabPanel value="3">
+        <TabPanel value="3" class="flex flex-col items-center gap-4">
           <p>
             <a href="https://github.com/john-grear/dungeon-maze" target="_blank">Dungeon Maze</a>
             - Takes an area, parses all preplaced blocks and applies different effects like
@@ -88,7 +96,6 @@
             end, enables a hard mode after initial completion, and takes you back to your spawnpoint
             after clicking a button to complete the maze.
           </p>
-          <br />
 
           <p>
             Hardcore mode made things minorly more difficult. My intention was to add maze

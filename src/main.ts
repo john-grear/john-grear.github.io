@@ -29,12 +29,6 @@ const themePreset = definePreset(Aura, {
       900: 'var(--new-primary-900)',
       950: 'var(--new-primary-950)',
     },
-    // color: {
-    //   text: {
-    //     surface: 'var(--p-surface-900)',
-    //     primary: 'var(--p-primary-500)',
-    //   },
-    // },
   },
 });
 

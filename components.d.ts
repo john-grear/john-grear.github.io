@@ -24,6 +24,7 @@ declare module 'vue' {
     ProjectCard: typeof import('./src/components/ProjectCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SimpleCard: typeof import('./src/components/SimpleCard.vue')['default']
     SockDialog: typeof import('./src/components/SockDialog.vue')['default']
     SockImageButton: typeof import('./src/components/SockImageButton.vue')['default']
     Tab: typeof import('primevue/tab')['default']

@@ -15,30 +15,34 @@
 
 <template>
   <DialogCard :image="data.image" :git-link="data.gitLink">
-    <p>{{ data.shortDescription }}</p>
+    <SimpleCard>
+      <p>{{ data.shortDescription }}</p>
+    </SimpleCard>
 
     <Image
       class="!h-50 select-none self-center object-contain"
       :src="bgsuInternshipMainPageImage"
-      image-class="rounded-lg"
+      image-class="rounded-xl"
       preview
     />
 
-    <p>
-      Our main task for this was to take the existing web app made in Laravel 5 and bring it up to
-      date (at the time) to Laravel 10, clean up the code, fix bugs, and add features. The previous
-      web app was made in another capstone course years earlier by people who were not keen of
-      frontend development. I spent a lot of this project improving UI and fixing issues that were
-      created in the past while still working on my own set of additions to this.
-    </p>
+    <SimpleCard class="flex flex-col gap-4">
+      <p>
+        Our main task for this was to take the existing web app made in Laravel 5 and bring it up to
+        date (at the time) to Laravel 10, clean up the code, fix bugs, and add features. The
+        previous web app was made in another capstone course years earlier by people who were not
+        keen of frontend development. I spent a lot of this project improving UI and fixing issues
+        that were created in the past while still working on my own set of additions to this.
+      </p>
+
+      <i>I don't have access to the code as this was created for BGSU.</i>
+    </SimpleCard>
 
     <Image
       class="!h-50 select-none self-center object-contain"
       :src="bgsuInternshipStudentPageImage"
-      image-class="rounded-lg"
+      image-class="rounded-xl"
       preview
     />
-
-    <p>I don't have access to the code as this was created for BGSU.</p>
   </DialogCard>
 </template>

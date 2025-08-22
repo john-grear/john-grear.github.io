@@ -10,7 +10,7 @@
 
   <!-- Wright State University -->
   <p class="subheader font-bold">Wright State University</p>
-  <img :src="wsuImage" alt="Wright State University" class="mt-4 w-[35%] rounded-lg" />
+  <img :src="wsuImage" alt="Wright State University" class="mt-4 w-[35%] rounded-xl" />
 
   <CustomCard>
     <p>
@@ -37,7 +37,7 @@
 
   <!-- Bowling Green State University -->
   <p class="subheader mt-4 font-bold">Bowling Green State University</p>
-  <img :src="bgsuImage" alt="Bowling Green State University" class="w-[35%] rounded-lg" />
+  <img :src="bgsuImage" alt="Bowling Green State University" class="w-[35%] rounded-xl" />
 
   <CustomCard>
     <p>

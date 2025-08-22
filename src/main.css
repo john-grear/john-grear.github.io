@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
 @theme {
   --new-primary-50: #d4fede;
   --new-primary-100: #9cfdb7;
@@ -20,9 +22,8 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  /* background-color: #242424; */
+  /* color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87); */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -63,27 +64,35 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+:root {
+  --background-color: #f0f0f088;
+  --text-color: black;
+  background-color: var(--background-color);
+
+  --p-menubar-background: #e6e6e6 !important;
+  --p-card-background: rgba(233, 233, 233, 0.75) !important;
+}
+
+.dark-mode {
+  --background-color: #12121288;
+  --text-color: white;
+
+  --p-menubar-background: #18181b !important;
+  --p-card-background: rgba(30, 30, 30, 0.85) !important;
 }
 
 p {
+  color: var(--text-color);
+  /* size: clamp(var(--text-sm), var(--text-base), var(--text-base)); */
   @apply text-sm md:text-base;
 }
 
 p.subheader {
+  /* size: clamp(var(--text-base), var(--text-xl), var(--text-2xl)); */
   @apply text-base md:text-xl lg:text-2xl;
 }
 
 p.header {
+  /* size: clamp(var(--text-2xl), var(--text-3xl), var(--text-6xl)); */
   @apply text-2xl md:text-3xl lg:text-6xl;
 }
