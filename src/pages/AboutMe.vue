@@ -24,7 +24,7 @@
     </p>
   </CustomCard>
 
-  <img :src="megamanGIF" alt="Mega Man 5" class="w-[40%] !rounded-2xl" />
+  <img :src="megamanGIF" alt="Mega Man 5" class="w-[40%] max-w-2xl !rounded-xl" />
 
   <CustomCard>
     <p>

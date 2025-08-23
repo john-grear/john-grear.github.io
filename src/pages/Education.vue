@@ -10,7 +10,7 @@
 
   <!-- Wright State University -->
   <p class="subheader font-bold">Wright State University</p>
-  <img :src="wsuImage" alt="Wright State University" class="mt-4 w-[35%] rounded-xl" />
+  <img :src="wsuImage" alt="Wright State University" class="mt-4" />
 
   <CustomCard>
     <p>
@@ -37,7 +37,7 @@
 
   <!-- Bowling Green State University -->
   <p class="subheader mt-4 font-bold">Bowling Green State University</p>
-  <img :src="bgsuImage" alt="Bowling Green State University" class="w-[35%] rounded-xl" />
+  <img :src="bgsuImage" alt="Bowling Green State University" />
 
   <CustomCard>
     <p>
@@ -54,3 +54,11 @@
     </p>
   </CustomCard>
 </template>
+
+<style lang="css" scoped>
+  @reference 'tailwindcss';
+
+  img {
+    @apply w-[35%] max-w-xl rounded-xl;
+  }
+</style>

@@ -67,6 +67,7 @@ button:focus-visible {
 :root {
   --background-color: #f0f0f088;
   --text-color: black;
+  --subheader-text-color: #252525;
   background-color: var(--background-color);
 
   --p-menubar-background: #e6e6e6 !important;
@@ -76,6 +77,7 @@ button:focus-visible {
 .dark-mode {
   --background-color: #12121288;
   --text-color: white;
+  --subheader-text-color: #e6e6e6;
 
   --p-menubar-background: #18181b !important;
   --p-card-background: rgba(30, 30, 30, 0.85) !important;
@@ -88,6 +90,7 @@ p {
 }
 
 p.subheader {
+  color: var(--subheader-text-color);
   /* size: clamp(var(--text-base), var(--text-xl), var(--text-2xl)); */
   @apply text-base md:text-xl lg:text-2xl;
 }

@@ -10,7 +10,7 @@
 
   <br />
 
-  <img :src="grobImage" alt="GROB Systems Inc." class="w-[35%] rounded-xl" />
+  <img :src="grobImage" alt="GROB Systems Inc." />
   <p class="subheader mt-4 font-bold">GROB Systems Inc.</p>
   <p class="text-lg italic">IT Programmer • Dec. 2024 - Current</p>
 
@@ -39,7 +39,7 @@
   </CustomCard>
   <br />
 
-  <img :src="velTechImage" alt="Velocity Technologies" class="w-[35%] rounded-xl" />
+  <img :src="velTechImage" alt="Velocity Technologies" />
   <p class="subheader mt-4 font-bold">Velocity Technologies</p>
   <p class="text-lg italic">Full Stack Software Developer • Mar. 2023 - Aug. 2023</p>
 
@@ -73,7 +73,7 @@
   </CustomCard>
   <br />
 
-  <img :src="mcalearGroupImage" alt="McAlear Group" class="w-[35%] rounded-xl" />
+  <img :src="mcalearGroupImage" alt="McAlear Group" />
   <p class="subheader mt-4 font-bold">McAlear Group</p>
   <p class="text-lg italic">Software Developer Intern • Aug. 2022 - Dec. 2022</p>
 
@@ -95,7 +95,7 @@
   </CustomCard>
   <br />
 
-  <img :src="wsuImage" alt="Wright State University" class="w-[35%] rounded-xl" />
+  <img :src="wsuImage" alt="Wright State University" />
   <p class="subheader mt-4 font-bold">Wright State University</p>
   <p class="text-lg italic">Teaching Assistant • Jan 2020 – Apr 2021</p>
 
@@ -115,3 +115,11 @@
     </ul>
   </CustomCard>
 </template>
+
+<style lang="css" scoped>
+  @reference 'tailwindcss';
+
+  img {
+    @apply w-[35%] max-w-xl rounded-xl;
+  }
+</style>
