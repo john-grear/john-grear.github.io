@@ -40,6 +40,9 @@ document.addEventListener('keydown', (event) => {
       activeKeys.right = true;
       break;
     case ' ':
+      preventSpacebarScroll(event);
+      activeKeys.jump = true;
+      break;
     case 'z':
       activeKeys.jump = true;
       break;
@@ -112,3 +115,9 @@ document.addEventListener('contextmenu', (_event) => {
 document.addEventListener('click', (_event) => {
   activeKeys.contextMenu = false;
 });
+
+function preventSpacebarScroll(event: KeyboardEvent) {
+  if (event.target !== document.body) return;
+
+  event.preventDefault();
+}
