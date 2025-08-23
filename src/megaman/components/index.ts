@@ -33,6 +33,17 @@ function gameLoop() {
 }
 
 /**
+ * Finds all divs and adds the ground class to have them used as collision objects.
+ */
+function markDivsAsGround() {
+  const allDivs = document.getElementsByTagName('div');
+
+  for (const div of allDivs) {
+    div.classList.add('ground');
+  }
+}
+
+/**
  * Find all elements tagged as ground and adds them as CollisionObject's to an array
  *
  * TODO: Change this later to default to all divs in document unless config section toggled
@@ -44,6 +55,8 @@ function findCollisionObjects() {
     collisionObjects.push(new CollisionObject(element as HTMLElement))
   );
 }
+
+markDivsAsGround();
 
 findCollisionObjects();
 
