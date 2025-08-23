@@ -8,8 +8,9 @@ import PrimeVue from 'primevue/config';
 
 import 'primeicons/primeicons.css';
 
+import '@/assets/styles/main.css';
+
 import App from './App.vue';
-import './main.css';
 import { router } from './router';
 
 const app = createApp(App);
