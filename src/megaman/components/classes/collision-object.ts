@@ -1,5 +1,12 @@
 export default class CollisionObject {
-  constructor(element) {
+  element: HTMLElement;
+
+  top = 0;
+  bottom = 0;
+  left = 0;
+  right = 0;
+
+  constructor(element: HTMLElement) {
     this.element = element;
     this.updateBounds();
   }

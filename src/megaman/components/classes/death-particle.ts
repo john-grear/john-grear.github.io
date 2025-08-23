@@ -1,15 +1,27 @@
 export default class DeathParticle {
+  element: HTMLElement | undefined = undefined;
+  boundingClientRect: DOMRect | undefined = undefined;
+
+  vectorX = 0;
+  vectorY = 0;
+
+  angle = 0;
+  initialDistance = 0;
+  distance = 0;
+
   framesMoved = 0;
   time = 0;
 
-  static list = [];
+  disable = false;
+
+  static list: DeathParticle[] = [];
   static movingSpeed = 1;
   static maxFrames = 2000;
   static offsetParticleTimer = 50;
   static secondParticleOffset = 300;
   static updateBoundsFrame = 5;
 
-  static container = null;
+  static container: HTMLElement | Element | null | undefined = undefined;
 
   /**
    * Constructs a new DeathParticle
@@ -18,7 +30,7 @@ export default class DeathParticle {
    * @param {number} angle - Multiple of 45 degrees
    * @param {number} initialDistance - Half are to be offset from the initial ring of particles
    */
-  constructor(boundingClientRect, angle, initialDistance) {
+  constructor(boundingClientRect: DOMRect, angle: number, initialDistance: number) {
     this.boundingClientRect = boundingClientRect;
     this.angle = angle;
     this.initialDistance = initialDistance;
@@ -59,6 +71,8 @@ export default class DeathParticle {
    * Position the particles on Mega Man
    */
   setPosition() {
+    if (!this.element || !this.boundingClientRect) return;
+
     // Calculate position relative to Mega Man
     const relativeTop =
       (this.boundingClientRect.top + this.boundingClientRect.bottom) / 2 -
@@ -117,6 +131,8 @@ export default class DeathParticle {
    * Start animation to move the death particle linearly in a circle shape
    */
   move() {
+    if (!this.element) return;
+
     // Update position
     this.distance += DeathParticle.movingSpeed;
     this.element.style.setProperty('--positionX', `${this.distance * this.vectorX}px`);
@@ -132,6 +148,8 @@ export default class DeathParticle {
    * Remove death particle from HTML Doc and static list
    */
   delete() {
+    if (!this.element) return;
+
     this.element.remove();
     DeathParticle.list.splice(DeathParticle.list.indexOf(this), 1);
   }

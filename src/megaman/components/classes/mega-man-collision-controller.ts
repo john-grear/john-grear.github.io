@@ -1,8 +1,20 @@
-import Window from '../utils/window.js';
-import MegaMan from './mega-man.js';
+import Window from '../utils/window';
+import MegaMan from './mega-man';
+import MegaManTransformController from './mega-man-transform-controller';
 
 export default class MegaManCollisionController {
-  constructor(element, transformController) {
+  element: HTMLElement;
+
+  transformController: MegaManTransformController;
+
+  bounds: { left: number; right: number; top: number; bottom: number } = {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  };
+
+  constructor(element: any, transformController: any) {
     this.element = element;
     this.transformController = transformController;
   }
@@ -16,7 +28,7 @@ export default class MegaManCollisionController {
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    * @returns {boolean}
    */
-  checkHorizontalCollision(collisionObjects) {
+  checkHorizontalCollision(collisionObjects: any): boolean {
     // Check left and right edge of page
     const leftDistance = Math.abs(Window.left - this.bounds.left);
     const rightDistance = Math.abs(Window.right - this.bounds.right);
@@ -54,7 +66,7 @@ export default class MegaManCollisionController {
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    * @returns {boolean}
    */
-  checkHitCeiling(collisionObjects) {
+  checkHitCeiling(collisionObjects: any): boolean {
     // Check hit ceiling on top of page
     const distance = Math.abs(Window.top - this.bounds.top);
     if (distance <= MegaMan.collisionDistance) return true;
@@ -84,7 +96,7 @@ export default class MegaManCollisionController {
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    * @returns {boolean}
    */
-  checkOnGround(collisionObjects) {
+  checkOnGround(collisionObjects: any): boolean {
     // Check on ground at bottom of page
     const distance = Math.abs(Window.bottom - this.bounds.bottom);
     if (distance <= MegaMan.collisionDistance) {
@@ -119,7 +131,7 @@ export default class MegaManCollisionController {
    * @param {DOMRect} object - Bounding rectangle of the object to check
    * @returns {boolean} - True if the object is within Mega Man's X bounds, false otherwise.
    */
-  checkWithinHorizontalBounds(object) {
+  checkWithinHorizontalBounds(object: { left: number; right: number }): boolean {
     const left = this.bounds.left + MegaMan.collisionDistance;
     const right = this.bounds.right - MegaMan.collisionDistance;
     return (
@@ -133,7 +145,7 @@ export default class MegaManCollisionController {
    * @param {DOMRect} object - Bounding rectangle of the object to check
    * @returns {boolean} - True if the object is within Mega Man's Y bounds, false otherwise.
    */
-  checkWithinVerticalBounds(object) {
+  checkWithinVerticalBounds(object: { bottom: number; top: number }): boolean {
     const top = this.bounds.top + MegaMan.collisionDistance;
     const bottom = this.bounds.bottom - MegaMan.collisionDistance;
     return (
@@ -146,7 +158,7 @@ export default class MegaManCollisionController {
    *
    * @param {int} deltaX
    */
-  updateHorizontalBounds(deltaX) {
+  updateHorizontalBounds(deltaX: any) {
     this.transformController.updateX(deltaX);
 
     this.bounds.left += deltaX;
@@ -158,7 +170,7 @@ export default class MegaManCollisionController {
    *
    * @param {int} deltaY
    */
-  updateVerticalBounds(deltaY) {
+  updateVerticalBounds(deltaY: number) {
     this.transformController.updateY(deltaY);
 
     this.bounds.top += deltaY;

@@ -1,13 +1,13 @@
-import MegaMan from './mega-man.js';
+import MegaMan from './mega-man';
 
 export default class Bullet {
   charge = 0;
   direction = 1;
   position = 0;
-  boundingClientRect = null; // Mega Man bounds
-  element = null;
+  boundingClientRect: DOMRect | undefined = undefined; // Mega Man bounds
+  element: HTMLDivElement | undefined = undefined;
 
-  static list = [];
+  static list: Bullet[] = [];
   static maxBullets = 3;
   static lastBulletTime = 0;
   static shootDelay = 100;
@@ -18,9 +18,9 @@ export default class Bullet {
   static rightOffset = 0;
   static leftOffset = -32;
 
-  constructor(charge, direction, boundingClientRect) {
+  constructor(charge: number, direction: number, boundingClientRect: DOMRect) {
     // If too many bullets or shooting too quickly, do nothing
-    if (!Bullet.canSpawn()) return null;
+    if (!Bullet.canSpawn()) return;
 
     // Update bullet spawn limiting values
     Bullet.lastBulletTime = Date.now();
@@ -58,10 +58,16 @@ export default class Bullet {
    * Flip and position the bullet based on Mega Man flippped state and position
    */
   setPosition() {
-    this.element.style.setProperty('--direction', this.direction);
+    if (!this.element || !this.boundingClientRect) return;
+
+    this.element.style.setProperty('--direction', this.direction.toString());
 
     // Get the spawn area's position
-    const spawnAreaRect = document.querySelector('.spawn').getBoundingClientRect();
+    const spawnArea = document.querySelector('.spawn');
+
+    if (!spawnArea) return;
+
+    const spawnAreaRect = spawnArea.getBoundingClientRect();
 
     // Calculate position relative to the spawn area and offset from each side of Mega Man
     const relativeTop = this.boundingClientRect.top - spawnAreaRect.top + Bullet.topOffset;
@@ -84,6 +90,8 @@ export default class Bullet {
    * Start animation to move the bullet across the screen
    */
   move() {
+    if (!this.element) return;
+
     // Update position
     this.position += Bullet.movingSpeed * this.direction;
     this.element.style.setProperty('--position', `${this.position}px`);
@@ -103,6 +111,8 @@ export default class Bullet {
    * Remove bullet from HTML Doc and static list
    */
   delete() {
+    if (!this.element) return;
+
     this.element.remove();
     Bullet.list.splice(Bullet.list.indexOf(this), 1);
   }
@@ -112,7 +122,7 @@ export default class Bullet {
    *
    * @returns {boolean}
    */
-  static canSpawn() {
+  static canSpawn(): boolean {
     return (
       Bullet.list.length < Bullet.maxBullets &&
       Date.now() - Bullet.lastBulletTime >= Bullet.shootDelay

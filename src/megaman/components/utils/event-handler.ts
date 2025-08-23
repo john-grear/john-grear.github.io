@@ -1,6 +1,6 @@
-import MegaMan from '../classes/mega-man.js';
-import { collisionObjects, megaMan } from '../index.js';
-import Window from './window.js';
+import MegaMan from '../classes/mega-man';
+import { collisionObjects, megaMan } from '../index';
+import Window from './window';
 
 // Maintains keys being held down
 export const activeKeys = {
@@ -14,9 +14,9 @@ export const activeKeys = {
 };
 
 function resetActiveKeys() {
-  Object.keys(activeKeys).forEach((key) => {
-    activeKeys[key] = false;
-  });
+  for (const key in activeKeys) {
+    activeKeys[key as keyof typeof activeKeys] = false;
+  }
 }
 
 document.addEventListener('keydown', (event) => {
@@ -81,7 +81,7 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-window.addEventListener('resize', (event) => {
+window.addEventListener('resize', (_event) => {
   resetActiveKeys();
   Window.resize(MegaMan.collisionDistance, megaMan, collisionObjects);
   resetActiveKeys();
@@ -104,11 +104,11 @@ document.addEventListener('mouseup', (event) => {
 });
 
 // Stop input when right clicking for context menu
-document.addEventListener('contextmenu', (event) => {
+document.addEventListener('contextmenu', (_event) => {
   resetActiveKeys();
   activeKeys.contextMenu = true;
 });
 
-document.addEventListener('click', (event) => {
+document.addEventListener('click', (_event) => {
   activeKeys.contextMenu = false;
 });

@@ -1,13 +1,13 @@
-import Bullet from './classes/bullet.js';
-import CollisionObject from './classes/collision-object.js';
-import DeathParticle from './classes/death-particle.js';
-import MegaMan from './classes/mega-man.js';
-import './utils/event-handler.js';
-import Time from './utils/time.js';
-import Window from './utils/window.js';
+import Bullet from './classes/bullet';
+import CollisionObject from './classes/collision-object';
+import DeathParticle from './classes/death-particle';
+import MegaMan from './classes/mega-man';
+import './utils/event-handler';
+import Time from './utils/time';
+import Window from './utils/window';
 
 export const megaMan = new MegaMan();
-export const collisionObjects = [];
+export const collisionObjects: CollisionObject[] = [];
 
 /**
  * Run the whole interactive every frame
@@ -20,12 +20,12 @@ function gameLoop() {
   megaMan.update(collisionObjects);
 
   // Handle all bullet movement
-  Bullet.list.forEach((bullet) => {
+  Bullet.list.forEach((bullet: Bullet) => {
     bullet.update();
   });
 
   // Handle all death particle movement
-  DeathParticle.list.forEach((particle) => {
+  DeathParticle.list.forEach((particle: DeathParticle) => {
     particle.update();
   });
 
@@ -40,11 +40,13 @@ function gameLoop() {
 function findCollisionObjects() {
   var groundTagElements = Array.from(document.getElementsByClassName('ground'));
 
-  groundTagElements.forEach((element) => collisionObjects.push(new CollisionObject(element)));
+  groundTagElements.forEach((element) =>
+    collisionObjects.push(new CollisionObject(element as HTMLElement))
+  );
 }
 
 findCollisionObjects();
 
-Window.resize(MegaMan.collisionDistance);
+Window.resize(MegaMan.collisionDistance, megaMan);
 
 gameLoop();

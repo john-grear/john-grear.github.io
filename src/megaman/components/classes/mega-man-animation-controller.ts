@@ -1,6 +1,9 @@
-import MegaMan from './mega-man.js';
+import MegaMan from './mega-man';
 
 export default class MegaManAnimationController {
+  element: HTMLElement;
+  style: CSSStyleDeclaration;
+
   idle = false;
   activeStates = {
     spawn: false,
@@ -9,6 +12,12 @@ export default class MegaManAnimationController {
     slide: false,
     attack: false,
   };
+
+  idleState: number;
+  spawnState: number;
+  walkState: number;
+  slideFrames: number;
+  chargeState: number;
 
   static maxIdleState = 150;
   static maxIdleFrames = 10; // max frames to be idle for
@@ -30,7 +39,7 @@ export default class MegaManAnimationController {
    *
    * @param {Element} element
    */
-  constructor(element) {
+  constructor(element: HTMLElement) {
     this.element = element;
     this.element.classList.add('spawn-animation-state');
     this.style = this.element.style;
@@ -47,7 +56,7 @@ export default class MegaManAnimationController {
    *
    * @param {number} xCoordinate
    */
-  updateX(xCoordinate) {
+  updateX(xCoordinate: any) {
     this.style.setProperty('--positionX', `${xCoordinate}px`);
   }
 
@@ -56,17 +65,17 @@ export default class MegaManAnimationController {
    *
    * @param {number} yCoordinate
    */
-  updateY(yCoordinate) {
+  updateY(yCoordinate: any) {
     this.style.setProperty('--positionY', `${yCoordinate}px`);
   }
 
   /**
    * Update the direction property to flip Mega Man's sprite / animation
    *
-   * @param {int} direction - 1 = right, -1 = left
+   * @param {number} direction - 1 = right, -1 = left
    */
-  updateDirection(direction = 1) {
-    this.style.setProperty('--direction', direction);
+  updateDirection(direction: number = 1) {
+    this.style.setProperty('--direction', direction.toString());
   }
 
   /**
@@ -74,7 +83,7 @@ export default class MegaManAnimationController {
    *
    * @param {boolean} disable - Set hidden if true, visible if false
    */
-  updateVisibility(disable = false) {
+  updateVisibility(disable: boolean = false) {
     this.style.visibility = disable ? 'hidden' : 'visible';
   }
 
@@ -83,7 +92,7 @@ export default class MegaManAnimationController {
    *
    * @param {Function} onComplete - Callback function executed after the spawn animation completes
    */
-  enableSpawn(onComplete) {
+  enableSpawn(onComplete: any) {
     if (this.activeStates.spawn) return;
 
     this.activeStates.spawn = true;
@@ -99,10 +108,10 @@ export default class MegaManAnimationController {
    *
    * @param {Function} onComplete - Callback function executed after the spawn animation completes
    */
-  updateSpawn(onComplete) {
+  updateSpawn(onComplete: any) {
     const adjustedSpawnState =
       Math.floor(this.spawnState / MegaManAnimationController.spawnFramePause) + 1;
-    this.style.setProperty('--spawn-state', adjustedSpawnState); // 1 - 2
+    this.style.setProperty('--spawn-state', adjustedSpawnState.toString()); // 1 - 2
 
     if (++this.spawnState > MegaManAnimationController.maxSpawnState) {
       this.completeSpawn(onComplete);
@@ -117,7 +126,7 @@ export default class MegaManAnimationController {
    *
    * @param {Function} onComplete - Callback function executed after the transition
    */
-  completeSpawn(onComplete) {
+  completeSpawn(onComplete: () => void) {
     this.activeStates.spawn = false;
     this.enableBase();
 
@@ -130,7 +139,7 @@ export default class MegaManAnimationController {
    */
   enableBase() {
     this.spawnState = 0;
-    this.style.setProperty('--spawn-state', 0);
+    this.style.setProperty('--spawn-state', '0');
     this.element.classList.remove('spawn-animation-state');
     this.element.classList.add('base-animation-state');
   }
@@ -188,7 +197,7 @@ export default class MegaManAnimationController {
    *
    * @returns {boolean} - True if some state in activeStates is active, false otherwise
    */
-  checkNotIdle() {
+  checkNotIdle(): boolean {
     return Object.values(this.activeStates).some((state) => state);
   }
 
@@ -199,7 +208,7 @@ export default class MegaManAnimationController {
    */
   disableIdle() {
     this.idle = false;
-    this.style.setProperty('--idle-state', 0);
+    this.style.setProperty('--idle-state', '0');
   }
 
   /**
@@ -209,7 +218,7 @@ export default class MegaManAnimationController {
    */
   checkIdleTimeHasBeenReached() {
     if (this.idleState === MegaManAnimationController.maxIdleState) {
-      this.style.setProperty('--idle-state', 1);
+      this.style.setProperty('--idle-state', '1');
     }
   }
 
@@ -226,7 +235,7 @@ export default class MegaManAnimationController {
       MegaManAnimationController.maxIdleState + MegaManAnimationController.maxIdleFrames
     ) {
       this.idleState = 0;
-      this.style.setProperty('--idle-state', 0);
+      this.style.setProperty('--idle-state', '0');
     }
   }
 
@@ -238,12 +247,12 @@ export default class MegaManAnimationController {
    * @param {boolean} disable - Forcibly sets property to 0 if true after displaying the knee bend frame
    * after some delay. If jumping, skip knee bend frame
    */
-  updateWalk(disable = false) {
+  updateWalk(disable: boolean = false) {
     this.activeStates.walk = !disable;
 
     // Don't walk if jumping or sliding
     if (this.activeStates.jump || this.activeStates.slide) {
-      this.style.setProperty('--walk-state', 0);
+      this.style.setProperty('--walk-state', '0');
       this.walkState = -MegaManAnimationController.kneeBendFrameLength;
       if (!this.idle) this.updateIdle();
       return;
@@ -256,11 +265,11 @@ export default class MegaManAnimationController {
       }
 
       if (this.walkState < 0) {
-        this.style.setProperty('--walk-state', MegaManAnimationController.kneeBendFrame);
+        this.style.setProperty('--walk-state', MegaManAnimationController.kneeBendFrame.toString());
         ++this.walkState;
         requestAnimationFrame(() => this.updateWalk(true));
       } else {
-        this.style.setProperty('--walk-state', 0);
+        this.style.setProperty('--walk-state', '0');
         this.walkState = -MegaManAnimationController.kneeBendFrameLength;
         this.updateIdle();
       }
@@ -268,13 +277,13 @@ export default class MegaManAnimationController {
     }
 
     if (this.walkState < 0) {
-      this.style.setProperty('--walk-state', MegaManAnimationController.kneeBendFrame);
+      this.style.setProperty('--walk-state', MegaManAnimationController.kneeBendFrame.toString());
       ++this.walkState;
     } else {
       const currentWalkFrame = Math.floor(
         this.walkState / MegaManAnimationController.walkFramePause
       );
-      this.style.setProperty('--walk-state', currentWalkFrame + 3); // Skip idle and knee bend frame
+      this.style.setProperty('--walk-state', (currentWalkFrame + 3).toString()); // Skip idle and knee bend frame
       this.walkState = (this.walkState + 1) % MegaManAnimationController.maxWalkState;
     }
   }
@@ -284,17 +293,17 @@ export default class MegaManAnimationController {
    *
    * @param {boolean} disable - Forcibly sets property to 0 if true
    */
-  updateJump(disable = false) {
+  updateJump(disable: boolean = false) {
     this.activeStates.jump = !disable;
 
     if (disable) {
-      this.style.setProperty('--jump-state', 0);
+      this.style.setProperty('--jump-state', '0');
       if (!this.idle) this.updateIdle();
       return;
     }
 
     this.updateWalk(true);
-    this.style.setProperty('--jump-state', 1);
+    this.style.setProperty('--jump-state', '1');
   }
 
   /**
@@ -302,17 +311,17 @@ export default class MegaManAnimationController {
    *
    * @param {boolean} disable - Forcibly sets property to 0 if true
    */
-  updateSlide(disable = false) {
+  updateSlide(disable: boolean = false) {
     this.activeStates.slide = !disable;
 
     if (disable) {
-      this.style.setProperty('--slide-state', 0);
+      this.style.setProperty('--slide-state', '0');
       if (!this.idle) this.updateIdle();
       return;
     }
 
     this.updateWalk(true);
-    this.style.setProperty('--slide-state', 1);
+    this.style.setProperty('--slide-state', '1');
   }
 
   /**
@@ -320,22 +329,22 @@ export default class MegaManAnimationController {
    *
    * @param {boolean} disable - Forcibly sets property to 0 if true
    */
-  updateAttack(disable = false) {
+  updateAttack(disable: boolean = false) {
     this.activeStates.attack = !disable;
 
     if (disable) {
-      this.style.setProperty('--attack-state', 0);
+      this.style.setProperty('--attack-state', '0');
       this.updateCharge(0);
       if (!this.idle) this.updateIdle();
       return;
     }
 
     if (this.activeStates.jump) {
-      this.style.setProperty('--attack-state', 1); // Jumping + attacking
+      this.style.setProperty('--attack-state', '1'); // Jumping + attacking
     } else if (this.activeStates.walk) {
-      this.style.setProperty('--attack-state', 4); // Walking + attacking
+      this.style.setProperty('--attack-state', '4'); // Walking + attacking
     } else {
-      this.style.setProperty('--attack-state', 6); // Idle, skip over knee bend and idle frames
+      this.style.setProperty('--attack-state', '6'); // Idle, skip over knee bend and idle frames
     }
 
     // Wait before disabling attack and charge animations
@@ -346,13 +355,13 @@ export default class MegaManAnimationController {
    * Update the charge state property. Increment chargeState until maxChargeState reached,
    * then reset to 0. Display a 3 frame animation for both min and max charge states
    *
-   * @param {int} charge - Value to determine correct charge state
+   * @param {number} charge - Value to determine correct charge state
    * @returns {void}
    */
-  updateCharge(charge = 0) {
+  updateCharge(charge: number = 0): void {
     if (charge === 0) {
       this.chargeState = 0;
-      this.element.style.setProperty('--charge-state', 0);
+      this.element.style.setProperty('--charge-state', '0');
       if (!this.idle) this.updateIdle();
       return;
     }
@@ -362,9 +371,9 @@ export default class MegaManAnimationController {
     this.chargeState = (this.chargeState + 1) % MegaManAnimationController.maxChargeState;
 
     if (charge < MegaMan.maxChargeValue) {
-      this.style.setProperty('--charge-state', (this.chargeState % 3) + 1);
+      this.style.setProperty('--charge-state', ((this.chargeState % 3) + 1).toString());
     } else {
-      this.style.setProperty('--charge-state', (this.chargeState % 3) + 4);
+      this.style.setProperty('--charge-state', ((this.chargeState % 3) + 4).toString());
     }
   }
 }

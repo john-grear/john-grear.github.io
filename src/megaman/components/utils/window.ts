@@ -1,5 +1,5 @@
-import CollisionObject from '../classes/collision-object.js';
-import MegaMan from '../classes/mega-man.js';
+import CollisionObject from '../classes/collision-object';
+import MegaMan from '../classes/mega-man';
 
 export default class Window {
   static top = 0;
@@ -16,7 +16,11 @@ export default class Window {
    * @param {MegaMan} megaMan
    * @param {CollisionObject[]} collisionObjects
    */
-  static resize(collisionDistance, megaMan = null, collisionObjects = []) {
+  static resize(
+    collisionDistance: number,
+    megaMan: MegaMan,
+    collisionObjects: CollisionObject[] = []
+  ) {
     Window.top = 0;
     Window.bottom = window.innerHeight + scrollY - collisionDistance;
     Window.left = 0;
@@ -46,7 +50,12 @@ export default class Window {
    * @param {DOMRect} bounds
    * @returns {boolean}
    */
-  static isOffScreen(bounds) {
+  static isOffScreen(bounds: {
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  }): boolean {
     console.log(bounds);
     return (
       bounds.left < Window.left ||

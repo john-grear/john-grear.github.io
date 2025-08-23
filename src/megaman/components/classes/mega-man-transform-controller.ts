@@ -1,5 +1,21 @@
+import MegaManAnimationController from './mega-man-animation-controller';
+
 export default class MegaManTransformController {
   direction = 1; // Left = -1, right = 1
+
+  element: HTMLElement;
+
+  animationController: MegaManAnimationController;
+
+  bounds: { left: number; right: number; top: number; bottom: number } = {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  };
+
+  spawnCoordinates: { x: number; y: number } = { x: 0, y: 0 };
+  coords: { x: number; y: number } = { x: 0, y: 0 };
 
   static left = -1;
   static right = -1;
@@ -11,7 +27,7 @@ export default class MegaManTransformController {
    * @param {Element} element
    * @param {animationController} animationController
    */
-  constructor(element, animationController) {
+  constructor(element: HTMLElement, animationController: MegaManAnimationController) {
     this.element = element;
     this.animationController = animationController;
     this.setSpawnCoords();
@@ -43,7 +59,7 @@ export default class MegaManTransformController {
    *
    * @param {number} deltaX
    */
-  updateX(deltaX) {
+  updateX(deltaX: number) {
     this.coords.x += deltaX;
 
     // Offset position by spawn area x-coordinate
@@ -55,7 +71,7 @@ export default class MegaManTransformController {
    *
    * @param {number} deltaY
    */
-  updateY(deltaY) {
+  updateY(deltaY: number) {
     this.coords.y += deltaY;
     this.animationController.updateY(this.coords.y);
   }
@@ -65,7 +81,7 @@ export default class MegaManTransformController {
    *
    * @param {boolean} leftPressed
    */
-  updateDirection(leftPressed) {
+  updateDirection(leftPressed: any) {
     this.direction = leftPressed ? -1 : 1;
     this.animationController.updateDirection(this.direction);
   }

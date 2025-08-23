@@ -1,12 +1,12 @@
-import { activeKeys } from '../utils/event-handler.js';
-import Time from '../utils/time.js';
-import Window from '../utils/window.js';
-import Bullet from './bullet.js';
-import CollisionObject from './collision-object.js';
-import DeathParticle from './death-particle.js';
-import MegaManAnimationController from './mega-man-animation-controller.js';
-import MegaManCollisionController from './mega-man-collision-controller.js';
-import MegaManTransformController from './mega-man-transform-controller.js';
+import { activeKeys } from '../utils/event-handler';
+import Time from '../utils/time';
+import Window from '../utils/window';
+import Bullet from './bullet';
+import CollisionObject from './collision-object';
+import DeathParticle from './death-particle';
+import MegaManAnimationController from './mega-man-animation-controller';
+import MegaManCollisionController from './mega-man-collision-controller';
+import MegaManTransformController from './mega-man-transform-controller';
 
 export default class MegaMan {
   // Spawn related variables
@@ -52,8 +52,27 @@ export default class MegaMan {
   // Collision related variables
   static collisionDistance = 10;
 
+  element: HTMLElement | null;
+  animationController: MegaManAnimationController;
+  transformController: MegaManTransformController;
+  collisionController: MegaManCollisionController;
+
+  top = 0;
+  bottom = 0;
+  left = 0;
+  right = 0;
+
+  bounds: { left: number; right: number; top: number; bottom: number } = {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  };
+
   constructor() {
     this.element = document.querySelector('.mega-man');
+
+    if (!this.element) throw Error('Mega Man not created.');
 
     // TODO: If element === null, find spawn area and create new .mega-man element
 
@@ -124,6 +143,8 @@ export default class MegaMan {
    * Disable functionality and visibility, spawn death particles, and set a timer to respawn
    */
   die() {
+    if (!this.element) return;
+
     // Disable functionality and visibility
     this.spawned = false;
     this.animationController.updateVisibility(true);
@@ -144,7 +165,7 @@ export default class MegaMan {
    *
    * @param {number} [newRespawnTime=0] - Respawn time to use instead of MegaMan.respawnTime
    */
-  setRespawnTimer(newRespawnTime = 0) {
+  setRespawnTimer(newRespawnTime: number = 0) {
     setTimeout(
       () => {
         if (Window.isOffScreen(this.bounds)) {
@@ -152,7 +173,7 @@ export default class MegaMan {
           return;
         }
 
-        this.moveToSpawnArea();
+        // this.moveToSpawnArea();
         this.collisionController.updateBounds();
         this.animationController.updateVisibility();
         this.spawn();
@@ -166,7 +187,7 @@ export default class MegaMan {
    *
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    */
-  update(collisionObjects = []) {
+  update(collisionObjects: CollisionObject[] = []) {
     // Check spawned
     if (!this.spawned) return;
 
@@ -193,7 +214,7 @@ export default class MegaMan {
    *
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    */
-  walk(collisionObjects) {
+  walk(collisionObjects: CollisionObject[]) {
     const leftPressed = activeKeys.left;
     const rightPressed = activeKeys.right;
     // Don't move if pressing either left or right or both left and right
@@ -222,7 +243,7 @@ export default class MegaMan {
     // Check in air and not jumping to enable falling
     if (!this.jumping && !this.collisionController.checkOnGround(collisionObjects)) {
       this.disableGravity();
-      this.enableFalling(true);
+      this.enableFalling();
     }
   }
 
@@ -231,7 +252,7 @@ export default class MegaMan {
    *
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    */
-  slide(collisionObjects) {
+  slide(collisionObjects: CollisionObject[]) {
     if (this.sliding) {
       this.updateSlide(collisionObjects);
     } else {
@@ -245,7 +266,7 @@ export default class MegaMan {
    *
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    */
-  triggerSlide(collisionObjects) {
+  triggerSlide(collisionObjects: CollisionObject[]) {
     this.unlockSlide();
 
     if (this.slideLocked) return;
@@ -267,7 +288,7 @@ export default class MegaMan {
    *
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    */
-  updateSlide(collisionObjects) {
+  updateSlide(collisionObjects: CollisionObject[]) {
     this.unlockSlide();
 
     // Increment slide time
@@ -293,7 +314,7 @@ export default class MegaMan {
     if (!this.collisionController.checkOnGround(collisionObjects)) {
       this.disableGravity();
       this.disableSlide();
-      this.enableFalling(true);
+      this.enableFalling();
       return;
     }
 
@@ -331,7 +352,7 @@ export default class MegaMan {
    *
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    */
-  jump(collisionObjects) {
+  jump(collisionObjects: CollisionObject[]) {
     if (!activeKeys.jump) {
       if (this.jumping) {
         this.jumping = false;
@@ -406,7 +427,7 @@ export default class MegaMan {
    *
    * @param {CollisionObject[]} [collisionObjects=[]] - Objects to collide with
    */
-  applyGravity(collisionObjects) {
+  applyGravity(collisionObjects: CollisionObject[]) {
     // Check not jumping or grounded
     if (this.jumping || this.grounded) return;
 
@@ -435,7 +456,7 @@ export default class MegaMan {
    * Update attack animation, shoot a bullet, and reset charge to prevent multiple charged shots
    */
   attack(force = false) {
-    if (this.sliding) return;
+    if (!this.element || this.sliding) return;
 
     // Stop charging
     this.charging = force;
@@ -489,6 +510,8 @@ export default class MegaMan {
    * Only to be used during resize event and constructor to prevent constant refresh of the document
    */
   updateBounds() {
+    if (!this.element) return;
+
     const rect = this.element.getBoundingClientRect();
     this.top = rect.top;
     this.bottom = rect.bottom;

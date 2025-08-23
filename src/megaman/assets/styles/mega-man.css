@@ -21,14 +21,13 @@
   /* Sprite Initialization */
   width: 32px;
   height: 32px;
-  visibility: hidden;
-  background-image: url("../images/megaman-animations.png");
+  /* visibility: hidden; */
+  background-image: url('../images/megaman-animations.png');
   background-position: 0 0;
   background-repeat: no-repeat;
 
   /* Position, Movement, and Scale */
-  transform: translate(var(--positionX), var(--positionY))
-    scale(calc(var(--direction) * 4), 4);
+  transform: translate(var(--positionX), var(--positionY)) scale(calc(var(--direction) * 4), 4);
   transform-origin: center;
   position: absolute;
 
@@ -37,7 +36,6 @@
 }
 
 /* Animation */
-
 .mega-man.spawn-animation-state {
   background-position: -0px -224px;
   animation: spawnAnimation 0.1s steps(1, end) infinite;
@@ -61,7 +59,8 @@
         (
             var(--idle-state) + var(--walk-state) + (var(--jump-state) * 10) +
               (var(--slide-state) * 12) + var(--attack-state)
-          ) * -32px
+          ) *
+          -32px
       )
       calc(var(--charge-state) * -32px);
   }
