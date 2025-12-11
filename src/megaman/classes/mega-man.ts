@@ -107,7 +107,11 @@ export default class MegaMan {
 
     const rect = spawnArea?.getBoundingClientRect();
 
-    const screenY = window.screenY + (rect?.top ?? 0);
+    const screenX = -this.bounds.left + (rect?.x ?? 0);
+    const screenY = window.screenY + (rect?.y ?? 0);
+
+    // Position above the spawn area
+    this.collisionController.updateHorizontalBounds(screenX);
 
     const updatePosition = () => {
       if (this.bounds.top < screenY) {
