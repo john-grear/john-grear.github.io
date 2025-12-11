@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div class="mega-man" />
+  <div class="mega-man"></div>
 </template>
 
 <style lang="css" scoped>
