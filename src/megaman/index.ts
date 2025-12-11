@@ -49,11 +49,9 @@ function markDivsAsGround() {
  * TODO: Change this later to default to all divs in document unless config section toggled
  */
 function findCollisionObjects() {
-  var groundTagElements = Array.from(document.getElementsByClassName('ground'));
+  var groundTagElements = Array.from(document.getElementsByClassName('ground')) as HTMLElement[];
 
-  groundTagElements.forEach((element) =>
-    collisionObjects.push(new CollisionObject(element as HTMLElement))
-  );
+  groundTagElements.forEach((element) => collisionObjects.push(new CollisionObject(element)));
 }
 
 markDivsAsGround();

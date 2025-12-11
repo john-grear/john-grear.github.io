@@ -5,7 +5,7 @@
   /* Sprite Initialization */
   width: 32px;
   height: 32px;
-  background-image: url("../images/megaman-animations.png");
+  background-image: url('../images/megaman-animations.png');
   background-position: 0px -256px;
   background-repeat: no-repeat;
 

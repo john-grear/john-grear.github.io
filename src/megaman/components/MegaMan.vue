@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { onMounted } from 'vue';
 
-  onMounted(() => import('@/megaman/components/index'));
+  onMounted(() => import('@/megaman/index'));
 </script>
 
 <template>

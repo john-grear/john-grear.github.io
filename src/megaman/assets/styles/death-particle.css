@@ -13,11 +13,14 @@
   --positionX: 0px;
   --positionY: 0px;
 
+  --deathParticleBackgroundPositionX: -96px;
+  --deathParticleBackgroundPositionY: -224px;
+
   /* Sprite Initialization */
   width: 32px;
   height: 32px;
-  background-image: url("../images/megaman-animations.png");
-  background-position: -96px -224px;
+  background-image: url('../images/megaman-animations.png');
+  background-position: --deathParticleBackgroundPositionX --deathParticleBackgroundPositionY;
   background-repeat: no-repeat;
 
   /* Position, Movement, and Scale */
@@ -33,22 +36,22 @@
 
 @keyframes spread {
   0% {
-    background-position: -96px -224px;
+    --deathParticleBackgroundPositionX: -96px;
   }
 
   20% {
-    background-position: -128px -224px;
+    --deathParticleBackgroundPositionX: -128px;
   }
 
   40% {
-    background-position: -160px -224px;
+    --deathParticleBackgroundPositionX: -160px;
   }
 
   60% {
-    background-position: -192px -224px;
+    --deathParticleBackgroundPositionX: -192px;
   }
 
   80% {
-    background-position: -224px -224px;
+    --deathParticleBackgroundPositionX: -224px;
   }
 }

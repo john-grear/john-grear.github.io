@@ -37,7 +37,7 @@ export default class MegaManAnimationController {
   /**
    * Initialize the base animation state and default states to 0
    *
-   * @param {Element} element
+   * @param {HTMLElement} element
    */
   constructor(element: HTMLElement) {
     this.element = element;
@@ -56,7 +56,7 @@ export default class MegaManAnimationController {
    *
    * @param {number} xCoordinate
    */
-  updateX(xCoordinate: any) {
+  updateX(xCoordinate: number) {
     this.style.setProperty('--positionX', `${xCoordinate}px`);
   }
 
@@ -65,7 +65,7 @@ export default class MegaManAnimationController {
    *
    * @param {number} yCoordinate
    */
-  updateY(yCoordinate: any) {
+  updateY(yCoordinate: number) {
     this.style.setProperty('--positionY', `${yCoordinate}px`);
   }
 
@@ -92,7 +92,7 @@ export default class MegaManAnimationController {
    *
    * @param {Function} onComplete - Callback function executed after the spawn animation completes
    */
-  enableSpawn(onComplete: any) {
+  enableSpawn(onComplete: () => void) {
     if (this.activeStates.spawn) return;
 
     this.activeStates.spawn = true;
@@ -108,7 +108,7 @@ export default class MegaManAnimationController {
    *
    * @param {Function} onComplete - Callback function executed after the spawn animation completes
    */
-  updateSpawn(onComplete: any) {
+  updateSpawn(onComplete: () => void) {
     const adjustedSpawnState =
       Math.floor(this.spawnState / MegaManAnimationController.spawnFramePause) + 1;
     this.style.setProperty('--spawn-state', adjustedSpawnState.toString()); // 1 - 2
@@ -130,7 +130,7 @@ export default class MegaManAnimationController {
     this.activeStates.spawn = false;
     this.enableBase();
 
-    if (onComplete) onComplete();
+    onComplete();
   }
 
   /**
@@ -356,9 +356,8 @@ export default class MegaManAnimationController {
    * then reset to 0. Display a 3 frame animation for both min and max charge states
    *
    * @param {number} charge - Value to determine correct charge state
-   * @returns {void}
    */
-  updateCharge(charge: number = 0): void {
+  updateCharge(charge: number = 0) {
     if (charge === 0) {
       this.chargeState = 0;
       this.element.style.setProperty('--charge-state', '0');

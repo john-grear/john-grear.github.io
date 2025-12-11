@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import MegaMan from '@/megaman/components/MegaMan.vue';
+
   import { ref } from 'vue';
 
   import ghostbustersSocksJpg from '@/assets/images/ghostbusters-socks.png';
@@ -16,6 +18,8 @@
 <template>
   <Header header="About Me" subheader="Who Am I?" />
 
+  <MegaMan />
+
   <CustomCard>
     <p>
       I am always looking to broaden my horizons and strive to be a better person and software
@@ -32,6 +36,8 @@
       Man and Kirby's Adventure.
     </p>
   </CustomCard>
+
+  <div class="spawn size-30 -me-100 -mb-3 border-2 border-blue-600" />
 
   <CustomCard>
     <p>

@@ -1,12 +1,13 @@
 import { activeKeys } from '../utils/event-handler';
 import Time from '../utils/time';
 import Window from '../utils/window';
+import MegaManAnimationController from './animation-controller';
+import Bounds from './bounds';
 import Bullet from './bullet';
+import MegaManCollisionController from './collision-controller';
 import CollisionObject from './collision-object';
 import DeathParticle from './death-particle';
-import MegaManAnimationController from './mega-man-animation-controller';
-import MegaManCollisionController from './mega-man-collision-controller';
-import MegaManTransformController from './mega-man-transform-controller';
+import MegaManTransformController from './transform-controller';
 
 export default class MegaMan {
   // Spawn related variables
@@ -57,24 +58,12 @@ export default class MegaMan {
   transformController: MegaManTransformController;
   collisionController: MegaManCollisionController;
 
-  top = 0;
-  bottom = 0;
-  left = 0;
-  right = 0;
-
-  bounds: { left: number; right: number; top: number; bottom: number } = {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  };
+  bounds: Bounds = new Bounds();
 
   constructor() {
     this.element = document.querySelector('.mega-man');
 
     if (!this.element) throw Error('Mega Man not created.');
-
-    // TODO: If element === null, find spawn area and create new .mega-man element
 
     this.animationController = new MegaManAnimationController(this.element);
 
@@ -85,6 +74,7 @@ export default class MegaMan {
 
     this.collisionController = new MegaManCollisionController(
       this.element,
+      this.bounds,
       this.transformController
     );
     this.collisionController.updateBounds();
@@ -113,15 +103,20 @@ export default class MegaMan {
    * then update the spawn animation until time is up, and disable spawn animation
    */
   spawn() {
-    // TODO: Change this from 0 to a spawn area system in a config
+    const spawnArea = document.querySelector('.spawn');
+
+    const rect = spawnArea?.getBoundingClientRect();
+
+    const screenY = window.screenY + (rect?.top ?? 0);
+
     const updatePosition = () => {
-      if (this.coords.y < 0) {
+      if (this.bounds.top < screenY) {
         // Drop into place
         this.collisionController.updateVerticalBounds(MegaMan.spawnSpeed);
         requestAnimationFrame(updatePosition);
       } else {
         // Adjust position to 0
-        this.collisionController.updateVerticalBounds(-this.coords.y);
+        this.collisionController.updateVerticalBounds(0);
         this.triggerSpawnAnimation();
       }
     };
@@ -467,7 +462,7 @@ export default class MegaMan {
     this.animationController.updateAttack();
 
     // Spawn bullet
-    new Bullet(this.charge, this.direction, this.element.getBoundingClientRect());
+    new Bullet(this.charge, this.direction, this.bounds);
 
     this.charge = 0;
   }
@@ -502,20 +497,5 @@ export default class MegaMan {
     this.charge += MegaMan.chargeRate * deltaTime;
 
     this.animationController.updateCharge(this.charge);
-  }
-
-  /**
-   * Update position in global context for use with collisions
-   *
-   * Only to be used during resize event and constructor to prevent constant refresh of the document
-   */
-  updateBounds() {
-    if (!this.element) return;
-
-    const rect = this.element.getBoundingClientRect();
-    this.top = rect.top;
-    this.bottom = rect.bottom;
-    this.left = rect.left;
-    this.right = rect.right;
   }
 }

@@ -1,3 +1,4 @@
+import Bounds from '../classes/bounds';
 import CollisionObject from '../classes/collision-object';
 import MegaMan from '../classes/mega-man';
 
@@ -31,7 +32,7 @@ export default class Window {
     // Apply gravity if originally standing on bottom that has moved
     if (!megaMan) return;
 
-    megaMan.updateBounds();
+    megaMan.bounds.update(megaMan.element);
 
     if (!megaMan.spawned) return;
 
@@ -50,13 +51,7 @@ export default class Window {
    * @param {DOMRect} bounds
    * @returns {boolean}
    */
-  static isOffScreen(bounds: {
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-  }): boolean {
-    console.log(bounds);
+  static isOffScreen(bounds: Bounds): boolean {
     return (
       bounds.left < Window.left ||
       bounds.right > Window.right ||

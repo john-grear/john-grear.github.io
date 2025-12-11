@@ -1,4 +1,4 @@
-import MegaManAnimationController from './mega-man-animation-controller';
+import MegaManAnimationController from './animation-controller';
 
 export default class MegaManTransformController {
   direction = 1; // Left = -1, right = 1
@@ -6,13 +6,6 @@ export default class MegaManTransformController {
   element: HTMLElement;
 
   animationController: MegaManAnimationController;
-
-  bounds: { left: number; right: number; top: number; bottom: number } = {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  };
 
   spawnCoordinates: { x: number; y: number } = { x: 0, y: 0 };
   coords: { x: number; y: number } = { x: 0, y: 0 };
@@ -81,7 +74,7 @@ export default class MegaManTransformController {
    *
    * @param {boolean} leftPressed
    */
-  updateDirection(leftPressed: any) {
+  updateDirection(leftPressed: boolean) {
     this.direction = leftPressed ? -1 : 1;
     this.animationController.updateDirection(this.direction);
   }

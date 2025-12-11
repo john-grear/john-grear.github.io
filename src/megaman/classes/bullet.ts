@@ -1,10 +1,11 @@
+import Bounds from './bounds';
 import MegaMan from './mega-man';
 
 export default class Bullet {
   charge = 0;
   direction = 1;
   position = 0;
-  boundingClientRect: DOMRect | undefined = undefined; // Mega Man bounds
+  megaManBounds: Bounds | undefined = undefined;
   element: HTMLDivElement | undefined = undefined;
 
   static list: Bullet[] = [];
@@ -18,7 +19,7 @@ export default class Bullet {
   static rightOffset = 0;
   static leftOffset = -32;
 
-  constructor(charge: number, direction: number, boundingClientRect: DOMRect) {
+  constructor(charge: number, direction: number, bounds: Bounds) {
     // If too many bullets or shooting too quickly, do nothing
     if (!Bullet.canSpawn()) return;
 
@@ -27,7 +28,7 @@ export default class Bullet {
 
     this.charge = charge;
     this.direction = direction;
-    this.boundingClientRect = boundingClientRect;
+    this.megaManBounds = bounds;
 
     this.createHtmlElement();
 
@@ -58,21 +59,21 @@ export default class Bullet {
    * Flip and position the bullet based on Mega Man flippped state and position
    */
   setPosition() {
-    if (!this.element || !this.boundingClientRect) return;
+    if (!this.element || !this.megaManBounds) return;
 
     this.element.style.setProperty('--direction', this.direction.toString());
 
     // Get the spawn area's position
     const spawnArea = document.querySelector('.spawn');
 
-    if (!spawnArea) return;
+    // if (!spawnArea) return;
 
-    const spawnAreaRect = spawnArea.getBoundingClientRect();
+    const spawnAreaRect = spawnArea?.getBoundingClientRect() ?? new Bounds();
 
     // Calculate position relative to the spawn area and offset from each side of Mega Man
-    const relativeTop = this.boundingClientRect.top - spawnAreaRect.top + Bullet.topOffset;
-    const relativeLeft = this.boundingClientRect.left - spawnAreaRect.left + Bullet.leftOffset;
-    const relativeRight = this.boundingClientRect.right - spawnAreaRect.left + Bullet.rightOffset;
+    const relativeTop = this.megaManBounds.top - spawnAreaRect.top + Bullet.topOffset;
+    const relativeLeft = this.megaManBounds.left - spawnAreaRect.left + Bullet.leftOffset;
+    const relativeRight = this.megaManBounds.right - spawnAreaRect.left + Bullet.rightOffset;
 
     // Position bullet
     this.element.style.top = `${relativeTop}px`;
