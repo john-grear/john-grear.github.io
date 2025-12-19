@@ -63,17 +63,10 @@ export default class Bullet {
 
     this.element.style.setProperty('--direction', this.direction.toString());
 
-    // Get the spawn area's position
-    const spawnArea = document.querySelector('.spawn');
-
-    // if (!spawnArea) return;
-
-    const spawnAreaRect = spawnArea?.getBoundingClientRect() ?? new Bounds();
-
     // Calculate position relative to the spawn area and offset from each side of Mega Man
-    const relativeTop = this.megaManBounds.top - spawnAreaRect.top + Bullet.topOffset;
-    const relativeLeft = this.megaManBounds.left - spawnAreaRect.left + Bullet.leftOffset;
-    const relativeRight = this.megaManBounds.right - spawnAreaRect.left + Bullet.rightOffset;
+    const relativeTop = this.megaManBounds.top + Bullet.topOffset;
+    const relativeLeft = this.megaManBounds.left + Bullet.leftOffset;
+    const relativeRight = this.megaManBounds.right + Bullet.rightOffset;
 
     // Position bullet
     this.element.style.top = `${relativeTop}px`;
