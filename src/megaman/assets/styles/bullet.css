@@ -1,0 +1,59 @@
+.bullet {
+  --position: 0px;
+  --direction: 1;
+
+  --bulletBackgroundPositionX: 0px;
+  --bulletBackgroundPositionY: -256px;
+
+  /* Sprite Initialization */
+  width: 32px;
+  height: 32px;
+  background-image: url('../images/megaman-animations.png');
+  background-position: var(--bulletBackgroundPositionX) var(--bulletBackgroundPositionY);
+  background-repeat: no-repeat;
+
+  z-index: 1000 !important;
+
+  /* Position, Movement, and Scale */
+  position: absolute !important;
+  transform: translateX(var(--position)) scale(calc(var(--direction) * 4), 4);
+  transform-origin: center;
+}
+
+.bullet.low-charge {
+  animation: lowChargeBullet 0.25s steps(1, end) infinite;
+  animation-fill-mode: forwards;
+}
+
+@keyframes lowChargeBullet {
+  0% {
+    --bulletBackgroundPositionX: -32px;
+  }
+
+  50% {
+    --bulletBackgroundPositionX: -64px;
+  }
+}
+
+.bullet.max-charge {
+  animation: maxChargeBullet 0.25s steps(1, end) infinite;
+  animation-fill-mode: forwards;
+}
+
+@keyframes maxChargeBullet {
+  0% {
+    --bulletBackgroundPositionX: -96px;
+  }
+
+  25% {
+    --bulletBackgroundPositionX: -128px;
+  }
+
+  50% {
+    --bulletBackgroundPositionX: -160px;
+  }
+
+  75% {
+    --bulletBackgroundPositionX: -192px;
+  }
+}

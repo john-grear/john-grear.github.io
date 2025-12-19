@@ -1,0 +1,63 @@
+import Bullet from './classes/bullet';
+import CollisionObject from './classes/collision-object';
+import DeathParticle from './classes/death-particle';
+import MegaMan from './classes/mega-man';
+import './utils/event-handler';
+import Time from './utils/time';
+import Window from './utils/window';
+
+export const megaMan = new MegaMan();
+export const collisionObjects: CollisionObject[] = [];
+
+/**
+ * Run the whole interactive every frame
+ */
+function gameLoop() {
+  // Update delta time to be used in other classes
+  Time.update();
+
+  // Handle all functionality for Mega Man
+  megaMan.update(collisionObjects);
+
+  // Handle all bullet movement
+  Bullet.list.forEach((bullet: Bullet) => {
+    bullet.update();
+  });
+
+  // Handle all death particle movement
+  DeathParticle.list.forEach((particle: DeathParticle) => {
+    particle.update();
+  });
+
+  requestAnimationFrame(gameLoop);
+}
+
+/**
+ * Finds all divs and adds the ground class to have them used as collision objects.
+ */
+function markDivsAsGround() {
+  const allDivs = document.getElementsByTagName('div');
+
+  for (const div of allDivs) {
+    div.classList.add('ground');
+  }
+}
+
+/**
+ * Find all elements tagged as ground and adds them as CollisionObject's to an array
+ *
+ * TODO: Change this later to default to all divs in document unless config section toggled
+ */
+function findCollisionObjects() {
+  var groundTagElements = Array.from(document.getElementsByClassName('ground')) as HTMLElement[];
+
+  groundTagElements.forEach((element) => collisionObjects.push(new CollisionObject(element)));
+}
+
+markDivsAsGround();
+
+findCollisionObjects();
+
+Window.resize(MegaMan.collisionDistance, megaMan);
+
+gameLoop();
