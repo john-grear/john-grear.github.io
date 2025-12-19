@@ -8,9 +8,9 @@
   import johnJpeg from '@/assets/images/john.jpeg';
 
   const links = [
-    { to: '/about', icon: 'pi pi-user', label: 'About Me' },
-    { to: '/education', icon: 'pi pi-graduation-cap', label: 'Education' },
-    { to: '/experience', icon: 'pi pi-briefcase', label: 'Experience' },
+    { to: 'about', icon: 'pi pi-user', label: 'About Me' },
+    { to: 'education', icon: 'pi pi-graduation-cap', label: 'Education' },
+    { to: 'experience', icon: 'pi pi-briefcase', label: 'Experience' },
     { to: '/resume', icon: 'pi pi-file-arrow-up', label: 'Resume', click: () => openResume() },
   ];
 
@@ -43,7 +43,7 @@
         if (link.click) {
           link.click();
         } else {
-          router.push(link.to);
+          router.push({ name: link.to });
         }
       },
     }))
@@ -85,7 +85,7 @@
         <RouterLink
           v-for="link in links"
           :key="link.to"
-          :to="!link.click ? link.to : ''"
+          :to="!link.click ? { name: link.to } : ''"
           class="p-button p-component font-bold"
           :class="{ 'p-button-text': !isCurrentRoute(link.to) }"
           @click="link.click"

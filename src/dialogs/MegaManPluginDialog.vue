@@ -38,7 +38,11 @@
         pixels based on an algorithm using CSS variables.
       </p>
 
-      <p>You can see this in action on the <a href="/about">About Me</a> page.</p>
+      <p>
+        You can see this in action on the
+        <router-link :to="{ name: 'about' }" @click="() => dialog?.close()">About Me</router-link>
+        page.
+      </p>
     </SimpleCard>
   </DialogCard>
 </template>
