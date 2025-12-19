@@ -30,7 +30,7 @@
 
   <div class="flex w-[40%] justify-center">
     <img :src="megamanGIF" alt="Mega Man 5" class="w-full max-w-2xl !rounded-xl" />
-    <div class="spawn size-30 absolute -mb-3 self-end border-2 border-blue-600" />
+    <div class="spawn size-30 absolute -mb-3 self-end" />
   </div>
 
   <CustomCard>
