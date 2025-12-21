@@ -14,7 +14,7 @@ export default class MegaMan {
   spawned = false;
 
   static spawnSpeed = 15;
-  static respawnTime = 10000; // Time (ms) to respawn after dying
+  static respawnTime = 5000; // Time (ms) to respawn after dying
 
   // Walk related variables
   walking = false;
@@ -112,6 +112,13 @@ export default class MegaMan {
 
     // Position above the spawn area
     this.collisionController.updateHorizontalBounds(screenX);
+    this.collisionController.updateVerticalBounds(-this.bounds.top);
+
+    // Enable spawn animation
+    this.animationController.enableSpawn();
+
+    // Show megaman again
+    this.animationController.updateVisibility();
 
     const updatePosition = () => {
       if (this.bounds.top < screenY) {
@@ -133,7 +140,7 @@ export default class MegaMan {
    * It should be called after Mega Man has reached the correct spawn position
    */
   triggerSpawnAnimation() {
-    this.animationController.enableSpawn(() => {
+    this.animationController.updateSpawn(() => {
       this.spawned = true;
     });
   }
@@ -161,24 +168,22 @@ export default class MegaMan {
   /**
    * Set timer to respawn Mega Man, checking if Mega Man can fit on screen before spawning
    * If still off screen, reattempt every 0.5 second after that
+   * TODO: Detect window resizing / moving and restart timer.
    *
-   * @param {number} [newRespawnTime=0] - Respawn time to use instead of MegaMan.respawnTime
+   * @param {number} [newRespawnTime=MegaMan.respawnTime] - Respawn time to use.
    */
-  setRespawnTimer(newRespawnTime: number = 0) {
-    setTimeout(
-      () => {
-        if (Window.isOffScreen(this.bounds)) {
-          this.setRespawnTimer(500);
-          return;
-        }
+  setRespawnTimer(newRespawnTime: number = MegaMan.respawnTime) {
+    setTimeout(() => {
+      if (Window.isOffScreen(this.bounds)) {
+        this.setRespawnTimer(500);
+        return;
+      }
 
-        // this.moveToSpawnArea();
-        this.collisionController.updateBounds();
-        this.animationController.updateVisibility();
-        this.spawn();
-      },
-      newRespawnTime === 0 ? MegaMan.respawnTime : newRespawnTime
-    );
+      // this.moveToSpawnArea();
+      this.collisionController.updateBounds();
+      this.animationController.updateVisibility();
+      this.spawn();
+    }, newRespawnTime);
   }
 
   /**
