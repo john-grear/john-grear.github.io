@@ -88,19 +88,15 @@ export default class MegaManAnimationController {
   }
 
   /**
-   * Enable spawn animation state and initiate the spawn sequence
-   *
-   * @param {Function} onComplete - Callback function executed after the spawn animation completes
+   * Enable spawn animation state.
    */
-  enableSpawn(onComplete: () => void) {
+  enableSpawn() {
     if (this.activeStates.spawn) return;
 
     this.activeStates.spawn = true;
     this.spawnState = 0;
     this.element.classList.add('spawn-animation-state');
     this.element.classList.remove('base-animation-state');
-
-    this.updateSpawn(onComplete);
   }
 
   /**

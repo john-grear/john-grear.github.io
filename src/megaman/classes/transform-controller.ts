@@ -11,7 +11,7 @@ export default class MegaManTransformController {
   coords: { x: number; y: number } = { x: 0, y: 0 };
 
   static left = -1;
-  static right = -1;
+  static right = 1;
 
   /**
    * Sets the default coordinates to the spawn area coordinates with a higher y value to allow

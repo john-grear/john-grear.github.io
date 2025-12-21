@@ -3,6 +3,12 @@
   --positionY: 0px;
   --direction: 1;
 
+  --spawnAnimationStartPositionX: 0px;
+  --spawnAnimationStartPositionY: -224px;
+
+  --backgroundPositionX: var(--spawnAnimationStartPositionX);
+  --backgroundPositionY: var(--spawnAnimationStartPositionY);
+
   /* 0 (idle), 1 (blink) */
   --idle-state: 0;
   /* 0 (idle), 1 - 2 (spawning) */
@@ -23,7 +29,7 @@
   height: 32px;
   visibility: hidden;
   background-image: url('../images/megaman-animations.png');
-  background-position: 0 0;
+  background-position: var(--backgroundPositionX) var(--backgroundPositionY);
   background-repeat: no-repeat;
 
   /* Position, Movement, and Scale */
@@ -37,7 +43,9 @@
 
 /* Animation */
 .mega-man.spawn-animation-state {
-  background-position: -0px -224px;
+  --backgroundPositionX: var(--spawnAnimationStartPositionX);
+  --backgroundPositionY: var(--spawnAnimationStartPositionY);
+
   animation: spawnAnimation 0.1s steps(1, end) infinite;
 }
 
@@ -48,20 +56,21 @@
 }
 
 .mega-man.base-animation-state {
-  background-position: 0 0;
+  --backgroundPositionX: 0px;
+  --backgroundPositionY: 0px;
+
   animation: baseAnimation 0.1s steps(1, end) infinite;
-  animation-fill-mode: forwards;
 }
 
 @keyframes baseAnimation {
   0% {
-    background-position: calc(
-        (
-            var(--idle-state) + var(--walk-state) + (var(--jump-state) * 10) +
-              (var(--slide-state) * 12) + var(--attack-state)
-          ) *
-          -32px
-      )
-      calc(var(--charge-state) * -32px);
+    --backgroundPositionX: calc(
+      (
+          var(--idle-state) + var(--walk-state) + (var(--jump-state) * 10) +
+            (var(--slide-state) * 12) + var(--attack-state)
+        ) *
+        -32px
+    );
+    --backgroundPositionY: calc(var(--charge-state) * -32px);
   }
 }
