@@ -5,7 +5,7 @@
   import { onMounted, onUnmounted, ref } from 'vue';
   import { RouterLink } from 'vue-router';
 
-  import johnJpeg from '@/assets/images/john.jpeg';
+  import johnJpeg from '@/assets/images/john.jpg';
 
   const links = [
     { to: 'about', icon: 'pi pi-user', label: 'About Me' },
@@ -77,6 +77,7 @@
         :pt="{
           image: { class: '!rounded-full' },
         }"
+        draggable="false"
       />
     </template>
 
