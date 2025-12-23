@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import MegaMan from '@/megaman/components/MegaMan.vue';
+  import Spawn from '@/megaman/components/Spawn.vue';
 
   import { ref } from 'vue';
 
@@ -28,9 +29,9 @@
     </p>
   </CustomCard>
 
-  <div class="flex w-[40%] justify-center">
+  <div class="passable flex w-[40%] justify-center">
     <img :src="megamanGIF" alt="Mega Man 5" class="w-full max-w-2xl !rounded-xl" />
-    <div class="spawn size-30 absolute -mb-3 self-end" />
+    <Spawn class="size-30 absolute -mb-3 self-end" />
   </div>
 
   <CustomCard>
@@ -56,7 +57,7 @@
     </p>
   </CustomCard>
 
-  <div class="relative mt-5 flex items-center justify-center gap-[-6rem]">
+  <div class="passable relative mt-5 flex items-center justify-center gap-[-6rem]">
     <SockImageButton
       :src="spidermanSocksJpg"
       alt="Spiderman Socks"

@@ -39,8 +39,33 @@ function markDivsAsGround() {
   const allDivs = document.getElementsByTagName('div');
 
   for (const div of allDivs) {
+    if (!checkValidGround(div)) continue;
+
     div.classList.add('ground');
   }
+}
+
+/**
+ * Checks if the div element is considered valid ground or not.
+ *
+ * @param div - Div element to check.
+ * @returns `true` if the div element is considered valid ground, otherwise `false`.
+ */
+function checkValidGround(div: HTMLDivElement) {
+  const style = window.getComputedStyle(div);
+  const rect = div.getBoundingClientRect();
+
+  // Explicit opt-outs always win
+  if (div.classList.contains('passable')) return false;
+
+  // Not visually present
+  if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0')
+    return false;
+
+  // Has no physical presence
+  if (rect.width === 0 || rect.height === 0) return false;
+
+  return true;
 }
 
 /**
