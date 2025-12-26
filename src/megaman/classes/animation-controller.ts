@@ -148,11 +148,11 @@ export default class MegaManAnimationController {
    * `idle` to true and calling `updateIdle`.
    */
   triggerIdle() {
-    if (this.checkNotIdle()) return;
+    if (this.checkNotIdle() || this.idle) return;
 
     this.idle = true;
 
-    requestAnimationFrame(() => this.updateIdle());
+    this.updateIdle();
   }
 
   /**
@@ -250,7 +250,7 @@ export default class MegaManAnimationController {
     if (this.activeStates.jump || this.activeStates.slide) {
       this.style.setProperty('--walk-state', '0');
       this.walkState = -MegaManAnimationController.kneeBendFrameLength;
-      if (!this.idle) this.updateIdle();
+      this.triggerIdle();
       return;
     }
 
@@ -267,7 +267,7 @@ export default class MegaManAnimationController {
       } else {
         this.style.setProperty('--walk-state', '0');
         this.walkState = -MegaManAnimationController.kneeBendFrameLength;
-        this.updateIdle();
+        this.triggerIdle();
       }
       return;
     }
@@ -294,7 +294,7 @@ export default class MegaManAnimationController {
 
     if (disable) {
       this.style.setProperty('--jump-state', '0');
-      if (!this.idle) this.updateIdle();
+      this.triggerIdle();
       return;
     }
 
@@ -312,7 +312,7 @@ export default class MegaManAnimationController {
 
     if (disable) {
       this.style.setProperty('--slide-state', '0');
-      if (!this.idle) this.updateIdle();
+      this.triggerIdle();
       return;
     }
 
@@ -331,7 +331,7 @@ export default class MegaManAnimationController {
     if (disable) {
       this.style.setProperty('--attack-state', '0');
       this.updateCharge(0);
-      if (!this.idle) this.updateIdle();
+      this.triggerIdle();
       return;
     }
 
@@ -357,7 +357,7 @@ export default class MegaManAnimationController {
     if (charge === 0) {
       this.chargeState = 0;
       this.element.style.setProperty('--charge-state', '0');
-      if (!this.idle) this.updateIdle();
+      this.triggerIdle();
       return;
     }
 
