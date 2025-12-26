@@ -7,7 +7,7 @@
   onUnmounted(stop);
 
   // Stop spacebar from scrolling page
-  window.addEventListener('keydown', function (e) {
+  window.addEventListener('keydown', (e) => {
     // Check if the pressed key is the spacebar
     if (e.key !== ' ') return;
 
