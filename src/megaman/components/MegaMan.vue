@@ -1,7 +1,10 @@
 <script setup lang="ts">
-  import { onMounted } from 'vue';
+  import { start, stop } from '@/megaman/index';
 
-  onMounted(() => import('@/megaman/index'));
+  import { onMounted, onUnmounted } from 'vue';
+
+  onMounted(start);
+  onUnmounted(stop);
 </script>
 
 <template>

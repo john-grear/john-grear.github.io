@@ -6,13 +6,46 @@ import './utils/event-handler';
 import Time from './utils/time';
 import Window from './utils/window';
 
-export const megaMan = new MegaMan();
-export const collisionObjects: CollisionObject[] = [];
+export let megaMan: MegaMan;
+export let collisionObjects: CollisionObject[];
+
+let running = false;
+
+/**
+ * Starts the megaman game loop and all other necessary startup steps.
+ */
+export function start() {
+  megaMan = new MegaMan();
+  collisionObjects = [];
+
+  markDivsAsGround();
+
+  findCollisionObjects();
+
+  Window.resize(MegaMan.collisionDistance, megaMan);
+
+  running = true;
+
+  gameLoop();
+}
+
+/**
+ * Stops the megaman game loop and clears all cache lists.
+ */
+export function stop() {
+  running = false;
+
+  Bullet.deleteAll();
+
+  DeathParticle.deleteAll();
+}
 
 /**
  * Run the whole interactive every frame
  */
 function gameLoop() {
+  if (!running) return;
+
   // Update delta time to be used in other classes
   Time.update();
 
@@ -78,11 +111,3 @@ function findCollisionObjects() {
 
   groundTagElements.forEach((element) => collisionObjects.push(new CollisionObject(element)));
 }
-
-markDivsAsGround();
-
-findCollisionObjects();
-
-Window.resize(MegaMan.collisionDistance, megaMan);
-
-gameLoop();

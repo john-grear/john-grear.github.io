@@ -112,6 +112,17 @@ export default class Bullet {
   }
 
   /**
+   * Deletes all bullets in the static list by first deleting the elements then clearing the list.
+   *
+   * NOTE: Does not use the delete function since the list is splicing too soon and leaves strand
+   * bullets occasionally.
+   */
+  static deleteAll() {
+    Bullet.list.forEach((bullet: Bullet) => bullet.element?.remove());
+    Bullet.list = [];
+  }
+
+  /**
    * Check to ensure not too many bullets are spawned and bullets are spaced out
    *
    * @returns {boolean}

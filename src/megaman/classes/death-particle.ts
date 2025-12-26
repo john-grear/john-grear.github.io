@@ -153,4 +153,15 @@ export default class DeathParticle {
     this.element.remove();
     DeathParticle.list.splice(DeathParticle.list.indexOf(this), 1);
   }
+
+  /**
+   * Deletes all death particles in the static list by first deleting the elements then clearing the list.
+   *
+   * NOTE: Does not use the delete function since the list is splicing too soon and leaves strand
+   * death particles occasionally.
+   */
+  static deleteAll() {
+    DeathParticle.list.forEach((particle: DeathParticle) => particle.element?.remove());
+    DeathParticle.list = [];
+  }
 }
