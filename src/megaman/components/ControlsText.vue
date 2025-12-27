@@ -31,7 +31,7 @@
    * Detects the first game-related key press to hide the controls text, then stops listening.
    */
   const detectInput = (e: KeyboardEvent) => {
-    if (!allKeys.includes(e.key)) return;
+    if (!allKeys.includes(e.key.toLowerCase())) return;
 
     hideControlsText();
   };

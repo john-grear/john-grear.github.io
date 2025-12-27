@@ -3,17 +3,17 @@ import { collisionObjects, megaMan } from '../index';
 import Window from './window';
 
 export const allKeys = [
-  'ArrowUp',
-  'ArrowDown',
-  'ArrowLeft',
-  'ArrowRight',
+  'arrowup',
+  'arrowdown',
+  'arrowleft',
+  'arrowright',
   'w',
   'a',
   's',
   'd',
   ' ',
   'z',
-  'Shift',
+  'shift',
   'x',
 ];
 
@@ -37,20 +37,20 @@ function resetActiveKeys() {
 document.addEventListener('keydown', (event) => {
   if (activeKeys.contextMenu) return;
 
-  switch (event.key) {
-    case 'ArrowUp':
+  switch (event.key.toLowerCase()) {
+    case 'arrowup':
     case 'w':
       activeKeys.up = true;
       break;
-    case 'ArrowDown':
+    case 'arrowdown':
     case 's':
       activeKeys.down = true;
       break;
-    case 'ArrowLeft':
+    case 'arrowleft':
     case 'a':
       activeKeys.left = true;
       break;
-    case 'ArrowRight':
+    case 'arrowright':
     case 'd':
       activeKeys.right = true;
       break;
@@ -61,7 +61,7 @@ document.addEventListener('keydown', (event) => {
     case 'z':
       activeKeys.jump = true;
       break;
-    case 'Shift':
+    case 'shift':
     case 'x':
       activeKeys.attack = true;
       break;
@@ -71,20 +71,20 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener('keyup', (event) => {
   if (activeKeys.contextMenu) return;
 
-  switch (event.key) {
-    case 'ArrowUp':
+  switch (event.key.toLowerCase()) {
+    case 'arrowup':
     case 'w':
       activeKeys.up = false;
       break;
-    case 'ArrowDown':
+    case 'arrowdown':
     case 's':
       activeKeys.down = false;
       break;
-    case 'ArrowLeft':
+    case 'arrowleft':
     case 'a':
       activeKeys.left = false;
       break;
-    case 'ArrowRight':
+    case 'arrowright':
     case 'd':
       activeKeys.right = false;
       break;
@@ -92,7 +92,7 @@ document.addEventListener('keyup', (event) => {
     case 'z':
       activeKeys.jump = false;
       break;
-    case 'Shift':
+    case 'shift':
     case 'x':
       activeKeys.attack = false;
       break;
