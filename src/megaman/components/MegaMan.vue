@@ -5,7 +5,9 @@
 
   // Slow down the start function to let styling position everything first
   // Removing RAF's breaks the positioning of everything except MegaMan
-  onMounted(requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(start))));
+  onMounted(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(start)));
+  });
 
   onUnmounted(stop);
 
