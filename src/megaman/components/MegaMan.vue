@@ -3,7 +3,10 @@
 
   import { onMounted, onUnmounted } from 'vue';
 
-  onMounted(start);
+  // Slow down the start function to let styling position everything first
+  // Removing RAF's breaks the positioning of everything except MegaMan
+  onMounted(requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(start))));
+
   onUnmounted(stop);
 
   // Stop spacebar from scrolling page

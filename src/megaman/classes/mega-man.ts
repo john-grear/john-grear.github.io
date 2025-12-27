@@ -13,7 +13,7 @@ export default class MegaMan {
   // Spawn related variables
   spawned = false;
 
-  static spawnSpeed = 15;
+  static spawnSpeed = 12;
   static respawnTime = 5000; // Time (ms) to respawn after dying
 
   // Walk related variables
@@ -54,6 +54,8 @@ export default class MegaMan {
   static collisionDistance = 10;
 
   element: HTMLElement | null;
+  spawnElement: HTMLElement | null;
+
   animationController: MegaManAnimationController;
   transformController: MegaManTransformController;
   collisionController: MegaManCollisionController;
@@ -62,8 +64,10 @@ export default class MegaMan {
 
   constructor() {
     this.element = document.querySelector('.mega-man');
+    this.spawnElement = document.querySelector('.spawn');
 
     if (!this.element) throw Error('Mega Man not created.');
+    if (!this.spawnElement) throw Error('No spawn point to spawn Mega Man.');
 
     this.animationController = new MegaManAnimationController(this.element);
 
@@ -77,6 +81,7 @@ export default class MegaMan {
       this.bounds,
       this.transformController
     );
+
     this.collisionController.updateBounds();
 
     this.animationController.updateVisibility();
@@ -103,16 +108,14 @@ export default class MegaMan {
    * then update the spawn animation until time is up, and disable spawn animation
    */
   spawn() {
-    const spawnArea = document.querySelector('.spawn');
+    const rect = this.spawnElement!.getBoundingClientRect();
 
-    const rect = spawnArea?.getBoundingClientRect();
-
-    const screenX = -this.bounds.left + (rect?.x ?? 0);
-    const screenY = window.screenY + (rect?.y ?? 0);
+    const screenX = -this.bounds.left + rect.x;
+    const screenY = window.screenY + rect.bottom;
 
     // Position above the spawn area
     this.collisionController.updateHorizontalBounds(screenX);
-    this.collisionController.updateVerticalBounds(-this.bounds.top);
+    this.collisionController.updateVerticalBounds(-this.bounds.bottom);
 
     // Enable spawn animation
     this.animationController.enableSpawn();
@@ -121,18 +124,16 @@ export default class MegaMan {
     this.animationController.updateVisibility();
 
     const updatePosition = () => {
-      if (this.bounds.top < screenY) {
+      if (this.bounds.bottom < screenY) {
         // Drop into place
         this.collisionController.updateVerticalBounds(MegaMan.spawnSpeed);
         requestAnimationFrame(updatePosition);
       } else {
-        // Adjust position to 0
-        this.collisionController.updateVerticalBounds(0);
         this.triggerSpawnAnimation();
       }
     };
 
-    updatePosition();
+    requestAnimationFrame(updatePosition);
   }
 
   /**
