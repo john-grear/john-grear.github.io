@@ -1,10 +1,14 @@
 <script setup lang="ts">
   import { allKeys } from '@/megaman/utils/event-handler';
 
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
+
+  import ControlsModal from './ControlsModal.vue';
 
   const visible = ref(true);
   const disappearing = ref(false);
+
+  const showControls = ref(false);
 
   /**
    * Hides the controls text, then disables all related event listeners.
@@ -40,14 +44,32 @@
   document.addEventListener('mousedown', detectScroll);
 
   window.addEventListener('keydown', detectInput);
+
+  const watchControlsModal = watch(showControls, () => {
+    hideControlsText();
+    watchControlsModal.stop();
+  });
+
+  // Show controls modal
+  window.addEventListener('keydown', (e) => {
+    // Check if the pressed key is escape
+    if (e.key !== 'Escape') return;
+
+    showControls.value = !showControls.value;
+
+    e.preventDefault();
+  });
 </script>
 
 <template>
-  <text
-    v-if="visible"
-    class="z-1000 fixed top-[40%] text-3xl font-bold opacity-100 transition-[0s]"
+  <div
+    v-if="visible && !showControls"
+    class="z-1000 fixed top-[40%] flex flex-col items-center opacity-100 transition-[0s]"
     :class="{ 'opacity-0! duration-1500!': disappearing }"
   >
-    Press WASD, Space, or Left Click to Start!
-  </text>
+    <text class="text-3xl font-bold">Press WASD to Start!</text>
+    <text class="text-sm"> Press escape to see all controls </text>
+  </div>
+
+  <ControlsModal v-model:open="showControls" />
 </template>
