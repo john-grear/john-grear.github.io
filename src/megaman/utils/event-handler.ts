@@ -2,6 +2,21 @@ import MegaMan from '../classes/mega-man';
 import { collisionObjects, megaMan } from '../index';
 import Window from './window';
 
+export const allKeys = [
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'w',
+  'a',
+  's',
+  'd',
+  ' ',
+  'z',
+  'Shift',
+  'x',
+];
+
 // Maintains keys being held down
 export const activeKeys = {
   up: false,

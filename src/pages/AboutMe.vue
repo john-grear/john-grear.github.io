@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import ControlsText from '@/megaman/components/ControlsText.vue';
   import MegaMan from '@/megaman/components/MegaMan.vue';
   import Spawn from '@/megaman/components/Spawn.vue';
 
@@ -19,6 +20,8 @@
 <template>
   <Header header="About Me" subheader="Who Am I?" />
 
+  <ControlsText />
+
   <MegaMan />
 
   <CustomCard>
@@ -30,7 +33,12 @@
   </CustomCard>
 
   <div class="passable flex w-[40%] justify-center">
-    <img :src="megamanGIF" alt="Mega Man 5" class="w-full max-w-2xl !rounded-xl" />
+    <img
+      :src="megamanGIF"
+      alt="Mega Man 5"
+      class="w-full max-w-2xl !rounded-xl"
+      draggable="false"
+    />
     <Spawn class="size-30 absolute -mb-3 self-end" />
   </div>
 
