@@ -59,7 +59,7 @@
 </script>
 
 <template>
-  <Menubar class="mb-25 h-15 sticky top-0 !w-full">
+  <Menubar class="mb-25 h-15 z-1000 sticky top-0 !w-full">
     <template #start>
       <RouterLink to="/" class="p-button p-component p-button-text font-bold">
         <i class="pi pi-address-book" />
