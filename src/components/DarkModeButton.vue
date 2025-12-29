@@ -21,15 +21,15 @@
 
   // On component mount, check for saved preference
   onMounted(() => {
-    const darkModeLastUsed = localStorage.getItem('theme') == 'dark';
+    const darkModeLastUsed = localStorage.getItem('theme') === 'dark';
     const darkThemePreference = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     if (darkThemePreference || darkModeLastUsed) {
       enableDarkMode();
-      setDarkModeSunIcon();
+      setDarkModeMoonIcon();
     } else {
       disableDarkMode();
-      setDarkModeMoonIcon();
+      setDarkModeSunIcon();
     }
   });
 </script>
