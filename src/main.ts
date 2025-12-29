@@ -1,6 +1,7 @@
 import '@/megaman/assets/styles/main.css';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+import { createPinia } from 'pinia';
 
 import { createApp } from 'vue';
 
@@ -15,6 +16,7 @@ import App from './App.vue';
 import { router } from './router';
 
 const app = createApp(App);
+const pinia = createPinia();
 
 const themePreset = definePreset(Aura, {
   semantic: {
@@ -48,4 +50,7 @@ app.use(PrimeVue, {
 app.use(DialogService);
 app.use(ToastService);
 app.use(router);
+
+app.use(pinia);
+
 app.mount('#app');

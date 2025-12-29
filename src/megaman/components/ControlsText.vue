@@ -1,14 +1,15 @@
 <script setup lang="ts">
+  import { useMenuStore } from '@/megaman/stores/menu';
   import { allKeys } from '@/megaman/utils/event-handler';
 
   import { ref, watch } from 'vue';
 
-  import ControlsModal from './ControlsModal.vue';
+  import ControlsModal from '../dialogs/PauseMenu.vue';
 
   const visible = ref(true);
   const disappearing = ref(false);
 
-  const showControls = ref(false);
+  const menu = useMenuStore();
 
   /**
    * Hides the controls text, then disables all related event listeners.
@@ -45,17 +46,20 @@
 
   window.addEventListener('keydown', detectInput);
 
-  const watchControlsModal = watch(showControls, () => {
-    hideControlsText();
-    watchControlsModal.stop();
-  });
+  const watchControlsModal = watch(
+    () => menu.isOpen,
+    () => {
+      hideControlsText();
+      watchControlsModal.stop();
+    }
+  );
 
   // Show controls modal
   window.addEventListener('keydown', (e) => {
     // Check if the pressed key is escape
     if (e.key !== 'Escape') return;
 
-    showControls.value = !showControls.value;
+    menu.toggle();
 
     e.preventDefault();
   });
@@ -63,7 +67,7 @@
 
 <template>
   <div
-    v-if="visible && !showControls"
+    v-if="visible && !menu.isOpen"
     class="z-1000 fixed top-[40%] flex flex-col items-center opacity-100 transition-[0s]"
     :class="{ 'opacity-0! duration-1500!': disappearing }"
   >
@@ -71,5 +75,5 @@
     <text class="text-sm"> Press escape to see all controls </text>
   </div>
 
-  <ControlsModal v-model:open="showControls" />
+  <ControlsModal />
 </template>

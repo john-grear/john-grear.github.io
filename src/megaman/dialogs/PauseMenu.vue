@@ -1,5 +1,18 @@
+<script setup lang="ts">
+  import { useMenuStore } from '@/megaman/stores/menu';
+
+  import ControlRow from '../components/ControlRow.vue';
+
+  const menu = useMenuStore();
+</script>
+
 <template>
-  <Dialog v-model:visible="open" modal :close-on-escape="false" class="bg-slate-900! w-[80%]">
+  <Dialog
+    v-model:visible="menu.isOpen"
+    modal
+    :close-on-escape="false"
+    class="bg-slate-900! w-[80%]"
+  >
     <template #header>
       <h2 class="text-2xl font-bold tracking-wide">Controls</h2>
     </template>
@@ -31,9 +44,3 @@
     </template>
   </Dialog>
 </template>
-
-<script setup lang="ts">
-  import ControlRow from './ControlRow.vue';
-
-  const open = defineModel<boolean>('open', { required: true });
-</script>

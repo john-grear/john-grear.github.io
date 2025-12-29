@@ -2,6 +2,7 @@ import Bullet from './classes/bullet';
 import CollisionObject from './classes/collision-object';
 import DeathParticle from './classes/death-particle';
 import MegaMan from './classes/mega-man';
+import { useMenuStore } from './stores/menu';
 import './utils/event-handler';
 import Time from './utils/time';
 import Window from './utils/window';
@@ -10,6 +11,8 @@ export let megaMan: MegaMan;
 export let collisionObjects: CollisionObject[];
 
 let running = false;
+
+const menu = useMenuStore();
 
 /**
  * Starts the megaman game loop and all other necessary startup steps.
@@ -44,10 +47,14 @@ export function stop() {
  * Run the whole interactive every frame
  */
 function gameLoop() {
-  if (!running) return;
-
   // Update delta time to be used in other classes
   Time.update();
+
+  // Skip game loop if not running or menu is open
+  if (!running || menu.isOpen) {
+    requestAnimationFrame(gameLoop);
+    return;
+  }
 
   // Handle all functionality for Mega Man
   megaMan.update(collisionObjects);
