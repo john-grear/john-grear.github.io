@@ -20,9 +20,8 @@
 
     setTimeout(() => (visible.value = false), 3000);
 
-    document.removeEventListener('scroll', detectScroll);
-    document.removeEventListener('mousedown', detectScroll);
-
+    window.removeEventListener('scroll', detectScroll);
+    window.removeEventListener('mousedown', detectScroll);
     window.removeEventListener('keydown', detectInput);
   };
 
@@ -42,9 +41,8 @@
     hideControlsText();
   };
 
-  document.addEventListener('scroll', detectScroll);
-  document.addEventListener('mousedown', detectScroll);
-
+  window.addEventListener('scroll', detectScroll);
+  window.addEventListener('mousedown', detectScroll);
   window.addEventListener('keydown', detectInput);
 
   const watchControlsModal = watch(

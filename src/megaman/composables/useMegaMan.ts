@@ -140,7 +140,6 @@ export const useMegaMan = () => {
       }
     };
 
-    console.log('spawning');
     requestAnimationFrame(updatePosition);
   };
 
@@ -406,9 +405,6 @@ export const useMegaMan = () => {
 
     charging.value = force;
     if (charge.value < minChargeValue && !force) return;
-
-    // TODO: Direction is always undefined because transform?.direction.value returns undefined every time??
-    console.log('shoot!', direction.value);
 
     if (direction.value === undefined) return;
 
