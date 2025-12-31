@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { useInput } from '@/megaman/composables/useInput';
   import { useMenuStore } from '@/megaman/stores/menu';
-  import { allKeys } from '@/megaman/utils/event-handler';
 
   import { ref, watch } from 'vue';
 
@@ -10,6 +10,7 @@
   const disappearing = ref(false);
 
   const menu = useMenuStore();
+  const { allKeys } = useInput();
 
   /**
    * Hides the controls text, then disables all related event listeners.

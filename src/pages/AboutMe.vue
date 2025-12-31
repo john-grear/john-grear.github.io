@@ -36,7 +36,7 @@
     <img
       :src="megamanGIF"
       alt="Mega Man 5"
-      class="w-full max-w-2xl !rounded-xl"
+      class="rounded-xl! w-full max-w-2xl"
       draggable="false"
     />
     <Spawn class="size-30 absolute -mb-3 self-end" />
@@ -83,7 +83,7 @@
     <SockImageButton
       :src="ghostbustersSocksJpg"
       alt="Ghostbusters Socks"
-      class="translate-y-4 rotate-[12deg]"
+      class="translate-y-4 rotate-12"
       @show-dialog="enableSocksDialog"
     />
   </div>

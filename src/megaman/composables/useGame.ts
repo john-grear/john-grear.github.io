@@ -1,52 +1,59 @@
-import Bullet from './classes/bullet';
-import CollisionObject from './classes/collision-object';
-import DeathParticle from './classes/death-particle';
-import MegaMan from './classes/mega-man';
-import { useMenuStore } from './stores/menu';
-import './utils/event-handler';
-import Time from './utils/time';
-import Window from './utils/window';
+import { ref } from 'vue';
 
-export let megaMan: MegaMan;
-export let collisionObjects: CollisionObject[];
+import { useMenuStore } from '../stores/menu';
+import { Bullets, useBullets } from './useBullet';
+import { useCollisionObjects } from './useCollisionObject';
+import { DeathParticles, useDeathParticles } from './useDeathParticle';
+import { useInput } from './useInput';
+import { MegaMan } from './useMegaMan';
+import { useTime } from './useTime';
+import { useWindow } from './useWindow';
 
 let running = false;
 
 const menu = useMenuStore();
 
+const megaMan = ref<MegaMan>();
+const bullets = ref<Bullets>();
+const deathParticles = ref<DeathParticles>();
+const collisionObjects = useCollisionObjects();
+
+const { resizeWindow } = useWindow();
+const Time = useTime();
+useInput();
+
 /**
  * Starts the megaman game loop and all other necessary startup steps.
  */
-export function start() {
-  megaMan = new MegaMan();
-  collisionObjects = [];
+const start = () => {
+  if (!megaMan || !bullets || !deathParticles) return;
 
   markDivsAsGround();
 
   findCollisionObjects();
 
-  Window.resize(MegaMan.collisionDistance, megaMan);
+  resizeWindow(megaMan.value!.collisionDistance);
 
   running = true;
 
   gameLoop();
-}
+};
 
 /**
  * Stops the megaman game loop and clears all cache lists.
  */
-export function stop() {
+const stop = () => {
   running = false;
 
-  Bullet.deleteAll();
+  bullets.value?.deleteAll();
 
-  DeathParticle.deleteAll();
-}
+  deathParticles.value?.deleteAll();
+};
 
 /**
  * Run the whole interactive every frame
  */
-function gameLoop() {
+const gameLoop = () => {
   // Update delta time to be used in other classes
   Time.update();
 
@@ -57,25 +64,21 @@ function gameLoop() {
   }
 
   // Handle all functionality for Mega Man
-  megaMan.update(collisionObjects);
+  megaMan.value!.update();
 
   // Handle all bullet movement
-  Bullet.list.forEach((bullet: Bullet) => {
-    bullet.update();
-  });
+  bullets.value!.updateAll();
 
   // Handle all death particle movement
-  DeathParticle.list.forEach((particle: DeathParticle) => {
-    particle.update();
-  });
+  deathParticles.value!.updateAll();
 
   requestAnimationFrame(gameLoop);
-}
+};
 
 /**
  * Finds all divs and adds the ground class to have them used as collision objects.
  */
-function markDivsAsGround() {
+const markDivsAsGround = () => {
   const allDivs = document.getElementsByTagName('div');
 
   for (const div of allDivs) {
@@ -83,7 +86,7 @@ function markDivsAsGround() {
 
     div.classList.add('ground');
   }
-}
+};
 
 /**
  * Checks if the div element is considered valid ground or not.
@@ -91,7 +94,7 @@ function markDivsAsGround() {
  * @param div - Div element to check.
  * @returns `true` if the div element is considered valid ground, otherwise `false`.
  */
-function checkValidGround(div: HTMLDivElement) {
+const checkValidGround = (div: HTMLDivElement) => {
   const style = window.getComputedStyle(div);
   const rect = div.getBoundingClientRect();
 
@@ -106,15 +109,23 @@ function checkValidGround(div: HTMLDivElement) {
   if (rect.width === 0 || rect.height === 0) return false;
 
   return true;
-}
+};
 
 /**
  * Find all elements tagged as ground and adds them as CollisionObject's to an array
  *
  * TODO: Change this later to default to all divs in document unless config section toggled
  */
-function findCollisionObjects() {
+const findCollisionObjects = () => {
   var groundTagElements = Array.from(document.getElementsByClassName('ground')) as HTMLElement[];
 
-  groundTagElements.forEach((element) => collisionObjects.push(new CollisionObject(element)));
-}
+  groundTagElements.forEach((element) => collisionObjects.createCollisionObject(element));
+};
+
+export const useGame = (player: MegaMan) => {
+  megaMan.value = player;
+  bullets.value = useBullets(megaMan.value.bounds);
+  deathParticles.value = useDeathParticles(megaMan.value.bounds);
+
+  return { start, stop };
+};
