@@ -36,20 +36,20 @@
     <img
       :src="megamanGIF"
       alt="Mega Man 5"
-      class="w-full max-w-2xl !rounded-xl"
+      class="rounded-xl! w-full max-w-2xl"
       draggable="false"
     />
     <Spawn class="size-30 absolute -mb-3 self-end" />
   </div>
 
-  <CustomCard>
+  <CustomCard class="ground">
     <p>
       My favorite video games are Minecraft, Hollow Knight, Neva, Pokemon, and NES games like Mega
       Man and Kirby's Adventure.
     </p>
   </CustomCard>
 
-  <CustomCard>
+  <CustomCard class="ground w-[70%]!">
     <p>
       I love cooking and trying foods from all over the world. Some of my favorite foods to cook are
       fettucine alfredo and breads of all kind (which I guess is also technically baking haha). I
@@ -83,7 +83,7 @@
     <SockImageButton
       :src="ghostbustersSocksJpg"
       alt="Ghostbusters Socks"
-      class="translate-y-4 rotate-[12deg]"
+      class="translate-y-4 rotate-12"
       @show-dialog="enableSocksDialog"
     />
   </div>

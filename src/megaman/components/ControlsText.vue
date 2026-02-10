@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { useInput } from '@/megaman/composables/useInput';
   import { useMenuStore } from '@/megaman/stores/menu';
-  import { allKeys } from '@/megaman/utils/event-handler';
 
   import { ref, watch } from 'vue';
 
@@ -10,6 +10,7 @@
   const disappearing = ref(false);
 
   const menu = useMenuStore();
+  const { allKeys } = useInput();
 
   /**
    * Hides the controls text, then disables all related event listeners.
@@ -19,9 +20,8 @@
 
     setTimeout(() => (visible.value = false), 3000);
 
-    document.removeEventListener('scroll', detectScroll);
-    document.removeEventListener('mousedown', detectScroll);
-
+    window.removeEventListener('scroll', detectScroll);
+    window.removeEventListener('mousedown', detectScroll);
     window.removeEventListener('keydown', detectInput);
   };
 
@@ -41,9 +41,8 @@
     hideControlsText();
   };
 
-  document.addEventListener('scroll', detectScroll);
-  document.addEventListener('mousedown', detectScroll);
-
+  window.addEventListener('scroll', detectScroll);
+  window.addEventListener('mousedown', detectScroll);
   window.addEventListener('keydown', detectInput);
 
   const watchControlsModal = watch(

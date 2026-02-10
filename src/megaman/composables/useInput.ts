@@ -1,8 +1,9 @@
-import MegaMan from '../classes/mega-man';
-import { collisionObjects, megaMan } from '../index';
-import Window from './window';
+import { reactive } from 'vue';
 
-export const allKeys = [
+/**
+ * All supported keys for MegaMan controls.
+ */
+const allKeys = [
   'arrowup',
   'arrowdown',
   'arrowleft',
@@ -17,8 +18,10 @@ export const allKeys = [
   'x',
 ];
 
-// Maintains keys being held down
-export const activeKeys = {
+/**
+ * Reactive object maintaining keys being held down.
+ */
+const activeKeys = reactive({
   up: false,
   down: false,
   left: false,
@@ -26,13 +29,26 @@ export const activeKeys = {
   jump: false,
   attack: false,
   contextMenu: false,
+});
+
+/**
+ * Reset all active keys to false.
+ */
+const resetActiveKeys = () => {
+  Object.keys(activeKeys).forEach((key) => {
+    (activeKeys as any)[key] = false;
+  });
 };
 
-function resetActiveKeys() {
-  for (const key in activeKeys) {
-    activeKeys[key as keyof typeof activeKeys] = false;
-  }
-}
+/**
+ * Prevent spacebar from scrolling the page.
+ */
+const preventSpacebarScroll = (event: KeyboardEvent) => {
+  if (event.target !== document.body) return;
+  event.preventDefault();
+};
+
+// --- Event listeners (registered once globally) ---
 
 document.addEventListener('keydown', (event) => {
   if (activeKeys.contextMenu) return;
@@ -99,40 +115,30 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
-window.addEventListener('resize', (_event) => {
-  resetActiveKeys();
-  Window.resize(MegaMan.collisionDistance, megaMan, collisionObjects);
-  resetActiveKeys();
-});
-
 document.addEventListener('mousedown', (event) => {
-  switch (event.button) {
-    case 0:
-      activeKeys.attack = true;
-      break;
-  }
+  if (event.button === 0) activeKeys.attack = true;
 });
 
 document.addEventListener('mouseup', (event) => {
-  switch (event.button) {
-    case 0:
-      activeKeys.attack = false;
-      break;
-  }
+  if (event.button === 0) activeKeys.attack = false;
 });
 
-// Stop input when right clicking for context menu
-document.addEventListener('contextmenu', (_event) => {
+document.addEventListener('contextmenu', () => {
   resetActiveKeys();
   activeKeys.contextMenu = true;
 });
 
-document.addEventListener('click', (_event) => {
+document.addEventListener('click', () => {
   activeKeys.contextMenu = false;
 });
 
-function preventSpacebarScroll(event: KeyboardEvent) {
-  if (event.target !== document.body) return;
-
-  event.preventDefault();
-}
+/**
+ * Composable exposing activeKeys and reset function.
+ */
+export const useInput = () => {
+  return {
+    activeKeys,
+    allKeys,
+    resetActiveKeys,
+  };
+};

@@ -1,13 +1,15 @@
 <script setup lang="ts">
-  import { start, stop } from '@/megaman/index';
+  import { useGame } from '@/megaman/composables/useGame';
 
   import { onMounted, onUnmounted } from 'vue';
+
+  const { start, stop } = useGame();
 
   // Slow down the start function to let styling position everything first
   // Removing RAF's breaks the positioning of everything except MegaMan
   // Only an issue because spawn is using margin instead of a fixed position from absolute and top
   onMounted(() => {
-    requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(start)));
+    setTimeout(start, 1);
   });
 
   onUnmounted(stop);
@@ -30,7 +32,7 @@
 </script>
 
 <template>
-  <div class="mega-man"></div>
+  <div id="mega-man" class="mega-man"></div>
 </template>
 
 <style lang="css" scoped>

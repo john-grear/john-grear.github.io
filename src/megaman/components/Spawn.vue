@@ -1,3 +1,3 @@
 <template>
-  <div v-bind="$attrs" class="spawn passable"></div>
+  <div v-bind="$attrs" id="spawn" class="spawn passable"></div>
 </template>
