@@ -35,7 +35,7 @@ const start = () => {
       'Could not start game. Mega man, bullets, or death particle composables not defined.'
     );
 
-  // markDivsAsGround();
+  markDivsAsGround();
 
   findCollisionObjects();
 
