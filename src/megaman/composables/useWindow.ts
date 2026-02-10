@@ -13,13 +13,14 @@ export const useWindow = () => {
   /**
    * Update the bounds for the Window as well as all objects in it to ensure collisions function correctly.
    *
-   * @param {number} collisionDistance - Distance to shrink bounds for collision detection.
+   * @param {number} horizontalCollisionDistance - Distance to shrink horizontal bounds for collision detection.
+   * @param {number} verticalCollisionDistance - Distance to shrink vertical bounds for collision detection.
    */
-  const resizeWindow = (collisionDistance: number) => {
+  const resizeWindow = (horizontalCollisionDistance: number, verticalCollisionDistance: number) => {
     windowBounds.top = 0;
-    windowBounds.bottom = window.innerHeight + scrollY - collisionDistance;
+    windowBounds.bottom = window.innerHeight + scrollY - verticalCollisionDistance;
     windowBounds.left = 0;
-    windowBounds.right = window.innerWidth + scrollX - collisionDistance;
+    windowBounds.right = window.innerWidth + scrollX - horizontalCollisionDistance;
 
     collisionObjects.list.forEach((object) => collisionObjects.update(object));
   };

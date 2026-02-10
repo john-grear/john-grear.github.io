@@ -42,14 +42,14 @@
     <Spawn class="size-30 absolute -mb-3 self-end" />
   </div>
 
-  <CustomCard>
+  <CustomCard class="ground">
     <p>
       My favorite video games are Minecraft, Hollow Knight, Neva, Pokemon, and NES games like Mega
       Man and Kirby's Adventure.
     </p>
   </CustomCard>
 
-  <CustomCard>
+  <CustomCard class="ground w-[70%]!">
     <p>
       I love cooking and trying foods from all over the world. Some of my favorite foods to cook are
       fettucine alfredo and breads of all kind (which I guess is also technically baking haha). I

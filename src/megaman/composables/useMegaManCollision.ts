@@ -1,6 +1,6 @@
 import { Bounds, useBounds } from './useBounds';
 import { CollisionObject, useCollisionObjects } from './useCollisionObject';
-import { collisionDistance } from './useMegaMan';
+import { horizontalCollisionDistance, verticalCollisionDistance } from './useMegaMan';
 import { MegaManTransform } from './useMegaManTransform';
 import { useWindow } from './useWindow';
 
@@ -23,30 +23,34 @@ export const useMegaManCollision = (
    * @returns {boolean}
    */
   const checkHorizontalCollision = (): boolean => {
-    const leftDistance = Math.abs(windowBounds.left - bounds.left);
-    const rightDistance = Math.abs(windowBounds.right - bounds.right);
+    // Window edges
+    const leftDistance = bounds.left - windowBounds.left;
+    const rightDistance = windowBounds.right - bounds.right;
+
     if (
-      (leftDistance <= collisionDistance && transform.direction.value === -1) ||
-      (rightDistance <= collisionDistance && transform.direction.value === 1)
+      (leftDistance <= horizontalCollisionDistance && !transform.isWalkingRight.value) ||
+      (rightDistance <= horizontalCollisionDistance && transform.isWalkingRight.value)
     ) {
       return true;
     }
 
+    // Collidable objects
     for (const object of collisionObjects.list) {
+      // Only consider objects that overlap vertically
       if (checkWithinVerticalBounds(object)) continue;
 
-      const objectLeft = object.bounds.bottom;
-      const objectRight = object.bounds.bottom;
-      const rightDistance = Math.abs(objectLeft - bounds.right);
-      const leftDistance = Math.abs(objectRight - bounds.left);
-      if (
-        (leftDistance > collisionDistance && transform.direction.value === -1) ||
-        (rightDistance > collisionDistance && transform.direction.value === 1)
-      ) {
-        continue;
-      }
+      const objectLeft = object.bounds.left;
+      const objectRight = object.bounds.right;
 
-      return true;
+      const distToLeft = Math.abs(bounds.right - objectLeft); // MegaMan → object’s left
+      const distToRight = Math.abs(objectRight - bounds.left); // MegaMan → object’s right
+
+      if (
+        (distToRight <= horizontalCollisionDistance && !transform.isWalkingRight.value) ||
+        (distToLeft <= horizontalCollisionDistance && transform.isWalkingRight.value)
+      ) {
+        return true;
+      }
     }
 
     return false;
@@ -59,7 +63,7 @@ export const useMegaManCollision = (
    */
   const checkHitCeiling = (): boolean => {
     const distance = Math.abs(windowBounds.top - bounds.top);
-    if (distance <= collisionDistance) return true;
+    if (distance <= verticalCollisionDistance) return true;
 
     for (const object of collisionObjects.list) {
       const objectBottom = object.bounds.bottom;
@@ -67,7 +71,7 @@ export const useMegaManCollision = (
       if (checkWithinHorizontalBounds(object)) continue;
 
       const distance = Math.abs(objectBottom - bounds.top);
-      if (distance > collisionDistance) continue;
+      if (distance > verticalCollisionDistance) continue;
 
       return true;
     }
@@ -82,7 +86,7 @@ export const useMegaManCollision = (
    */
   const checkOnGround = (): boolean => {
     const distance = Math.abs(windowBounds.bottom - bounds.bottom);
-    if (distance <= collisionDistance) {
+    if (distance <= verticalCollisionDistance) {
       return true;
     }
 
@@ -92,7 +96,7 @@ export const useMegaManCollision = (
       if (checkWithinHorizontalBounds(object)) continue;
 
       const distance = Math.abs(objectTop - bounds.bottom);
-      if (distance > collisionDistance) continue;
+      if (distance > verticalCollisionDistance) continue;
 
       updateVerticalBounds(distance);
       return true;
@@ -108,10 +112,12 @@ export const useMegaManCollision = (
    * @returns {boolean} - True if the object is within Mega Man's X bounds, false otherwise.
    */
   const checkWithinHorizontalBounds = (object: CollisionObject): boolean => {
-    const left = bounds.left + collisionDistance;
-    const right = bounds.right - collisionDistance;
+    const left = bounds.left + horizontalCollisionDistance;
+    const right = bounds.right - horizontalCollisionDistance;
+
     const objectLeft = object.bounds.left;
     const objectRight = object.bounds.right;
+
     return (right < objectLeft || left > objectRight) && (left < objectRight || right > objectLeft);
   };
 
@@ -122,10 +128,12 @@ export const useMegaManCollision = (
    * @returns {boolean} - True if the object is within Mega Man's Y bounds, otherwise false.
    */
   const checkWithinVerticalBounds = (object: CollisionObject): boolean => {
-    const top = bounds.top + collisionDistance;
-    const bottom = bounds.bottom - collisionDistance;
+    const top = bounds.top + verticalCollisionDistance;
+    const bottom = bounds.bottom - verticalCollisionDistance;
+
     const objectTop = object.bounds.top;
     const objectBottom = object.bounds.bottom;
+
     return (top < objectBottom || bottom > objectTop) && (bottom < objectTop || top > objectBottom);
   };
 

@@ -1,4 +1,4 @@
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 import { MegaManAnimation } from './useMegaManAnimation';
 
@@ -11,6 +11,8 @@ export const useMegaManTransform = (element: HTMLElement, animation: MegaManAnim
 
   const LEFT = -1;
   const RIGHT = 1;
+
+  const isWalkingRight = computed(() => direction.value === RIGHT);
 
   /**
    * Sets the default coordinates to the spawn area coordinates with a higher y value to allow
@@ -72,6 +74,7 @@ export const useMegaManTransform = (element: HTMLElement, animation: MegaManAnim
 
   return {
     direction,
+    isWalkingRight,
     spawnCoordinates,
     coords,
     LEFT,

@@ -1,4 +1,4 @@
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useBounds } from './useBounds';
 import { useBullets } from './useBullet';
@@ -31,7 +31,8 @@ export const lowChargeValue = 500;
 export const maxChargeValue = 1000;
 export const chargeIntervalRate = 20 / 1000;
 export const chargeRate = 2250;
-export const collisionDistance = 10;
+export const horizontalCollisionDistance = 5; // TODO: Trying to get this to be as small as possible so collisions are tighter
+export const verticalCollisionDistance = 10;
 
 export const useMegaMan = () => {
   // reactive state
@@ -48,45 +49,38 @@ export const useMegaMan = () => {
   const charge = ref(0);
   const charging = ref(false);
 
-  let element: HTMLElement | null;
-  let spawnElement: HTMLElement | null;
+  const element = ref<HTMLElement | null>();
+  const spawnElement = ref<HTMLElement | null>();
 
   const bounds = createBounds();
 
   const bullets = useBullets(bounds);
   const deathParticles = useDeathParticles(bounds);
 
-  let animation: MegaManAnimation;
-  let transform: MegaManTransform;
-  let collision: MegaManCollision;
+  // DOM elements
+  element.value = document.getElementById('mega-man') as HTMLElement | null;
+  spawnElement.value = document.getElementById('spawn') as HTMLElement | null;
 
-  onMounted(() => {
-    // DOM elements
-    element = document.getElementById('mega-man') as HTMLElement | null;
-    spawnElement = document.getElementById('spawn') as HTMLElement | null;
+  if (!element.value) throw Error('Mega Man not created.');
+  if (!spawnElement.value) throw Error('No spawn point to spawn Mega Man.');
 
-    if (!element) throw Error('Mega Man not created.');
-    if (!spawnElement) throw Error('No spawn point to spawn Mega Man.');
+  // controllers
+  const animation: MegaManAnimation = useMegaManAnimation(element.value);
+  const transform: MegaManTransform = useMegaManTransform(element.value, animation);
+  const collision: MegaManCollision = useMegaManCollision(element.value, bounds, transform);
 
-    // controllers
-    animation = useMegaManAnimation(element);
-    transform = useMegaManTransform(element, animation);
-    collision = useMegaManCollision(element, bounds, transform);
-
-    collision.updateCollisionBounds();
-    animation.updateVisibility();
-
-    // initialize
-    spawn();
-  });
+  animation.updateVisibility();
+  collision.updateCollisionBounds();
 
   window.addEventListener('resize', () => {
     resetActiveKeys();
 
-    resizeWindow(collisionDistance);
+    resizeWindow(horizontalCollisionDistance, verticalCollisionDistance);
+
+    if (!element.value) return;
 
     // Update bounds after window resize
-    updateBounds(element, bounds);
+    updateBounds(element.value, bounds);
 
     if (!spawned) return;
 
@@ -119,9 +113,9 @@ export const useMegaMan = () => {
    * then update the spawn animation until time is up, and disable spawn animation
    */
   const spawn = () => {
-    if (!spawnElement) throw Error('Cannot spawn Mega Man.');
+    if (!spawnElement.value) throw Error('Cannot spawn Mega Man.');
 
-    const rect = spawnElement.getBoundingClientRect();
+    const rect = spawnElement.value.getBoundingClientRect();
     const screenX = -bounds.left + rect.x;
     const screenY = window.screenY + rect.bottom;
 
@@ -449,7 +443,9 @@ export const useMegaMan = () => {
     lowChargeValue,
     minChargeValue,
     maxChargeValue,
-    collisionDistance,
+    horizontalCollisionDistance,
+    verticalCollisionDistance,
+    spawn,
     triggerSpawnAnimation,
     die,
     setRespawnTimer,

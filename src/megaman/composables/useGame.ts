@@ -5,7 +5,7 @@ import { Bullets, useBullets } from './useBullet';
 import { useCollisionObjects } from './useCollisionObject';
 import { DeathParticles, useDeathParticles } from './useDeathParticle';
 import { useInput } from './useInput';
-import { MegaMan } from './useMegaMan';
+import { MegaMan, useMegaMan } from './useMegaMan';
 import { useTime } from './useTime';
 import { useWindow } from './useWindow';
 
@@ -26,15 +26,24 @@ useInput();
  * Starts the megaman game loop and all other necessary startup steps.
  */
 const start = () => {
-  if (!megaMan || !bullets || !deathParticles) return;
+  megaMan.value = useMegaMan();
+  bullets.value = useBullets(megaMan.value.bounds);
+  deathParticles.value = useDeathParticles(megaMan.value.bounds);
 
-  markDivsAsGround();
+  if (!megaMan.value || !bullets.value || !deathParticles.value)
+    throw Error(
+      'Could not start game. Mega man, bullets, or death particle composables not defined.'
+    );
+
+  // markDivsAsGround();
 
   findCollisionObjects();
 
-  resizeWindow(megaMan.value!.collisionDistance);
+  resizeWindow(megaMan.value.horizontalCollisionDistance, megaMan.value.verticalCollisionDistance);
 
   running = true;
+
+  megaMan.value.spawn();
 
   gameLoop();
 };
@@ -64,13 +73,13 @@ const gameLoop = () => {
   }
 
   // Handle all functionality for Mega Man
-  megaMan.value!.update();
+  megaMan.value?.update();
 
   // Handle all bullet movement
-  bullets.value!.updateAll();
+  bullets.value?.updateAll();
 
   // Handle all death particle movement
-  deathParticles.value!.updateAll();
+  deathParticles.value?.updateAll();
 
   requestAnimationFrame(gameLoop);
 };
@@ -97,9 +106,10 @@ const markDivsAsGround = () => {
 const checkValidGround = (div: HTMLDivElement) => {
   const style = window.getComputedStyle(div);
   const rect = div.getBoundingClientRect();
+  const excludedClasses = new Set(['passable', 'spawn', 'mega-man']);
 
   // Explicit opt-outs always win
-  if (div.classList.contains('passable')) return false;
+  if (div.classList.values().some((divClass) => excludedClasses.has(divClass))) return false;
 
   // Not visually present
   if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0')
@@ -122,10 +132,6 @@ const findCollisionObjects = () => {
   groundTagElements.forEach((element) => collisionObjects.createCollisionObject(element));
 };
 
-export const useGame = (player: MegaMan) => {
-  megaMan.value = player;
-  bullets.value = useBullets(megaMan.value.bounds);
-  deathParticles.value = useDeathParticles(megaMan.value.bounds);
-
+export const useGame = () => {
   return { start, stop };
 };
