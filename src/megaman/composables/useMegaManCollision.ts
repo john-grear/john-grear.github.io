@@ -86,7 +86,9 @@ export const useMegaManCollision = (
    */
   const checkOnGround = (): boolean => {
     const distance = Math.abs(windowBounds.bottom - bounds.bottom);
+
     if (distance <= verticalCollisionDistance) {
+      updateVerticalBounds(distance);
       return true;
     }
 
