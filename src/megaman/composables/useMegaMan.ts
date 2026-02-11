@@ -245,7 +245,9 @@ export const useMegaMan = () => {
    */
   const triggerSlide = () => {
     unlockSlide();
+
     if (slideLocked.value) return;
+    if (collision.checkHorizontalCollision()) return;
 
     if (grounded.value && activeKeys.down && activeKeys.jump) {
       sliding.value = true;
