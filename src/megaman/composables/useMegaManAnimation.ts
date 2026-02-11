@@ -268,8 +268,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
       updateAttack(true);
     }
 
-    // updateWalk(true);
-    requestAnimationFrame(() => updateWalk(true));
+    updateWalk(true);
     style.setProperty('--slide-state', '1');
   };
 
