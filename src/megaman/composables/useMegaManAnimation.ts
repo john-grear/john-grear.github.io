@@ -213,7 +213,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
       if (walkState.value < 0) {
         style.setProperty('--walk-state', kneeBendFrame.toString());
         ++walkState.value;
-        requestAnimationFrame(() => updateWalk(true));
+        updateWalk(true);
       } else {
         style.setProperty('--walk-state', '0');
         walkState.value = -kneeBendFrameLength;
