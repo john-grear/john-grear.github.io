@@ -5,6 +5,8 @@ import { maxChargeValue, minChargeValue } from './useMegaMan';
 export type MegaManAnimation = ReturnType<typeof useMegaManAnimation>;
 
 export const useMegaManAnimation = (element: HTMLElement) => {
+  type StateType = 'idle' | 'spawn' | 'walk' | 'jump' | 'attack' | 'climb' | 'slide' | 'charge';
+
   const style = element.style;
 
   const idle = ref(false);
@@ -24,16 +26,34 @@ export const useMegaManAnimation = (element: HTMLElement) => {
 
   const attackTimeout = ref<NodeJS.Timeout | null>();
 
-  // constants
+  // Idle Constants
   const maxIdleState = 150;
   const maxIdleFrames = 10;
+
+  // Spawn Constants
   const maxSpawnState = 20;
   const spawnFramePause = 10;
+
+  // Walk Constants
   const maxWalkState = 30;
   const walkFramePause = 10;
   const kneeBendFrameLength = 5;
   const kneeBendFrame = 2;
+  const startWalkFrame = kneeBendFrame + 1;
+
+  // Jump Constants
+  const jumpFrame = 10;
+
+  // Attack Constants
   const attackAnimationTime = 250;
+  const jumpAndAttackFrame = 1;
+  const walkAndAttackFrame = 4;
+  const idleAttackFrame = 6;
+
+  // Slide Constants
+  const slideFrame = 12;
+
+  // Charge Constants
   const maxChargeState = 40;
 
   /**
@@ -91,7 +111,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
    */
   const updateSpawn = (onComplete: () => void) => {
     const adjustedSpawnState = Math.floor(spawnState.value / spawnFramePause) + 1;
-    style.setProperty('--spawn-state', adjustedSpawnState.toString()); // 1 - 2
+    updateStateStyle('spawn', adjustedSpawnState); // 1 - 2
 
     if (++spawnState.value > maxSpawnState) {
       completeSpawn(onComplete);
@@ -118,7 +138,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
    */
   const enableBase = () => {
     spawnState.value = 0;
-    style.setProperty('--spawn-state', '0');
+    updateStateStyle('spawn', 0);
     element.classList.remove('spawn-animation-state');
     element.classList.add('base-animation-state');
   };
@@ -168,26 +188,26 @@ export const useMegaManAnimation = (element: HTMLElement) => {
    */
   const disableIdle = () => {
     idle.value = false;
-    style.setProperty('--idle-state', '0');
+    updateStateStyle('idle', 0);
   };
 
   /**
    * Handle the initial idle animation (e.g., blinking) when idle time is reached.
    */
   const checkIdleTimeHasBeenReached = () => {
-    if (idleState.value === maxIdleState) {
-      style.setProperty('--idle-state', '1');
-    }
+    if (idleState.value !== maxIdleState) return;
+
+    updateStateStyle('idle', 1);
   };
 
   /**
    * Handle the completion of the idle animation cycle.
    */
   const checkIdleTimeHasBeenPassed = () => {
-    if (idleState.value >= maxIdleState + maxIdleFrames) {
-      idleState.value = 0;
-      style.setProperty('--idle-state', '0');
-    }
+    if (idleState.value < maxIdleState + maxIdleFrames) return;
+
+    idleState.value = 0;
+    updateStateStyle('idle', 0);
   };
 
   /**
@@ -199,7 +219,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     activeStates.walk = !disable;
 
     if (activeStates.jump || activeStates.slide) {
-      style.setProperty('--walk-state', '0');
+      updateStateStyle('walk', 0);
       walkState.value = -kneeBendFrameLength;
       triggerIdle();
       return;
@@ -211,11 +231,11 @@ export const useMegaManAnimation = (element: HTMLElement) => {
       }
 
       if (walkState.value < 0) {
-        style.setProperty('--walk-state', kneeBendFrame.toString());
+        updateStateStyle('walk', kneeBendFrame);
         ++walkState.value;
         updateWalk(true);
       } else {
-        style.setProperty('--walk-state', '0');
+        updateStateStyle('walk', 0);
         walkState.value = -kneeBendFrameLength;
         triggerIdle();
       }
@@ -223,14 +243,22 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     }
 
     if (walkState.value < 0) {
-      style.setProperty('--walk-state', kneeBendFrame.toString());
+      updateStateStyle('walk', kneeBendFrame);
       ++walkState.value;
     } else {
       const currentWalkFrame = Math.floor(walkState.value / walkFramePause);
-      style.setProperty('--walk-state', (currentWalkFrame + 3).toString());
+
+      if (attackTimeout.value) {
+        updateStateStyle('attack', walkAndAttackFrame); // Walking + attacking
+      }
+
+      updateStateStyle('walk', currentWalkFrame + startWalkFrame);
+
       walkState.value = (walkState.value + 1) % maxWalkState;
     }
-  }; /**
+  };
+
+  /**
    * Update the jump state property. Stop walking before displaying jump animation
    *
    * @param {boolean} disable - Forcibly sets property to 0 if true
@@ -239,13 +267,13 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     activeStates.jump = !disable;
 
     if (disable) {
-      style.setProperty('--jump-state', '0');
+      updateStateStyle('jump', 0);
       triggerIdle();
       return;
     }
 
     updateWalk(true);
-    style.setProperty('--jump-state', '1');
+    updateStateStyle('jump', jumpFrame);
   };
 
   /**
@@ -257,7 +285,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     activeStates.slide = !disable;
 
     if (disable) {
-      style.setProperty('--slide-state', '0');
+      updateStateStyle('slide', 0);
       triggerIdle();
       return;
     }
@@ -269,7 +297,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     }
 
     updateWalk(true);
-    style.setProperty('--slide-state', '1');
+    updateStateStyle('slide', slideFrame);
   };
 
   /**
@@ -282,18 +310,18 @@ export const useMegaManAnimation = (element: HTMLElement) => {
 
     if (disable) {
       attackTimeout.value = null;
-      style.setProperty('--attack-state', '0');
+      updateStateStyle('attack', 0);
       updateCharge(0);
       triggerIdle();
       return;
     }
 
     if (activeStates.jump) {
-      style.setProperty('--attack-state', '1'); // Jumping + attacking
+      updateStateStyle('attack', jumpAndAttackFrame); // Jumping + attacking
     } else if (activeStates.walk) {
-      style.setProperty('--attack-state', '4'); // Walking + attacking
+      updateStateStyle('attack', walkAndAttackFrame); // Walking + attacking
     } else {
-      style.setProperty('--attack-state', '6'); // Idle, skip over knee bend and idle frames
+      updateStateStyle('attack', idleAttackFrame); // Idle, skip over knee bend and idle frames
     }
 
     // Wait before disabling attack and charge animations
@@ -309,7 +337,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
   const updateCharge = (charge: number = 0) => {
     if (charge === 0) {
       chargeState.value = 0;
-      style.setProperty('--charge-state', '0');
+      updateStateStyle('charge', 0);
       triggerIdle();
       return;
     }
@@ -319,10 +347,22 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     chargeState.value = (chargeState.value + 1) % maxChargeState;
 
     if (charge < maxChargeValue) {
-      style.setProperty('--charge-state', ((chargeState.value % 3) + 1).toString());
+      const nonMaxChargeState = (chargeState.value % 3) + 1;
+      updateStateStyle('charge', nonMaxChargeState);
     } else {
-      style.setProperty('--charge-state', ((chargeState.value % 3) + 4).toString());
+      const maxChargeState = (chargeState.value % 3) + 4;
+      updateStateStyle('charge', maxChargeState);
     }
+  };
+
+  /**
+   * Updates the requested state style with the provided value.
+   *
+   * @param type - Type of state to update.
+   * @param value - Number of frames to update the state.
+   */
+  const updateStateStyle = (type: StateType, value: number) => {
+    style.setProperty(`--${type}-state`, value.toString());
   };
 
   // Initialize spawn state

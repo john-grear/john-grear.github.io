@@ -66,8 +66,8 @@
   0% {
     --backgroundPositionX: calc(
       (
-          var(--idle-state) + var(--walk-state) + (var(--jump-state) * 10) +
-            (var(--slide-state) * 12) + var(--attack-state)
+          var(--idle-state) + var(--walk-state) + var(--jump-state) + var(--slide-state) +
+            var(--attack-state)
         ) *
         -32px
     );
