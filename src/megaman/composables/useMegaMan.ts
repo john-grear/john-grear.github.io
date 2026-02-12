@@ -50,6 +50,7 @@ export const useMegaMan = () => {
   const charging = ref(false);
 
   const element = ref<HTMLElement | null>();
+  const collisionBoxElement = ref<HTMLElement | null>();
   const spawnElement = ref<HTMLElement | null>();
 
   const bounds = createBounds();
@@ -59,15 +60,21 @@ export const useMegaMan = () => {
 
   // DOM elements
   element.value = document.getElementById('mega-man') as HTMLElement | null;
+  collisionBoxElement.value = document.getElementById('mega-man-collision') as HTMLElement | null;
   spawnElement.value = document.getElementById('spawn') as HTMLElement | null;
 
   if (!element.value) throw Error('Mega Man not created.');
+  if (!collisionBoxElement.value) throw Error('Mega Man collision box not created.');
   if (!spawnElement.value) throw Error('No spawn point to spawn Mega Man.');
 
   // controllers
   const animation: MegaManAnimation = useMegaManAnimation(element.value);
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);
-  const collision: MegaManCollision = useMegaManCollision(element.value, bounds, transform);
+  const collision: MegaManCollision = useMegaManCollision(
+    collisionBoxElement.value,
+    bounds,
+    transform
+  );
 
   animation.updateVisibility();
   collision.updateCollisionBounds();

@@ -268,12 +268,29 @@ export const useMegaManAnimation = (element: HTMLElement) => {
 
     if (disable) {
       updateStateStyle('jump', 0);
+      updateJumpCollisionBox(true);
       triggerIdle();
       return;
     }
 
     updateWalk(true);
     updateStateStyle('jump', jumpFrame);
+    updateJumpCollisionBox();
+  };
+
+  /**
+   * Updates the jump align items property to shift the collision box to the top of the
+   * mega man element when jumping and to the bottom when not.
+   *
+   * @param disable - Forcibly sets property to 'end' if true.
+   */
+  const updateJumpCollisionBox = (disable: boolean = false) => {
+    if (disable) {
+      style.setProperty('--jump-align-items', 'end');
+      return;
+    }
+
+    style.setProperty('--jump-align-items', 'start');
   };
 
   /**

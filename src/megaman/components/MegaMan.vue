@@ -9,7 +9,7 @@
   // Removing RAF's breaks the positioning of everything except MegaMan
   // Only an issue because spawn is using margin instead of a fixed position from absolute and top
   onMounted(() => {
-    setTimeout(start, 1);
+    setTimeout(start, 10);
   });
 
   onUnmounted(stop);
@@ -32,7 +32,9 @@
 </script>
 
 <template>
-  <div id="mega-man" class="mega-man"></div>
+  <div id="mega-man" class="mega-man">
+    <div id="mega-man-collision" class="mega-man-collision"></div>
+  </div>
 </template>
 
 <style lang="css" scoped>
