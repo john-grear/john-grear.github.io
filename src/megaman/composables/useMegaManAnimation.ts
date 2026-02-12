@@ -4,7 +4,7 @@ import { maxChargeValue, minChargeValue } from './useMegaMan';
 
 export type MegaManAnimation = ReturnType<typeof useMegaManAnimation>;
 
-export const useMegaManAnimation = (element: HTMLElement) => {
+export const useMegaManAnimation = (element: HTMLElement, collisionBoxElement: HTMLElement) => {
   type StateType = 'idle' | 'spawn' | 'walk' | 'jump' | 'attack' | 'climb' | 'slide' | 'charge';
 
   const style = element.style;
@@ -279,18 +279,18 @@ export const useMegaManAnimation = (element: HTMLElement) => {
   };
 
   /**
-   * Updates the jump align items property to shift the collision box to the top of the
+   * Sets / removes the 'jumping' attribute to shift the collision box to the top of the
    * mega man element when jumping and to the bottom when not.
    *
    * @param disable - Forcibly sets property to 'end' if true.
    */
   const updateJumpCollisionBox = (disable: boolean = false) => {
     if (disable) {
-      style.setProperty('--jump-align-items', 'end');
+      element.removeAttribute('jumping');
       return;
     }
 
-    style.setProperty('--jump-align-items', 'start');
+    element.setAttribute('jumping', '1');
   };
 
   /**
@@ -303,6 +303,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
 
     if (disable) {
       updateStateStyle('slide', 0);
+      updateSlideCollisionBox(true);
       triggerIdle();
       return;
     }
@@ -315,6 +316,22 @@ export const useMegaManAnimation = (element: HTMLElement) => {
 
     updateWalk(true);
     updateStateStyle('slide', slideFrame);
+    updateSlideCollisionBox();
+  };
+
+  /**
+   * Sets / removes the 'sliding' attribute to shrink the collision box to fit
+   * under shorter obstacles when sliding.
+   *
+   * @param disable - Forcibly sets property to 'end' if true.
+   */
+  const updateSlideCollisionBox = (disable: boolean = false) => {
+    if (disable) {
+      collisionBoxElement.removeAttribute('sliding');
+      return;
+    }
+
+    collisionBoxElement.setAttribute('sliding', '1');
   };
 
   /**
