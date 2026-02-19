@@ -22,7 +22,7 @@ export const useMegaManCollision = (
    * jittery jumps from distance comparisons.
    * @returns {boolean}
    */
-  const checkHorizontalCollision = (): boolean => {
+  const checkHorizontalCollision = (isAttemptingSlide?: boolean): boolean => {
     // Window edges
     const leftDistance = bounds.left - windowBounds.left;
     const rightDistance = windowBounds.right - bounds.right;
@@ -37,7 +37,7 @@ export const useMegaManCollision = (
     // Collidable objects
     for (const object of collisionObjects.list) {
       // Only consider objects that overlap vertically
-      if (checkWithinVerticalBounds(object)) continue;
+      if (checkWithinVerticalBounds(object, isAttemptingSlide)) continue;
 
       const objectLeft = object.bounds.left;
       const objectRight = object.bounds.right;
@@ -129,12 +129,20 @@ export const useMegaManCollision = (
    * @param {DOMRect} object - Bounding rectangle of the object to check.
    * @returns {boolean} - True if the object is within Mega Man's Y bounds, otherwise false.
    */
-  const checkWithinVerticalBounds = (object: CollisionObject): boolean => {
-    const top = bounds.top + verticalCollisionDistance;
+  const checkWithinVerticalBounds = (
+    object: CollisionObject,
+    isAttemptingSlide?: boolean
+  ): boolean => {
+    let top = bounds.top + verticalCollisionDistance;
     const bottom = bounds.bottom - verticalCollisionDistance;
 
     const objectTop = object.bounds.top;
     const objectBottom = object.bounds.bottom;
+
+    if (isAttemptingSlide) {
+      // TODO: Subtract some from top
+      top = top - verticalCollisionDistance;
+    }
 
     return (top < objectBottom || bottom > objectTop) && (bottom < objectTop || top > objectBottom);
   };

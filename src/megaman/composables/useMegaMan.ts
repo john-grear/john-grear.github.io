@@ -253,8 +253,7 @@ export const useMegaMan = () => {
   const triggerSlide = () => {
     unlockSlide();
 
-    if (slideLocked.value) return;
-    if (collision.checkHorizontalCollision()) return;
+    if (slideLocked.value || collision.checkHorizontalCollision(true)) return;
 
     if (grounded.value && activeKeys.down && activeKeys.jump) {
       sliding.value = true;
@@ -278,7 +277,7 @@ export const useMegaMan = () => {
       return;
     }
 
-    if (collision.checkHorizontalCollision()) {
+    if (collision.checkHorizontalCollision(true)) {
       disableSlide();
       return;
     }
@@ -317,6 +316,7 @@ export const useMegaMan = () => {
    * Reset slide conditions and animation
    */
   const disableSlide = () => {
+    // TODO: Check vertical collision to return early before disabling
     animation.updateSlide(true);
     sliding.value = false;
     slideTime.value = 0;
