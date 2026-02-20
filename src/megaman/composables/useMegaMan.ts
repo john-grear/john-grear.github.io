@@ -1,6 +1,5 @@
 import { computed, ref } from 'vue';
 
-import { useBounds } from './useBounds';
 import { useBullets } from './useBullet';
 import { useDeathParticles } from './useDeathParticle';
 import { useInput } from './useInput';
@@ -10,7 +9,6 @@ import { MegaManTransform, useMegaManTransform } from './useMegaManTransform';
 import { useTime } from './useTime';
 import { useWindow } from './useWindow';
 
-const { createBounds, updateBounds } = useBounds();
 const { activeKeys, resetActiveKeys } = useInput();
 const { deltaTime } = useTime();
 const { isOffScreen, resizeWindow } = useWindow();
@@ -50,24 +48,25 @@ export const useMegaMan = () => {
   const charging = ref(false);
 
   const element = ref<HTMLElement | null>();
+  const collisionBoxElement = ref<HTMLElement | null>();
   const spawnElement = ref<HTMLElement | null>();
-
-  const bounds = createBounds();
-
-  const bullets = useBullets(bounds);
-  const deathParticles = useDeathParticles(bounds);
 
   // DOM elements
   element.value = document.getElementById('mega-man') as HTMLElement | null;
+  collisionBoxElement.value = document.getElementById('mega-man-collision') as HTMLElement | null;
   spawnElement.value = document.getElementById('spawn') as HTMLElement | null;
 
   if (!element.value) throw Error('Mega Man not created.');
+  if (!collisionBoxElement.value) throw Error('Mega Man collision box not created.');
   if (!spawnElement.value) throw Error('No spawn point to spawn Mega Man.');
 
   // controllers
-  const animation: MegaManAnimation = useMegaManAnimation(element.value);
+  const animation: MegaManAnimation = useMegaManAnimation(element.value, collisionBoxElement.value);
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);
-  const collision: MegaManCollision = useMegaManCollision(element.value, bounds, transform);
+  const collision: MegaManCollision = useMegaManCollision(collisionBoxElement.value, transform);
+
+  const bullets = useBullets(collision.bounds.value);
+  const deathParticles = useDeathParticles(collision.bounds.value);
 
   animation.updateVisibility();
   collision.updateCollisionBounds();
@@ -80,14 +79,14 @@ export const useMegaMan = () => {
     if (!element.value) return;
 
     // Update bounds after window resize
-    updateBounds(element.value, bounds);
+    collision.updateCollisionBounds();
 
     if (!spawned) return;
 
     // Kill mega man if off screen, otherwise set into fall state
     // TODO: Need to check if there is even possible ground below him to stop him from falling forever
     // or have some form of death plane
-    if (isOffScreen(bounds)) {
+    if (isOffScreen(collision.bounds.value)) {
       die();
     } else {
       grounded.value = false;
@@ -116,7 +115,12 @@ export const useMegaMan = () => {
     if (!spawnElement.value) throw Error('Cannot spawn Mega Man.');
 
     const rect = spawnElement.value.getBoundingClientRect();
-    const screenX = -bounds.left + rect.x;
+    const spawnCenter = (rect.left + rect.right) / 2;
+
+    const bounds = collision.bounds.value;
+    const collisionCenterOffset = (bounds.left + bounds.right) / -2;
+
+    const screenX = collisionCenterOffset + spawnCenter;
     const screenY = window.screenY + rect.bottom;
 
     collision.updateHorizontalBounds(screenX);
@@ -168,7 +172,7 @@ export const useMegaMan = () => {
    */
   const setRespawnTimer = (newRespawnTime: number = respawnTime) => {
     setTimeout(() => {
-      if (isOffScreen(bounds)) {
+      if (isOffScreen(collision.bounds.value)) {
         setRespawnTimer(500);
         return;
       }
@@ -246,8 +250,7 @@ export const useMegaMan = () => {
   const triggerSlide = () => {
     unlockSlide();
 
-    if (slideLocked.value) return;
-    if (collision.checkHorizontalCollision()) return;
+    if (slideLocked.value || collision.checkHorizontalCollision(true)) return;
 
     if (grounded.value && activeKeys.down && activeKeys.jump) {
       sliding.value = true;
@@ -266,13 +269,35 @@ export const useMegaMan = () => {
     unlockSlide();
     slideTime.value += slideSpeed * deltaTime.value;
 
-    if (slideTime.value >= slideTimeLimit) {
-      disableSlide();
+    const isHittingCeiling = collision.checkHitCeiling();
+
+    // Disable slide when time limit passed and not locked into slide under ceiling
+    if (slideTime.value >= slideTimeLimit && !isHittingCeiling) {
+      disableSlide(isHittingCeiling);
       return;
     }
 
-    if (collision.checkHorizontalCollision()) {
-      disableSlide();
+    const leftPressed = activeKeys.left;
+    const rightPressed = activeKeys.right;
+
+    const changingLeft = transform.isWalkingRight.value && leftPressed;
+    const changingRight = !transform.isWalkingRight.value && rightPressed;
+    const changingDirection = changingLeft || changingRight;
+
+    // Disable slide when changing direction and not locked into a slide under ceiling
+    if (changingDirection && !isHittingCeiling) {
+      disableSlide(isHittingCeiling);
+      return;
+    }
+
+    // Only update direction when pressing a button
+    if (changingDirection) {
+      transform.updateDirection(leftPressed || !rightPressed);
+    }
+
+    // Disable slide when colliding
+    if (collision.checkHorizontalCollision(true)) {
+      disableSlide(isHittingCeiling);
       return;
     }
 
@@ -281,9 +306,10 @@ export const useMegaMan = () => {
     const velocity = slideSpeed * direction.value * deltaTime.value;
     collision.updateHorizontalBounds(velocity);
 
+    // Disable slide and start falling when no longer on ground
     if (!collision.checkOnGround()) {
       disableGravity();
-      disableSlide();
+      disableSlide(isHittingCeiling);
       enableFalling();
       return;
     }
@@ -309,7 +335,12 @@ export const useMegaMan = () => {
   /**
    * Reset slide conditions and animation
    */
-  const disableSlide = () => {
+  const disableSlide = (isHittingCeiling?: boolean) => {
+    // Checks ceiling collision param if recalculating with function is unnecessary
+    if (isHittingCeiling) return;
+
+    if (isHittingCeiling !== undefined && collision.checkHitCeiling()) return;
+
     animation.updateSlide(true);
     sliding.value = false;
     slideTime.value = 0;
@@ -325,10 +356,15 @@ export const useMegaMan = () => {
       return;
     }
 
+    const isHittingCeiling = collision.checkHitCeiling();
+
+    // Don't allow jumping when sliding with a ceiling above
+    if (sliding.value && isHittingCeiling) return;
+
     if (!jumping.value && jumpButtonReleased.value && grounded.value) enableJumping();
     if (!jumping.value && !grounded.value) return;
 
-    if (collision.checkHitCeiling() || jumpTime.value >= jumpTimeLimit) {
+    if (isHittingCeiling || jumpTime.value >= jumpTimeLimit) {
       jumping.value = false;
       return;
     }
@@ -405,7 +441,7 @@ export const useMegaMan = () => {
     if (direction.value === undefined) return;
 
     animation.updateAttack();
-    bullets.createBullet(charge.value, direction.value, bounds);
+    bullets.createBullet(charge.value, direction.value);
     charge.value = 0;
   };
 
@@ -432,7 +468,6 @@ export const useMegaMan = () => {
   };
 
   return {
-    bounds,
     spawned,
     walking,
     sliding,

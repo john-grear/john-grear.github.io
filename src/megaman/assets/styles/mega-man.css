@@ -1,4 +1,7 @@
 .mega-man {
+  --mega-man-width: 32px;
+  --mega-man-height: 32px;
+
   --positionX: 0px;
   --positionY: 0px;
   --direction: 1;
@@ -25,8 +28,8 @@
   --charge-state: 0;
 
   /* Sprite Initialization */
-  width: 32px;
-  height: 32px;
+  width: var(--mega-man-width);
+  height: var(--mega-man-height);
   visibility: hidden;
   background-image: url('../images/megaman-animations.png');
   background-position: var(--backgroundPositionX) var(--backgroundPositionY);
@@ -37,8 +40,23 @@
   transform-origin: center;
   position: absolute;
 
-  /* Just for visibility */
-  /* border: 1px solid red; */
+  /* Collision Box Alignment */
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.mega-man[jumping] {
+  align-items: start; /* Shifts collision box up when jumping */
+}
+
+.mega-man > .mega-man-collision {
+  width: calc(var(--mega-man-width) * 0.75);
+  height: calc(var(--mega-man-height) * 0.75);
+}
+
+.mega-man > .mega-man-collision[sliding] {
+  height: calc(var(--mega-man-height) * 0.65); /* Shortens collision box when sliding */
 }
 
 /* Animation */

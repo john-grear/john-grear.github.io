@@ -1,3 +1,5 @@
+import { ref } from 'vue';
+
 import { Bounds, useBounds } from './useBounds';
 import { CollisionObject, useCollisionObjects } from './useCollisionObject';
 import { horizontalCollisionDistance, verticalCollisionDistance } from './useMegaMan';
@@ -6,15 +8,13 @@ import { useWindow } from './useWindow';
 
 const collisionObjects = useCollisionObjects();
 const { windowBounds } = useWindow();
-const { updateBounds } = useBounds();
+const { createBounds, updateBounds } = useBounds();
 
 export type MegaManCollision = ReturnType<typeof useMegaManCollision>;
 
-export const useMegaManCollision = (
-  element: HTMLElement,
-  bounds: Bounds,
-  transform: MegaManTransform
-) => {
+export const useMegaManCollision = (element: HTMLElement, transform: MegaManTransform) => {
+  const bounds = ref<Bounds>(createBounds(element));
+
   /**
    * Check for collisions either the edges of the window or any of the collisionObjects by
    * calculating the distance to each, ensuring they are within the collidable bounds, and
@@ -22,10 +22,10 @@ export const useMegaManCollision = (
    * jittery jumps from distance comparisons.
    * @returns {boolean}
    */
-  const checkHorizontalCollision = (): boolean => {
+  const checkHorizontalCollision = (isAttemptingSlide?: boolean): boolean => {
     // Window edges
-    const leftDistance = bounds.left - windowBounds.left;
-    const rightDistance = windowBounds.right - bounds.right;
+    const leftDistance = bounds.value.left - windowBounds.left;
+    const rightDistance = windowBounds.right - bounds.value.right;
 
     if (
       (leftDistance <= horizontalCollisionDistance && !transform.isWalkingRight.value) ||
@@ -37,13 +37,13 @@ export const useMegaManCollision = (
     // Collidable objects
     for (const object of collisionObjects.list) {
       // Only consider objects that overlap vertically
-      if (checkWithinVerticalBounds(object)) continue;
+      if (checkWithinVerticalBounds(object, isAttemptingSlide)) continue;
 
       const objectLeft = object.bounds.left;
       const objectRight = object.bounds.right;
 
-      const distToLeft = Math.abs(bounds.right - objectLeft); // MegaMan → object’s left
-      const distToRight = Math.abs(objectRight - bounds.left); // MegaMan → object’s right
+      const distToLeft = Math.abs(bounds.value.right - objectLeft); // MegaMan → object’s left
+      const distToRight = Math.abs(objectRight - bounds.value.left); // MegaMan → object’s right
 
       if (
         (distToRight <= horizontalCollisionDistance && !transform.isWalkingRight.value) ||
@@ -62,15 +62,15 @@ export const useMegaManCollision = (
    * @returns {boolean}
    */
   const checkHitCeiling = (): boolean => {
-    const distance = Math.abs(windowBounds.top - bounds.top);
+    const distance = Math.abs(windowBounds.top - bounds.value.top);
     if (distance <= verticalCollisionDistance) return true;
 
     for (const object of collisionObjects.list) {
       const objectBottom = object.bounds.bottom;
-      if (bounds.bottom < objectBottom) continue;
+      if (bounds.value.bottom < objectBottom) continue;
       if (checkWithinHorizontalBounds(object)) continue;
 
-      const distance = Math.abs(objectBottom - bounds.top);
+      const distance = Math.abs(objectBottom - bounds.value.top - verticalCollisionDistance);
       if (distance > verticalCollisionDistance) continue;
 
       return true;
@@ -85,7 +85,7 @@ export const useMegaManCollision = (
    * @returns {boolean}
    */
   const checkOnGround = (): boolean => {
-    const distance = Math.abs(windowBounds.bottom - bounds.bottom);
+    const distance = Math.abs(windowBounds.bottom - bounds.value.bottom);
 
     if (distance <= verticalCollisionDistance) {
       updateVerticalBounds(distance);
@@ -94,10 +94,10 @@ export const useMegaManCollision = (
 
     for (const object of collisionObjects.list) {
       const objectTop = object.bounds.top;
-      if (bounds.bottom > objectTop) continue;
+      if (bounds.value.bottom > objectTop) continue;
       if (checkWithinHorizontalBounds(object)) continue;
 
-      const distance = Math.abs(objectTop - bounds.bottom);
+      const distance = Math.abs(objectTop - bounds.value.bottom);
       if (distance > verticalCollisionDistance) continue;
 
       updateVerticalBounds(distance);
@@ -114,8 +114,8 @@ export const useMegaManCollision = (
    * @returns {boolean} - True if the object is within Mega Man's X bounds, false otherwise.
    */
   const checkWithinHorizontalBounds = (object: CollisionObject): boolean => {
-    const left = bounds.left + horizontalCollisionDistance;
-    const right = bounds.right - horizontalCollisionDistance;
+    const left = bounds.value.left + horizontalCollisionDistance;
+    const right = bounds.value.right - horizontalCollisionDistance;
 
     const objectLeft = object.bounds.left;
     const objectRight = object.bounds.right;
@@ -129,12 +129,21 @@ export const useMegaManCollision = (
    * @param {DOMRect} object - Bounding rectangle of the object to check.
    * @returns {boolean} - True if the object is within Mega Man's Y bounds, otherwise false.
    */
-  const checkWithinVerticalBounds = (object: CollisionObject): boolean => {
-    const top = bounds.top + verticalCollisionDistance;
-    const bottom = bounds.bottom - verticalCollisionDistance;
+  const checkWithinVerticalBounds = (
+    object: CollisionObject,
+    isAttemptingSlide?: boolean
+  ): boolean => {
+    let top = bounds.value.top + verticalCollisionDistance;
+    const bottom = bounds.value.bottom - verticalCollisionDistance;
 
     const objectTop = object.bounds.top;
     const objectBottom = object.bounds.bottom;
+
+    if (isAttemptingSlide) {
+      // TODO: "Adds" top offset to make it easier to slide before sliding, but this is a magic number and not ideal
+      // Need to find some way of using actual math, but I think the 75% height change would need to be in JS not CSS
+      top = top + verticalCollisionDistance / 2;
+    }
 
     return (top < objectBottom || bottom > objectTop) && (bottom < objectTop || top > objectBottom);
   };
@@ -146,8 +155,8 @@ export const useMegaManCollision = (
    */
   const updateHorizontalBounds = (deltaX: number) => {
     transform.updateX(deltaX);
-    bounds.left += deltaX;
-    bounds.right += deltaX;
+    bounds.value.left += deltaX;
+    bounds.value.right += deltaX;
   };
 
   /**
@@ -157,8 +166,8 @@ export const useMegaManCollision = (
    */
   const updateVerticalBounds = (deltaY: number) => {
     transform.updateY(deltaY);
-    bounds.top += deltaY;
-    bounds.bottom += deltaY;
+    bounds.value.top += deltaY;
+    bounds.value.bottom += deltaY;
   };
 
   /**
@@ -167,10 +176,11 @@ export const useMegaManCollision = (
    * Only to be used during resize event and constructor to prevent constant refresh of the document.
    */
   const updateCollisionBounds = () => {
-    updateBounds(element, bounds);
+    updateBounds(element, bounds.value);
   };
 
   return {
+    bounds,
     checkHorizontalCollision,
     checkHitCeiling,
     checkOnGround,

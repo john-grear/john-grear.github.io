@@ -10,7 +10,7 @@ let lastBulletTime = 0;
 const shootDelay = 100;
 
 const movingSpeed = 10;
-const topOffset = 60;
+const topOffset = 32;
 const rightOffset = 0;
 const leftOffset = -32;
 
@@ -32,15 +32,14 @@ export const useBullets = (megaManBounds: Bounds) => {
    *
    * @param charge - Charge of the bullet to determine it's sprite / power.
    * @param direction - Left / right direction that the bullet is moving in.
-   * @param bounds - Bounds to spawn the bullet with.
    */
-  const createBullet = (charge: number, direction: number, bounds: Bounds) => {
+  const createBullet = (charge: number, direction: number) => {
     if (!canSpawn()) return;
 
     const newBullet: Bullet = {
       charge,
       direction,
-      bounds,
+      bounds: megaManBounds,
       position: 0,
     };
 
