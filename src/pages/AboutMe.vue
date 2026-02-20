@@ -52,16 +52,15 @@
   <CustomCard class="ground w-[70%]!">
     <p>
       I love cooking and trying foods from all over the world. Some of my favorite foods to cook are
-      fettucine alfredo and breads of all kind (which I guess is also technically baking haha). I
-      love solving puzzles and challenging myself.
+      lebanese kafta, fettucine alfredo, and all kinds of bread.
     </p>
   </CustomCard>
 
   <CustomCard>
     <p>
-      I started collecting Rubik's Cubes back in junior high school and sat in my room for days
-      figuring out how to solve my first 3x3. Now I have over 20 and I still try to get to them all
-      occasionally. I also love collecting playing cards to remember places that I've been to.
+      I love solving puzzles and challenging myself. I started collecting Rubik's Cubes back in
+      junior high school and sat in my room for days figuring out how to solve my first 3x3. Now I
+      have over 20. I also love collecting playing cards to remember places that I've been to.
     </p>
   </CustomCard>
 
