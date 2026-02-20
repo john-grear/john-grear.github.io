@@ -70,7 +70,7 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
       if (bounds.value.bottom < objectBottom) continue;
       if (checkWithinHorizontalBounds(object)) continue;
 
-      const distance = Math.abs(objectBottom - bounds.value.top);
+      const distance = Math.abs(objectBottom - bounds.value.top - verticalCollisionDistance);
       if (distance > verticalCollisionDistance) continue;
 
       return true;
@@ -140,8 +140,9 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
     const objectBottom = object.bounds.bottom;
 
     if (isAttemptingSlide) {
-      // TODO: Subtract some from top
-      top = top - verticalCollisionDistance;
+      // TODO: "Adds" top offset to make it easier to slide before sliding, but this is a magic number and not ideal
+      // Need to find some way of using actual math, but I think the 75% height change would need to be in JS not CSS
+      top = top + verticalCollisionDistance / 2;
     }
 
     return (top < objectBottom || bottom > objectTop) && (bottom < objectTop || top > objectBottom);

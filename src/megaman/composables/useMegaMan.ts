@@ -269,13 +269,35 @@ export const useMegaMan = () => {
     unlockSlide();
     slideTime.value += slideSpeed * deltaTime.value;
 
-    if (slideTime.value >= slideTimeLimit) {
-      disableSlide();
+    const isHittingCeiling = collision.checkHitCeiling();
+
+    // Disable slide when time limit passed and not locked into slide under ceiling
+    if (slideTime.value >= slideTimeLimit && !isHittingCeiling) {
+      disableSlide(isHittingCeiling);
       return;
     }
 
+    const leftPressed = activeKeys.left;
+    const rightPressed = activeKeys.right;
+
+    const changingLeft = transform.isWalkingRight.value && leftPressed;
+    const changingRight = !transform.isWalkingRight.value && rightPressed;
+    const changingDirection = changingLeft || changingRight;
+
+    // Disable slide when changing direction and not locked into a slide under ceiling
+    if (changingDirection && !isHittingCeiling) {
+      disableSlide(isHittingCeiling);
+      return;
+    }
+
+    // Only update direction when pressing a button
+    if (changingDirection) {
+      transform.updateDirection(leftPressed || !rightPressed);
+    }
+
+    // Disable slide when colliding
     if (collision.checkHorizontalCollision(true)) {
-      disableSlide();
+      disableSlide(isHittingCeiling);
       return;
     }
 
@@ -284,9 +306,10 @@ export const useMegaMan = () => {
     const velocity = slideSpeed * direction.value * deltaTime.value;
     collision.updateHorizontalBounds(velocity);
 
+    // Disable slide and start falling when no longer on ground
     if (!collision.checkOnGround()) {
       disableGravity();
-      disableSlide();
+      disableSlide(isHittingCeiling);
       enableFalling();
       return;
     }
@@ -312,8 +335,12 @@ export const useMegaMan = () => {
   /**
    * Reset slide conditions and animation
    */
-  const disableSlide = () => {
-    // TODO: Check vertical collision to return early before disabling
+  const disableSlide = (isHittingCeiling?: boolean) => {
+    // Checks ceiling collision param if recalculating with function is unnecessary
+    if (isHittingCeiling) return;
+
+    if (isHittingCeiling !== undefined && collision.checkHitCeiling()) return;
+
     animation.updateSlide(true);
     sliding.value = false;
     slideTime.value = 0;
@@ -329,10 +356,15 @@ export const useMegaMan = () => {
       return;
     }
 
+    const isHittingCeiling = collision.checkHitCeiling();
+
+    // Don't allow jumping when sliding with a ceiling above
+    if (sliding.value && isHittingCeiling) return;
+
     if (!jumping.value && jumpButtonReleased.value && grounded.value) enableJumping();
     if (!jumping.value && !grounded.value) return;
 
-    if (collision.checkHitCeiling() || jumpTime.value >= jumpTimeLimit) {
+    if (isHittingCeiling || jumpTime.value >= jumpTimeLimit) {
       jumping.value = false;
       return;
     }
