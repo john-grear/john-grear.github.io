@@ -1,6 +1,5 @@
 import { computed, ref } from 'vue';
 
-import { useBounds } from './useBounds';
 import { useBullets } from './useBullet';
 import { useDeathParticles } from './useDeathParticle';
 import { useInput } from './useInput';
@@ -10,7 +9,6 @@ import { MegaManTransform, useMegaManTransform } from './useMegaManTransform';
 import { useTime } from './useTime';
 import { useWindow } from './useWindow';
 
-const { createBounds, updateBounds } = useBounds();
 const { activeKeys, resetActiveKeys } = useInput();
 const { deltaTime } = useTime();
 const { isOffScreen, resizeWindow } = useWindow();
@@ -53,11 +51,6 @@ export const useMegaMan = () => {
   const collisionBoxElement = ref<HTMLElement | null>();
   const spawnElement = ref<HTMLElement | null>();
 
-  const bounds = createBounds();
-
-  const bullets = useBullets(bounds);
-  const deathParticles = useDeathParticles(bounds);
-
   // DOM elements
   element.value = document.getElementById('mega-man') as HTMLElement | null;
   collisionBoxElement.value = document.getElementById('mega-man-collision') as HTMLElement | null;
@@ -70,11 +63,10 @@ export const useMegaMan = () => {
   // controllers
   const animation: MegaManAnimation = useMegaManAnimation(element.value, collisionBoxElement.value);
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);
-  const collision: MegaManCollision = useMegaManCollision(
-    collisionBoxElement.value,
-    bounds,
-    transform
-  );
+  const collision: MegaManCollision = useMegaManCollision(collisionBoxElement.value, transform);
+
+  const bullets = useBullets(collision.bounds.value);
+  const deathParticles = useDeathParticles(collision.bounds.value);
 
   animation.updateVisibility();
   collision.updateCollisionBounds();
@@ -87,14 +79,14 @@ export const useMegaMan = () => {
     if (!element.value) return;
 
     // Update bounds after window resize
-    updateBounds(element.value, bounds);
+    collision.updateCollisionBounds();
 
     if (!spawned) return;
 
     // Kill mega man if off screen, otherwise set into fall state
     // TODO: Need to check if there is even possible ground below him to stop him from falling forever
     // or have some form of death plane
-    if (isOffScreen(bounds)) {
+    if (isOffScreen(collision.bounds.value)) {
       die();
     } else {
       grounded.value = false;
@@ -123,7 +115,12 @@ export const useMegaMan = () => {
     if (!spawnElement.value) throw Error('Cannot spawn Mega Man.');
 
     const rect = spawnElement.value.getBoundingClientRect();
-    const screenX = -bounds.left + rect.x;
+    const spawnCenter = (rect.left + rect.right) / 2;
+
+    const bounds = collision.bounds.value;
+    const collisionCenterOffset = (bounds.left + bounds.right) / -2;
+
+    const screenX = collisionCenterOffset + spawnCenter;
     const screenY = window.screenY + rect.bottom;
 
     collision.updateHorizontalBounds(screenX);
@@ -175,7 +172,7 @@ export const useMegaMan = () => {
    */
   const setRespawnTimer = (newRespawnTime: number = respawnTime) => {
     setTimeout(() => {
-      if (isOffScreen(bounds)) {
+      if (isOffScreen(collision.bounds.value)) {
         setRespawnTimer(500);
         return;
       }
@@ -412,7 +409,7 @@ export const useMegaMan = () => {
     if (direction.value === undefined) return;
 
     animation.updateAttack();
-    bullets.createBullet(charge.value, direction.value, bounds);
+    bullets.createBullet(charge.value, direction.value);
     charge.value = 0;
   };
 
@@ -439,7 +436,6 @@ export const useMegaMan = () => {
   };
 
   return {
-    bounds,
     spawned,
     walking,
     sliding,

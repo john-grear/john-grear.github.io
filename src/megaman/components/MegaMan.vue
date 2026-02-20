@@ -5,6 +5,8 @@
 
   const { start, stop } = useGame();
 
+  defineProps<{ debug?: boolean }>();
+
   // Slow down the start function to let styling position everything first
   // Removing RAF's breaks the positioning of everything except MegaMan
   // Only an issue because spawn is using margin instead of a fixed position from absolute and top
@@ -33,7 +35,11 @@
 
 <template>
   <div id="mega-man" class="mega-man">
-    <div id="mega-man-collision" class="mega-man-collision"></div>
+    <div
+      id="mega-man-collision"
+      class="mega-man-collision"
+      :class="{ 'border border-pink-500': debug }"
+    ></div>
   </div>
 </template>
 
