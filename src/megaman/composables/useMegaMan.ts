@@ -61,7 +61,7 @@ export const useMegaMan = () => {
   if (!spawnElement.value) throw Error('No spawn point to spawn Mega Man.');
 
   // controllers
-  const animation: MegaManAnimation = useMegaManAnimation(element.value, collisionBoxElement.value);
+  const animation: MegaManAnimation = useMegaManAnimation(element.value);
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);
   const collision: MegaManCollision = useMegaManCollision(collisionBoxElement.value, transform);
 

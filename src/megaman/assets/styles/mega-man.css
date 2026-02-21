@@ -55,7 +55,7 @@
   height: calc(var(--mega-man-height) * 0.75);
 }
 
-.mega-man > .mega-man-collision[sliding] {
+.mega-man[sliding] > .mega-man-collision {
   height: calc(var(--mega-man-height) * 0.65); /* Shortens collision box when sliding */
 }
 

@@ -4,7 +4,7 @@ import { maxChargeValue, minChargeValue } from './useMegaMan';
 
 export type MegaManAnimation = ReturnType<typeof useMegaManAnimation>;
 
-export const useMegaManAnimation = (element: HTMLElement, collisionBoxElement: HTMLElement) => {
+export const useMegaManAnimation = (element: HTMLElement) => {
   type StateType = 'idle' | 'spawn' | 'walk' | 'jump' | 'attack' | 'climb' | 'slide' | 'charge';
 
   const style = element.style;
@@ -327,11 +327,11 @@ export const useMegaManAnimation = (element: HTMLElement, collisionBoxElement: H
    */
   const updateSlideCollisionBox = (disable: boolean = false) => {
     if (disable) {
-      collisionBoxElement.removeAttribute('sliding');
+      element.removeAttribute('sliding');
       return;
     }
 
-    collisionBoxElement.setAttribute('sliding', '1');
+    element.setAttribute('sliding', '1');
   };
 
   /**
