@@ -482,6 +482,8 @@ export const useMegaMan = () => {
     maxChargeValue,
     horizontalCollisionDistance,
     verticalCollisionDistance,
+    bullets,
+    deathParticles,
     spawn,
     triggerSpawnAnimation,
     die,

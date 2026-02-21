@@ -1,9 +1,9 @@
 import { ref } from 'vue';
 
 import { useMenuStore } from '../stores/menu';
-import { Bullets, useBullets } from './useBullet';
+import { Bullets } from './useBullet';
 import { useCollisionObjects } from './useCollisionObject';
-import { DeathParticles, useDeathParticles } from './useDeathParticle';
+import { DeathParticles } from './useDeathParticle';
 import { useInput } from './useInput';
 import { MegaMan, useMegaMan } from './useMegaMan';
 import { useTime } from './useTime';
@@ -27,8 +27,8 @@ useInput();
  */
 const start = () => {
   megaMan.value = useMegaMan();
-  bullets.value = useBullets(megaMan.value.bounds);
-  deathParticles.value = useDeathParticles(megaMan.value.bounds);
+  bullets.value = megaMan.value.bullets;
+  deathParticles.value = megaMan.value.deathParticles;
 
   if (!megaMan.value || !bullets.value || !deathParticles.value)
     throw Error(
