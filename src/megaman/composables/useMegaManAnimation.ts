@@ -41,9 +41,6 @@ export const useMegaManAnimation = (element: HTMLElement) => {
   const kneeBendFrame = 2;
   const startWalkFrame = kneeBendFrame + 1;
 
-  // Jump Constants
-  const jumpFrame = 10;
-
   // Attack Constants
   const attackAnimationTime = 250;
   const jumpAndAttackFrame = 1;
@@ -267,14 +264,12 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     activeStates.jump = !disable;
 
     if (disable) {
-      updateStateStyle('jump', 0);
       updateJumpCollisionBox(true);
       triggerIdle();
       return;
     }
 
     updateWalk(true);
-    updateStateStyle('jump', jumpFrame);
     updateJumpCollisionBox();
   };
 

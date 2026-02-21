@@ -48,6 +48,7 @@
 
 .mega-man[jumping] {
   align-items: start; /* Shifts collision box up when jumping */
+  --jump-state: 10;
 }
 
 .mega-man > .mega-man-collision {
