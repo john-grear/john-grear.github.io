@@ -1,9 +1,12 @@
 <script setup lang="ts">
   import { useGame } from '@/megaman/composables/useGame';
 
-  import { onMounted, onUnmounted } from 'vue';
+  import { computed, onMounted, onUnmounted } from 'vue';
 
-  const { start, stop } = useGame();
+  const { start, stop, megaMan } = useGame();
+
+  const jumping = computed(() => !megaMan.value?.grounded);
+  const sliding = computed(() => megaMan.value?.sliding);
 
   defineProps<{ debug?: boolean }>();
 
@@ -34,7 +37,7 @@
 </script>
 
 <template>
-  <div id="mega-man" class="mega-man">
+  <div id="mega-man" class="mega-man" :jumping="jumping || null" :sliding="sliding || null">
     <div
       id="mega-man-collision"
       class="mega-man-collision"

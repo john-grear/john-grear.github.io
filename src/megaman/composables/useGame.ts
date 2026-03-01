@@ -133,5 +133,5 @@ const findCollisionObjects = () => {
 };
 
 export const useGame = () => {
-  return { start, stop };
+  return { megaMan, start, stop };
 };

@@ -47,9 +47,6 @@ export const useMegaManAnimation = (element: HTMLElement) => {
   const walkAndAttackFrame = 4;
   const idleAttackFrame = 6;
 
-  // Slide Constants
-  const slideFrame = 12;
-
   // Charge Constants
   const maxChargeState = 40;
 
@@ -264,28 +261,11 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     activeStates.jump = !disable;
 
     if (disable) {
-      updateJumpCollisionBox(true);
       triggerIdle();
       return;
     }
 
     updateWalk(true);
-    updateJumpCollisionBox();
-  };
-
-  /**
-   * Sets / removes the 'jumping' attribute to shift the collision box to the top of the
-   * mega man element when jumping and to the bottom when not.
-   *
-   * @param disable - Forcibly sets property to 'end' if true.
-   */
-  const updateJumpCollisionBox = (disable: boolean = false) => {
-    if (disable) {
-      element.removeAttribute('jumping');
-      return;
-    }
-
-    element.setAttribute('jumping', '1');
   };
 
   /**
@@ -297,8 +277,6 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     activeStates.slide = !disable;
 
     if (disable) {
-      updateStateStyle('slide', 0);
-      updateSlideCollisionBox(true);
       triggerIdle();
       return;
     }
@@ -310,23 +288,6 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     }
 
     updateWalk(true);
-    updateStateStyle('slide', slideFrame);
-    updateSlideCollisionBox();
-  };
-
-  /**
-   * Sets / removes the 'sliding' attribute to shrink the collision box to fit
-   * under shorter obstacles when sliding.
-   *
-   * @param disable - Forcibly sets property to 'end' if true.
-   */
-  const updateSlideCollisionBox = (disable: boolean = false) => {
-    if (disable) {
-      element.removeAttribute('sliding');
-      return;
-    }
-
-    element.setAttribute('sliding', '1');
   };
 
   /**
