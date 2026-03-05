@@ -5,7 +5,7 @@ import { maxChargeValue, minChargeValue } from './useMegaMan';
 export type MegaManAnimation = ReturnType<typeof useMegaManAnimation>;
 
 export const useMegaManAnimation = (element: HTMLElement) => {
-  type StateType = 'idle' | 'spawn' | 'walk' | 'attack' | 'charge';
+  type StateType = 'spawn' | 'walk' | 'attack' | 'charge';
 
   const style = element.style;
 
@@ -141,8 +141,8 @@ export const useMegaManAnimation = (element: HTMLElement) => {
    * Start the idle animation if no other states are active.
    */
   const triggerIdle = () => {
-    if (checkNotIdle() || idle.value) return;
-    idle.value = true;
+    if (checkNotIdle()) return;
+
     updateIdle();
   };
 
@@ -182,7 +182,6 @@ export const useMegaManAnimation = (element: HTMLElement) => {
    */
   const disableIdle = () => {
     idle.value = false;
-    updateStateStyle('idle', 0);
   };
 
   /**
@@ -191,7 +190,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
   const checkIdleTimeHasBeenReached = () => {
     if (idleState.value !== maxIdleState) return;
 
-    updateStateStyle('idle', 1);
+    idle.value = true;
   };
 
   /**
@@ -201,7 +200,7 @@ export const useMegaManAnimation = (element: HTMLElement) => {
     if (idleState.value < maxIdleState + maxIdleFrames) return;
 
     idleState.value = 0;
-    updateStateStyle('idle', 0);
+    disableIdle();
   };
 
   /**

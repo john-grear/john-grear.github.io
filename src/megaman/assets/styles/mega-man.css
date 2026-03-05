@@ -51,6 +51,10 @@
   height: calc(var(--mega-man-height) * 0.75);
 }
 
+.mega-man[idle='true'] {
+  --idle-state: 1;
+}
+
 .mega-man[jumping='true'] {
   --jump-state: 10;
 }

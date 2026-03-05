@@ -471,6 +471,7 @@ export const useMegaMan = () => {
 
   return {
     spawned,
+    idle: animation.idle,
     walking,
     sliding,
     jumping,

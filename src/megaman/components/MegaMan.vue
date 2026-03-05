@@ -7,6 +7,7 @@
 
   const jumping = computed(() => !megaMan.value?.grounded);
   const sliding = computed(() => megaMan.value?.sliding);
+  const idle = computed(() => megaMan.value?.idle);
 
   defineProps<{ debug?: boolean }>();
 
@@ -37,7 +38,7 @@
 </script>
 
 <template>
-  <div id="mega-man" class="mega-man" :jumping="jumping" :sliding="sliding">
+  <div id="mega-man" class="mega-man" :idle="idle" :jumping="jumping" :sliding="sliding">
     <div
       id="mega-man-collision"
       class="mega-man-collision"
