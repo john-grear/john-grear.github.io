@@ -5,7 +5,7 @@ import { maxChargeValue, minChargeValue } from './useMegaMan';
 export type MegaManAnimation = ReturnType<typeof useMegaManAnimation>;
 
 export const useMegaManAnimation = (element: HTMLElement) => {
-  type StateType = 'idle' | 'spawn' | 'walk' | 'jump' | 'attack' | 'climb' | 'slide' | 'charge';
+  type StateType = 'idle' | 'spawn' | 'walk' | 'attack' | 'charge';
 
   const style = element.style;
 

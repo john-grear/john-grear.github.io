@@ -37,11 +37,12 @@
 </script>
 
 <template>
-  <div id="mega-man" class="mega-man" :jumping="jumping || null" :sliding="sliding || null">
+  <div id="mega-man" class="mega-man" :jumping="jumping" :sliding="sliding">
     <div
       id="mega-man-collision"
       class="mega-man-collision"
       :class="{ 'border border-pink-500': debug }"
+      :debug="true"
     ></div>
   </div>
 </template>

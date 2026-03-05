@@ -250,15 +250,17 @@ export const useMegaMan = () => {
   const triggerSlide = () => {
     unlockSlide();
 
-    if (slideLocked.value || collision.checkHorizontalCollision(true)) return;
+    if (slideLocked.value) return;
 
-    if (grounded.value && activeKeys.down && activeKeys.jump) {
-      sliding.value = true;
-      slideLocked.value = true;
-      slideTime.value = 0;
-      animation.updateSlide();
-      updateSlide();
-    }
+    if (!grounded.value || !activeKeys.down || !activeKeys.jump) return;
+
+    if (collision.checkHorizontalCollision(true)) return;
+
+    sliding.value = true;
+    slideLocked.value = true;
+    slideTime.value = 0;
+    animation.updateSlide();
+    updateSlide();
   };
 
   /**
