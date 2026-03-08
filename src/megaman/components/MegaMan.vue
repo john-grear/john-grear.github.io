@@ -5,9 +5,15 @@
 
   const { start, stop, megaMan } = useGame();
 
-  const jumping = computed(() => !megaMan.value?.grounded);
+  const spawning = computed(() => megaMan.value?.spawning);
+  const spawned = computed(() => megaMan.value?.spawned);
+  const blinking = computed(() => megaMan.value?.blinking);
+  const walking = computed(() => megaMan.value?.walking);
+  const jumping = computed(() => !megaMan.value?.grounded && !spawning.value);
   const sliding = computed(() => megaMan.value?.sliding);
-  const idle = computed(() => megaMan.value?.idle);
+  const attacking = computed(() => megaMan.value?.attacking);
+  const lowCharging = computed(() => megaMan.value?.lowCharging);
+  const maxCharging = computed(() => megaMan.value?.maxCharging);
 
   defineProps<{ debug?: boolean }>();
 
@@ -38,13 +44,26 @@
 </script>
 
 <template>
-  <div id="mega-man" class="mega-man" :idle="idle" :jumping="jumping" :sliding="sliding">
+  <div
+    id="mega-man"
+    class="mega-man"
+    :spawning="spawning"
+    :spawned="spawned"
+    :blinking="blinking"
+    :walking="walking"
+    :jumping="jumping"
+    :sliding="sliding"
+    :attacking="attacking"
+    :low-charging="lowCharging"
+    :max-charging="maxCharging"
+  >
     <div
       id="mega-man-collision"
       class="mega-man-collision"
       :class="{ 'border border-pink-500': debug }"
       :debug="true"
     ></div>
+    <div id="mega-man-charge-state" class="mega-man-charge-state"></div>
   </div>
 </template>
 
