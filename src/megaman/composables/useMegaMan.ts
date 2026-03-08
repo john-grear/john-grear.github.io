@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue';
 
+import { useBounds } from './useBounds';
 import { useBullets } from './useBullet';
 import { useDeathParticles } from './useDeathParticle';
 import { useInput } from './useInput';
@@ -12,6 +13,7 @@ import { useWindow } from './useWindow';
 const { activeKeys, resetActiveKeys } = useInput();
 const { deltaTime } = useTime();
 const { isOffScreen, resizeWindow } = useWindow();
+const { createBounds } = useBounds();
 
 export type MegaMan = ReturnType<typeof useMegaMan>;
 
@@ -174,8 +176,9 @@ export const useMegaMan = () => {
    */
   const setRespawnTimer = (newRespawnTime: number = respawnTime) => {
     setTimeout(() => {
-      if (isOffScreen(collision.bounds.value)) {
-        setRespawnTimer(500);
+      const spawnBounds = createBounds(spawnElement.value!);
+      if (isOffScreen(spawnBounds)) {
+        setRespawnTimer(1000);
         return;
       }
 
