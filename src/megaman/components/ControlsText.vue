@@ -67,7 +67,7 @@
 <template>
   <div
     v-if="visible && !menu.isOpen"
-    class="z-1000 fixed top-[40%] flex flex-col items-center opacity-100 transition-[0s]"
+    class="z-1000 fixed top-[40%] flex select-none flex-col items-center opacity-100 transition-[0s]"
     :class="{ 'opacity-0! duration-1500!': disappearing }"
   >
     <text class="text-3xl font-bold">Press WASD to Start!</text>

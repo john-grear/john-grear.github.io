@@ -16,7 +16,7 @@ const { isOffScreen, resizeWindow } = useWindow();
 export type MegaMan = ReturnType<typeof useMegaMan>;
 
 // constants
-export const spawnSpeed = 12;
+export const spawnSpeed = 20;
 export const respawnTime = 5000;
 export const walkingSpeed = 500;
 export const slideSpeed = 650;
@@ -28,12 +28,13 @@ export const minChargeValue = 250;
 export const lowChargeValue = 500;
 export const maxChargeValue = 1000;
 export const chargeIntervalRate = 20 / 1000;
-export const chargeRate = 2250;
+export const chargeRate = 2000;
 export const horizontalCollisionDistance = 5; // TODO: Trying to get this to be as small as possible so collisions are tighter
 export const verticalCollisionDistance = 10;
 
 export const useMegaMan = () => {
   // reactive state
+  const spawning = ref(true);
   const spawned = ref(false);
   const walking = ref(false);
   const slideLocked = ref(false);
@@ -43,9 +44,12 @@ export const useMegaMan = () => {
   const jumping = ref(false);
   const jumpTime = ref(0);
   const grounded = ref(false);
+  const attacking = ref(false);
   const chargeInterval = ref(0);
   const charge = ref(0);
   const charging = ref(false);
+  const lowCharging = computed(() => charge.value > lowChargeValue && !maxCharging.value);
+  const maxCharging = computed(() => charge.value > maxChargeValue);
 
   const element = ref<HTMLElement | null>();
   const collisionBoxElement = ref<HTMLElement | null>();
@@ -61,7 +65,15 @@ export const useMegaMan = () => {
   if (!spawnElement.value) throw Error('No spawn point to spawn Mega Man.');
 
   // controllers
-  const animation: MegaManAnimation = useMegaManAnimation(element.value, collisionBoxElement.value);
+  const animation: MegaManAnimation = useMegaManAnimation(
+    element.value,
+    spawning,
+    spawned,
+    walking,
+    sliding,
+    jumping,
+    attacking
+  );
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);
   const collision: MegaManCollision = useMegaManCollision(collisionBoxElement.value, transform);
 
@@ -81,7 +93,7 @@ export const useMegaMan = () => {
     // Update bounds after window resize
     collision.updateCollisionBounds();
 
-    if (!spawned) return;
+    if (spawning.value) return;
 
     // Kill mega man if off screen, otherwise set into fall state
     // TODO: Need to check if there is even possible ground below him to stop him from falling forever
@@ -126,7 +138,6 @@ export const useMegaMan = () => {
     collision.updateHorizontalBounds(screenX);
     collision.updateVerticalBounds(-bounds.bottom);
 
-    animation.enableSpawn();
     animation.updateVisibility();
 
     const updatePosition = () => {
@@ -134,7 +145,7 @@ export const useMegaMan = () => {
         collision.updateVerticalBounds(spawnSpeed);
         requestAnimationFrame(updatePosition);
       } else {
-        triggerSpawnAnimation();
+        animation.triggerSpawnAnimation();
       }
     };
 
@@ -142,19 +153,10 @@ export const useMegaMan = () => {
   };
 
   /**
-   * Triggers spawn animation and sets spawned property to true once the animation completes.
-   * It should be called after Mega Man has reached the correct spawn position
-   */
-  const triggerSpawnAnimation = () => {
-    animation.updateSpawn(() => {
-      spawned.value = true;
-    });
-  };
-
-  /**
    * Disable functionality and visibility, spawn death particles, and set a timer to respawn
    */
   const die = () => {
+    spawning.value = true;
     spawned.value = false;
     animation.updateVisibility(true);
 
@@ -187,13 +189,21 @@ export const useMegaMan = () => {
    * Main control function that runs every frame to handle all functionality
    */
   const update = () => {
-    if (!spawned.value) return;
+    if (spawning.value) return;
 
+    blink();
     walk();
     slide();
     jump();
     applyGravity();
     buildUpCharge();
+  };
+
+  /**
+   * Attempts to blink if there are no other active states.
+   */
+  const blink = () => {
+    animation.updateIdle();
   };
 
   /**
@@ -207,7 +217,6 @@ export const useMegaMan = () => {
 
     if ((!leftPressed && !rightPressed) || (leftPressed && rightPressed)) {
       if (walking.value) {
-        animation.updateWalk(true);
         walking.value = false;
       }
       return;
@@ -217,7 +226,6 @@ export const useMegaMan = () => {
 
     walking.value = true;
     transform.updateDirection(leftPressed);
-    animation.updateWalk();
 
     if (collision.checkHorizontalCollision()) return;
 
@@ -250,15 +258,16 @@ export const useMegaMan = () => {
   const triggerSlide = () => {
     unlockSlide();
 
-    if (slideLocked.value || collision.checkHorizontalCollision(true)) return;
+    if (slideLocked.value) return;
 
-    if (grounded.value && activeKeys.down && activeKeys.jump) {
-      sliding.value = true;
-      slideLocked.value = true;
-      slideTime.value = 0;
-      animation.updateSlide();
-      updateSlide();
-    }
+    if (!grounded.value || !activeKeys.down || !activeKeys.jump) return;
+
+    if (collision.checkHorizontalCollision(true)) return;
+
+    sliding.value = true;
+    slideLocked.value = true;
+    slideTime.value = 0;
+    updateSlide();
   };
 
   /**
@@ -313,8 +322,6 @@ export const useMegaMan = () => {
       enableFalling();
       return;
     }
-
-    animation.updateSlide();
   };
 
   /**
@@ -341,7 +348,6 @@ export const useMegaMan = () => {
 
     if (isHittingCeiling !== undefined && collision.checkHitCeiling()) return;
 
-    animation.updateSlide(true);
     sliding.value = false;
     slideTime.value = 0;
   };
@@ -382,7 +388,6 @@ export const useMegaMan = () => {
     if (activeKeys.down || slideLocked.value) return;
 
     if (sliding.value) {
-      animation.updateSlide(true);
       sliding.value = false;
       slideTime.value = 0;
     }
@@ -398,10 +403,6 @@ export const useMegaMan = () => {
   const enableFalling = () => {
     grounded.value = false;
     slideLocked.value = true;
-    animation.updateJump();
-    animation.updateWalk(true);
-    animation.updateSlide(true);
-    animation.updateAttack(true);
   };
 
   /**
@@ -426,7 +427,6 @@ export const useMegaMan = () => {
     jumping.value = false;
     grounded.value = true;
     jumpTime.value = 0;
-    animation.updateJump(true);
   };
 
   /**
@@ -440,7 +440,7 @@ export const useMegaMan = () => {
 
     if (direction.value === undefined) return;
 
-    animation.updateAttack();
+    attacking.value = true;
     bullets.createBullet(charge.value, direction.value);
     charge.value = 0;
   };
@@ -464,17 +464,21 @@ export const useMegaMan = () => {
 
     chargeInterval.value = 0;
     charge.value += chargeRate * deltaTimeState;
-    animation.updateCharge(charge.value);
   };
 
   return {
+    spawning,
     spawned,
+    blinking: animation.blinking,
     walking,
     sliding,
     jumping,
+    attacking,
     grounded,
     charge,
     charging,
+    lowCharging,
+    maxCharging,
     coords,
     direction,
     lowChargeValue,
@@ -482,8 +486,9 @@ export const useMegaMan = () => {
     maxChargeValue,
     horizontalCollisionDistance,
     verticalCollisionDistance,
+    bullets,
+    deathParticles,
     spawn,
-    triggerSpawnAnimation,
     die,
     setRespawnTimer,
     update,
