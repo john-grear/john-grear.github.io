@@ -24,7 +24,7 @@
 
   <MegaMan />
 
-  <CustomCard>
+  <CustomCard class="ground">
     <p>
       I am always looking to broaden my horizons and strive to be a better person and software
       developer. I really want to travel the world, so any opportunities that would allow that would
@@ -36,7 +36,7 @@
     <img
       :src="megamanGIF"
       alt="Mega Man 5"
-      class="rounded-xl! w-full max-w-2xl"
+      class="rounded-xl! w-full max-w-2xl select-none"
       draggable="false"
     />
     <Spawn class="size-30 absolute -mb-3 self-end" />
@@ -55,8 +55,10 @@
       lebanese kafta, fettucine alfredo, and all kinds of bread.
     </p>
   </CustomCard>
+  <br />
+  <br />
 
-  <CustomCard>
+  <CustomCard class="ground">
     <p>
       I love solving puzzles and challenging myself. I started collecting Rubik's Cubes back in
       junior high school and sat in my room for days figuring out how to solve my first 3x3. Now I
@@ -87,7 +89,7 @@
     />
   </div>
 
-  <CustomCard>
+  <CustomCard class="ground">
     <p>
       I’ve got a pretty wild sock collection—easily over 100 pairs at this point. It all started
       back in junior high when I got tired of plain white socks and decided to switch things up. Now

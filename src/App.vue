@@ -26,14 +26,14 @@
 
     <Image
       :src="kirbyImage"
-      class="scale-120 fixed right-[10%] top-[15%] z-[-1001] blur-lg dark:top-[30%]"
+      class="scale-120 fixed right-[10%] top-[15%] z-[-1001] select-none blur-lg dark:top-[30%]"
     />
     <Image
       :src="kirbySubImage"
-      class="dark:scale-120 not-2xl:hidden fixed left-[5%] top-[20%] z-[-1002] blur-lg"
+      class="dark:scale-120 not-2xl:hidden fixed left-[5%] top-[20%] z-[-1002] select-none blur-lg"
     />
 
-    <div class="flex flex-grow flex-col items-center">
+    <div class="flex grow flex-col items-center">
       <RouterView />
     </div>
 
