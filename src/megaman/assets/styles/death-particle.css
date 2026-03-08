@@ -28,14 +28,13 @@
   position: absolute;
   transform: translate(var(--positionX), var(--positionY)) scale(4);
   transform-origin: center;
-}
 
-.death-particle.spread {
-  animation: spread 0.25s steps(1, end) infinite;
+  /* Animation */
+  animation: pulse 0.25s steps(1, end) infinite;
   animation-fill-mode: forwards;
 }
 
-@keyframes spread {
+@keyframes pulse {
   0% {
     --deathParticleBackgroundPositionX: -96px;
   }

@@ -22,6 +22,14 @@ export type DeathParticle = {
 export type DeathParticles = ReturnType<typeof useDeathParticles>;
 
 export const useDeathParticles = (megaManBounds: Bounds) => {
+  let particleContainerElement = document.querySelector('.particle-container');
+
+  if (!particleContainerElement) {
+    particleContainerElement = document.createElement('div');
+    particleContainerElement.classList.add('particle-container');
+    document.body.appendChild(particleContainerElement);
+  }
+
   /**
    * Spawns a double ring of death particles around mega man when he dies.
    */
@@ -63,17 +71,9 @@ export const useDeathParticles = (megaManBounds: Bounds) => {
   const createHtmlElement = (deathParticle: DeathParticle) => {
     deathParticle.element = document.createElement('div');
     deathParticle.element.classList.add('death-particle');
-    deathParticle.element.classList.add('spread');
 
-    deathParticle.container = document.querySelector('.particle-container');
-    deathParticle.container = document.createElement('div');
-    deathParticle.container.classList.add('particle-container');
-
-    if (!deathParticle.container) throw Error('No container for death particles found.');
-
-    document.body.appendChild(deathParticle.container);
-
-    deathParticle.container.appendChild(deathParticle.element);
+    // Add to particle container to not cause horizontal overflow
+    particleContainerElement.appendChild(deathParticle.element);
   };
 
   /**
