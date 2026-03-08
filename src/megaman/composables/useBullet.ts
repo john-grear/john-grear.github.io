@@ -16,6 +16,7 @@ const leftOffset = -32;
 
 export type Bullet = {
   element?: HTMLDivElement;
+  collisionElement?: HTMLDivElement;
   position: number;
   charge: number;
   direction: number;
@@ -25,6 +26,14 @@ export type Bullet = {
 export type Bullets = ReturnType<typeof useBullets>;
 
 export const useBullets = (megaManBounds: Bounds) => {
+  let bulletContainerElement = document.querySelector('.bullet-container');
+
+  if (!bulletContainerElement) {
+    bulletContainerElement = document.createElement('div');
+    bulletContainerElement.classList.add('bullet-container');
+    document.body.appendChild(bulletContainerElement);
+  }
+
   /**
    * Creates a new bullet, HTML element for the bullet to display, sets the position, and
    * adds it to the bullet list. Also updates the last bullet time to determine when another
@@ -68,7 +77,13 @@ export const useBullets = (megaManBounds: Bounds) => {
     bullet.element = document.createElement('div');
     bullet.element.classList.add('bullet');
 
-    document.body.appendChild(bullet.element);
+    // Add a collision element to have a tighter collision with objects
+    bullet.collisionElement = document.createElement('div');
+    bullet.collisionElement.classList.add('bullet-collision');
+    bullet.element.appendChild(bullet.collisionElement);
+
+    // Add to bullet container to not cause horizontal overflow
+    bulletContainerElement.appendChild(bullet.element);
 
     if (bullet.charge >= lowChargeValue && bullet.charge < maxChargeValue) {
       bullet.element.classList.add('low-charge');
@@ -114,15 +129,15 @@ export const useBullets = (megaManBounds: Bounds) => {
    * Start animation to move the bullet across the screen
    */
   const move = (bullet: Bullet) => {
-    if (!bullet.element) return;
+    if (!bullet.element || !bullet.collisionElement) return;
 
     bullet.position += movingSpeed * bullet.direction;
     bullet.element.style.setProperty('--position', `${bullet.position}px`);
 
-    const bulletRect = bullet.element.getBoundingClientRect();
+    const bulletRect = bullet.collisionElement!.getBoundingClientRect();
     if (
-      (bullet.direction === 1 && bulletRect.right >= window.innerWidth - 20) ||
-      (bullet.direction === -1 && bulletRect.left <= 20)
+      (bullet.direction === 1 && bulletRect.right >= window.innerWidth + bulletRect.width) ||
+      (bullet.direction === -1 && bulletRect.left <= -bulletRect.width)
     ) {
       deleteBullet(bullet);
       return;

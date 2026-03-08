@@ -1,3 +1,14 @@
+.bullet-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+}
+
 .bullet {
   --position: 0px;
   --direction: 1;
@@ -18,6 +29,11 @@
   position: absolute !important;
   transform: translateX(var(--position)) scale(calc(var(--direction) * 4), 4);
   transform-origin: center;
+
+  /* Collision Box Alignment */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .bullet.low-charge {
@@ -56,4 +72,21 @@
   75% {
     --bulletBackgroundPositionX: -192px;
   }
+}
+
+/* Collision Box */
+
+.bullet:not(.low-charge):not(.max-charge) > .bullet-collision {
+  width: 25%;
+  height: 20%;
+}
+
+.bullet.low-charge:not(.max-charge) > .bullet-collision {
+  width: 50%;
+  height: 50%;
+}
+
+.bullet.max-charge:not(.low-charge) > .bullet-collision {
+  width: 90%;
+  height: 90%;
 }
