@@ -183,7 +183,6 @@ export const useDeathParticles = (megaManBounds: Bounds) => {
   };
 
   return {
-    list,
     spawnDeathParticles,
     updateAll,
     deleteAll,

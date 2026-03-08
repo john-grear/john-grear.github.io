@@ -38,9 +38,9 @@
 </script>
 
 <template>
-  <Menubar class="mt-10 flex !h-full !w-full flex-col">
+  <Menubar class="h-full! w-full! ground mt-10 flex flex-col">
     <template #start>
-      <div class="flex !w-full flex-col items-center">
+      <div class="w-full! flex flex-col items-center">
         <div class="mt-2 flex gap-3">
           <a
             v-for="link in links"
