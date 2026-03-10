@@ -9,7 +9,7 @@ import { MegaMan, useMegaMan } from './useMegaMan';
 import { useTime } from './useTime';
 import { useWindow } from './useWindow';
 
-let running = false;
+const running = ref(false);
 
 const menu = useMenuStore();
 
@@ -41,7 +41,7 @@ const start = () => {
 
   resizeWindow(megaMan.value.horizontalCollisionDistance, megaMan.value.verticalCollisionDistance);
 
-  running = true;
+  running.value = true;
 
   megaMan.value.spawn();
 
@@ -52,7 +52,7 @@ const start = () => {
  * Stops the megaman game loop and clears all cache lists.
  */
 const stop = () => {
-  running = false;
+  running.value = false;
 
   bullets.value?.deleteAll();
 
@@ -66,8 +66,11 @@ const gameLoop = () => {
   // Update delta time to be used in other classes
   Time.update();
 
-  // Skip game loop if not running or menu is open
-  if (!running || menu.isOpen) {
+  // Break game loop if not running
+  if (!running.value) return;
+
+  // Skip game loop if menu is open
+  if (menu.isOpen) {
     requestAnimationFrame(gameLoop);
     return;
   }
