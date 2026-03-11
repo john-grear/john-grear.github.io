@@ -2,7 +2,7 @@
   import { useInput } from '@/megaman/composables/useInput';
   import { useMenuStore } from '@/megaman/stores/menu';
 
-  import { ref, watch } from 'vue';
+  import { onMounted, onUnmounted, ref, watch } from 'vue';
 
   import ControlsModal from '../dialogs/PauseMenu.vue';
 
@@ -20,9 +20,9 @@
 
     setTimeout(() => (visible.value = false), 3000);
 
-    window.removeEventListener('scroll', detectScroll);
-    window.removeEventListener('mousedown', detectScroll);
-    window.removeEventListener('keydown', detectInput);
+    document.removeEventListener('scroll', detectScroll);
+    document.removeEventListener('mousedown', detectScroll);
+    document.removeEventListener('keydown', detectInput);
   };
 
   /**
@@ -41,10 +41,6 @@
     hideControlsText();
   };
 
-  window.addEventListener('scroll', detectScroll);
-  window.addEventListener('mousedown', detectScroll);
-  window.addEventListener('keydown', detectInput);
-
   const watchControlsModal = watch(
     () => menu.isOpen,
     () => {
@@ -53,14 +49,25 @@
     }
   );
 
-  // Show controls modal
-  window.addEventListener('keydown', (e) => {
+  const showControlsModal = (e: KeyboardEvent) => {
     // Check if the pressed key is escape
     if (e.key !== 'Escape') return;
 
     menu.toggle();
 
     e.preventDefault();
+  };
+
+  onMounted(() => {
+    document.addEventListener('keydown', showControlsModal);
+
+    document.addEventListener('scroll', detectScroll);
+    document.addEventListener('mousedown', detectScroll);
+    document.addEventListener('keydown', detectInput);
+  });
+
+  onUnmounted(() => {
+    document.removeEventListener('keydown', showControlsModal);
   });
 </script>
 
