@@ -161,6 +161,7 @@ export const useMegaMan = () => {
     spawning.value = true;
     spawned.value = false;
     animation.updateVisibility(true);
+    transform.updateDirection(false);
 
     deathParticles.spawnDeathParticles();
 
