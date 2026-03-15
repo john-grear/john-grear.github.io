@@ -22,7 +22,7 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
    * jittery jumps from distance comparisons.
    * @returns {boolean}
    */
-  const checkHorizontalCollision = (isAttemptingSlide?: boolean): boolean => {
+  const checkHorizontalCollision = (isAttemptingSlide: boolean = false): boolean => {
     // Window edges
     const leftDistance = bounds.value.left - windowBounds.left;
     const rightDistance = windowBounds.right - bounds.value.right;
@@ -61,20 +61,29 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
    * calculating the distance to each and ensuring they are within the collidable bounds.
    * @returns {boolean}
    */
-  const checkHitCeiling = (): boolean => {
+  const checkHitCeiling = (isAttemptingJump: boolean = false): boolean => {
+    const collisionDistance = isAttemptingJump
+      ? verticalCollisionDistance + 5
+      : verticalCollisionDistance;
+
     const distance = Math.abs(windowBounds.top - bounds.value.top);
-    if (distance <= verticalCollisionDistance) return true;
+    if (distance <= collisionDistance) return true;
 
-    for (const object of collisionObjects.list) {
-      const objectBottom = object.bounds.bottom;
-      if (bounds.value.bottom < objectBottom) continue;
-      if (checkWithinHorizontalBounds(object)) continue;
+    const possibleCeilingObjects = collisionObjects.list
+      .filter(
+        (object) =>
+          bounds.value.bottom >= object.bounds.bottom && !checkWithinHorizontalBounds(object)
+      )
+      .sort((a, b) => b.bounds.top - a.bounds.top);
 
-      const distance = Math.abs(objectBottom - bounds.value.top - verticalCollisionDistance);
-      if (distance > verticalCollisionDistance) continue;
+    if (possibleCeilingObjects.length === 0) return false;
 
-      return true;
-    }
+    const closestObject = possibleCeilingObjects[0];
+    const distanceToClosestObject = Math.abs(
+      closestObject.bounds.bottom - bounds.value.top - verticalCollisionDistance
+    );
+
+    if (distanceToClosestObject <= collisionDistance) return true;
 
     return false;
   };
@@ -131,9 +140,9 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
    */
   const checkWithinVerticalBounds = (
     object: CollisionObject,
-    isAttemptingSlide?: boolean
+    isAttemptingSlide: boolean = false
   ): boolean => {
-    let top = bounds.value.top + verticalCollisionDistance;
+    let top = bounds.value.top;
     const bottom = bounds.value.bottom - verticalCollisionDistance;
 
     const objectTop = object.bounds.top;
@@ -142,7 +151,7 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
     if (isAttemptingSlide) {
       // TODO: "Adds" top offset to make it easier to slide before sliding, but this is a magic number and not ideal
       // Need to find some way of using actual math, but I think the 75% height change would need to be in JS not CSS
-      top = top + verticalCollisionDistance / 2;
+      top = top + verticalCollisionDistance * 1.25;
     }
 
     return (top < objectBottom || bottom > objectTop) && (bottom < objectTop || top > objectBottom);

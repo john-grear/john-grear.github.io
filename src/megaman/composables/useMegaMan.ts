@@ -346,11 +346,11 @@ export const useMegaMan = () => {
   /**
    * Reset slide conditions and animation
    */
-  const disableSlide = (isHittingCeiling?: boolean) => {
+  const disableSlide = (isHittingCeiling: boolean = false) => {
     // Checks ceiling collision param if recalculating with function is unnecessary
     if (isHittingCeiling) return;
 
-    if (isHittingCeiling !== undefined && collision.checkHitCeiling()) return;
+    if (collision.checkHitCeiling()) return;
 
     sliding.value = false;
     slideTime.value = 0;
@@ -361,20 +361,23 @@ export const useMegaMan = () => {
    */
   const jump = () => {
     if (!activeKeys.jump) {
-      if (jumping.value) jumping.value = false;
+      jumping.value = false;
       jumpButtonReleased.value = true;
       return;
     }
 
-    const isHittingCeiling = collision.checkHitCeiling();
-
     // Don't allow jumping when sliding with a ceiling above
-    if (sliding.value && isHittingCeiling) return;
+    if (!jumping.value && jumpButtonReleased.value) {
+      const willHitCeiling = collision.checkHitCeiling(true);
 
-    if (!jumping.value && jumpButtonReleased.value && grounded.value) enableJumping();
+      if (willHitCeiling) return;
+
+      if (grounded.value) enableJumping();
+    }
+
     if (!jumping.value && !grounded.value) return;
 
-    if (isHittingCeiling || jumpTime.value >= jumpTimeLimit) {
+    if ((jumping.value && collision.checkHitCeiling()) || jumpTime.value >= jumpTimeLimit) {
       jumping.value = false;
       return;
     }
