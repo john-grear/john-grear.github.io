@@ -17,6 +17,7 @@ export const useMegaManAnimation = (
   // Idle Constants
   const maxIdleState = 150;
   const maxIdleFrames = 10;
+  const blinkStepFrameDelay = 50;
 
   // Attack Constants
   const attackAnimationTime = 250;
@@ -36,10 +37,23 @@ export const useMegaManAnimation = (
     if (value >= maxIdleState + maxIdleFrames) idleState.value = 0;
   });
 
-  const attackTimeout = ref<NodeJS.Timeout | null>();
-
+  const delayedAfterIdle = ref(false);
   const idle = computed(() => !Object.values(activeStates.value).some((state) => state));
-  const blinking = computed(() => idle.value && idleState.value > maxIdleState);
+  const blinking = computed(
+    () => idle.value && idleState.value > maxIdleState && delayedAfterIdle.value
+  );
+
+  // Don't allow blinking until after the start/stop step frame
+  watch(idle, (value) => {
+    if (!value) {
+      delayedAfterIdle.value = false;
+      return;
+    }
+
+    setTimeout(() => (delayedAfterIdle.value = true), blinkStepFrameDelay);
+  });
+
+  const attackTimeout = ref<NodeJS.Timeout | null>();
 
   /**
    * Update horizontal position on screen
