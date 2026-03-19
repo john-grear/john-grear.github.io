@@ -60,16 +60,16 @@
 }
 
 .mega-man[spawned='true'] {
-  --backgroundPositionX: 1;
-  animation: spawnAnimation 0.25s steps(1, end);
+  animation: spawnAnimation 0.25s steps(1, end) !important;
+  background-position: 0 0;
 }
 
 @keyframes spawnAnimation {
   0% {
-    background-position: calc(1 * -32px) -224px;
+    background-position: -32px -224px;
   }
   50% {
-    background-position: calc(2 * -32px) -224px;
+    background-position: -64px -224px;
   }
 }
 
