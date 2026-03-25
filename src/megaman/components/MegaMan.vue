@@ -9,6 +9,7 @@
   const spawned = computed(() => megaMan.value?.spawned);
   const blinking = computed(() => megaMan.value?.blinking);
   const walking = computed(() => megaMan.value?.walking);
+  const wasWalking = computed(() => megaMan.value?.wasWalking);
   const jumping = computed(() => !megaMan.value?.grounded && !spawning.value);
   const sliding = computed(() => megaMan.value?.sliding);
   const attacking = computed(() => megaMan.value?.attacking);
@@ -51,6 +52,7 @@
     :spawned="spawned"
     :blinking="blinking"
     :walking="walking"
+    :stopped-walking="wasWalking"
     :jumping="jumping"
     :sliding="sliding"
     :attacking="attacking"

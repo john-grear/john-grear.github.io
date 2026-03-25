@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { useBounds } from './useBounds';
 import { useBullets } from './useBullet';
@@ -39,6 +39,7 @@ export const useMegaMan = () => {
   const spawning = ref(true);
   const spawned = ref(false);
   const walking = ref(false);
+  const wasWalking = ref(false);
   const slideLocked = ref(false);
   const sliding = ref(false);
   const slideTime = ref(0);
@@ -120,6 +121,15 @@ export const useMegaMan = () => {
    * Shortcut for direction access
    */
   const direction = computed(() => transform?.direction.value);
+
+  watch(walking, (v) => {
+    wasWalking.value = !((v as boolean | undefined) ?? false);
+  });
+
+  watch(spawned, (v) => {
+    if (!v) return;
+    wasWalking.value = false;
+  });
 
   /**
    * Move Mega Man in spawn noodle animation down until they reach spawn area,
@@ -478,6 +488,7 @@ export const useMegaMan = () => {
     spawned,
     blinking: animation.blinking,
     walking,
+    wasWalking,
     sliding,
     jumping,
     attacking,

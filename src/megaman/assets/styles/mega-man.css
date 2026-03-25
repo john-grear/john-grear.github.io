@@ -88,16 +88,16 @@
 .mega-man[walking='true'][jumping='false'][sliding='false'] {
   /* Enables walk animations */
   animation:
-    walkStartAnimation 0.05s steps(1, end),
-    walkAnimation 0.25s steps(1, end) infinite 0.05s,
+    walkStartAnimation 0.06s steps(1, end),
+    walkAnimation 0.25s steps(1, end) infinite 0.06s,
     lowChargeAnimation var(--lowChargeAnimation-duration, 0s) steps(1, end) infinite,
     maxChargeAnimation var(--maxChargeAnimation-duration, 0s) steps(1, end) infinite;
 }
 
-.mega-man[walking='false'][jumping='false'][sliding='false'] {
+.mega-man[walking='false'][stopped-walking='true'][jumping='false'][sliding='false'] {
   /* Enables walk animations */
   animation:
-    walkStopAnimation 0.05s steps(1, end),
+    walkStopAnimation 0.06s steps(1, end),
     lowChargeAnimation var(--lowChargeAnimation-duration, 0s) steps(1, end) infinite,
     maxChargeAnimation var(--maxChargeAnimation-duration, 0s) steps(1, end) infinite;
 }

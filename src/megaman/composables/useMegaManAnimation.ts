@@ -17,7 +17,7 @@ export const useMegaManAnimation = (
   // Idle Constants
   const maxIdleState = 150;
   const maxIdleFrames = 10;
-  const blinkStepFrameDelay = 50;
+  const blinkStepFrameDelay = 60;
 
   // Attack Constants
   const attackAnimationTime = 250;
