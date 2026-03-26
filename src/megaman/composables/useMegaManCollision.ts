@@ -133,7 +133,8 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
   };
 
   /**
-   * Check if the given object is within the vertical bounds of Mega Man.
+   * Check if the given object is within the vertical bounds of Mega Man, adjusting for the
+   * slide height if attempting to slide.
    *
    * @param {DOMRect} object - Bounding rectangle of the object to check.
    * @returns {boolean} - True if the object is within Mega Man's Y bounds, otherwise false.
@@ -149,9 +150,10 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
     const objectBottom = object.bounds.bottom;
 
     if (isAttemptingSlide) {
-      // TODO: "Adds" top offset to make it easier to slide before sliding, but this is a magic number and not ideal
-      // Need to find some way of using actual math, but I think the 75% height change would need to be in JS not CSS
-      top = top + verticalCollisionDistance * 1.25;
+      const height = bottom - top;
+      const slideHeight = height * (0.65 / 0.75);
+      const difference = height - slideHeight;
+      top = top + difference;
     }
 
     return (top < objectBottom || bottom > objectTop) && (bottom < objectTop || top > objectBottom);
