@@ -21,13 +21,13 @@ export type DeathParticle = {
 
 export type DeathParticles = ReturnType<typeof useDeathParticles>;
 
-export const useDeathParticles = (megaManBounds: Bounds) => {
-  let particleContainerElement = document.querySelector('.particle-container');
+export const useDeathParticles = (gameContainerElement: HTMLElement, megaManBounds: Bounds) => {
+  let particleContainerElement = document.getElementById('particle-container');
 
   if (!particleContainerElement) {
     particleContainerElement = document.createElement('div');
-    particleContainerElement.classList.add('particle-container');
-    document.body.appendChild(particleContainerElement);
+    particleContainerElement.id = 'particle-container';
+    gameContainerElement.appendChild(particleContainerElement);
   }
 
   /**

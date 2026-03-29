@@ -25,13 +25,13 @@ export type Bullet = {
 
 export type Bullets = ReturnType<typeof useBullets>;
 
-export const useBullets = (megaManBounds: Bounds) => {
-  let bulletContainerElement = document.querySelector('.bullet-container');
+export const useBullets = (gameContainerElement: HTMLElement, megaManBounds: Bounds) => {
+  let bulletContainerElement = document.getElementById('bullet-container');
 
   if (!bulletContainerElement) {
     bulletContainerElement = document.createElement('div');
-    bulletContainerElement.classList.add('bullet-container');
-    document.body.appendChild(bulletContainerElement);
+    bulletContainerElement.id = 'bullet-container';
+    gameContainerElement.appendChild(bulletContainerElement);
   }
 
   /**

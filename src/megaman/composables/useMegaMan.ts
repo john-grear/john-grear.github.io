@@ -57,15 +57,18 @@ export const useMegaMan = () => {
   const maxCharging = computed(() => charge.value > maxChargeValue);
 
   const element = ref<HTMLElement | null>();
+  const gameContainerElement = ref<HTMLElement | null>();
   const collisionBoxElement = ref<HTMLElement | null>();
   const spawnElement = ref<HTMLElement | null>();
 
   // DOM elements
   element.value = document.getElementById('mega-man') as HTMLElement | null;
+  gameContainerElement.value = document.getElementById('game-container') as HTMLElement | null;
   collisionBoxElement.value = document.getElementById('mega-man-collision') as HTMLElement | null;
   spawnElement.value = document.getElementById('spawn') as HTMLElement | null;
 
   if (!element.value) throw Error('Mega Man not created.');
+  if (!gameContainerElement.value) throw Error('Game container not created.');
   if (!collisionBoxElement.value) throw Error('Mega Man collision box not created.');
   if (!spawnElement.value) throw Error('No spawn point to spawn Mega Man.');
 
@@ -82,8 +85,8 @@ export const useMegaMan = () => {
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);
   const collision: MegaManCollision = useMegaManCollision(collisionBoxElement.value, transform);
 
-  const bullets = useBullets(collision.bounds.value);
-  const deathParticles = useDeathParticles(collision.bounds.value);
+  const bullets = useBullets(gameContainerElement.value, collision.bounds.value);
+  const deathParticles = useDeathParticles(gameContainerElement.value, collision.bounds.value);
 
   animation.updateVisibility();
   collision.updateCollisionBounds();
