@@ -25,14 +25,15 @@ export const slideSpeed = 650;
 export const slideTimeLimit = 300;
 export const jumpingSpeed = 650;
 export const jumpTimeLimit = 300;
-export const gravity = 900;
+export const gravity = 1500;
+export const fallTimeLimit = 150;
 export const minChargeValue = 250;
 export const lowChargeValue = 500;
 export const maxChargeValue = 1000;
 export const chargeIntervalRate = 20 / 1000;
 export const chargeRate = 2000;
 export const horizontalCollisionDistance = 5; // TODO: Trying to get this to be as small as possible so collisions are tighter
-export const verticalCollisionDistance = 10;
+export const verticalCollisionDistance = 30;
 
 export const useMegaMan = () => {
   // reactive state
@@ -46,6 +47,7 @@ export const useMegaMan = () => {
   const jumpButtonReleased = ref(false);
   const jumping = ref(false);
   const jumpTime = ref(0);
+  const fallTime = ref(0);
   const grounded = ref(false);
   const attacking = ref(false);
   const chargeInterval = ref(0);
@@ -249,7 +251,6 @@ export const useMegaMan = () => {
     collision.updateHorizontalBounds(velocity);
 
     if (!jumping.value && !collision.checkOnGround()) {
-      disableGravity();
       enableFalling();
     }
   };
@@ -392,8 +393,13 @@ export const useMegaMan = () => {
       return;
     }
 
-    const velocity = jumpingSpeed * deltaTime.value;
-    jumpTime.value += velocity;
+    let velocity = jumpingSpeed * deltaTime.value;
+    jumpTime.value = Math.min(jumpTime.value + velocity, jumpTimeLimit);
+
+    const jumpRatio = (jumpTimeLimit - jumpTime.value) / jumpTimeLimit;
+
+    velocity *= jumpRatio > 0.5 ? 1 : jumpRatio;
+
     collision.updateVerticalBounds(-velocity);
     grounded.value = false;
   };
@@ -433,7 +439,13 @@ export const useMegaMan = () => {
       return;
     }
 
-    const velocity = gravity * deltaTime.value;
+    let velocity = gravity * deltaTime.value;
+
+    fallTime.value = Math.min(fallTime.value + velocity, fallTimeLimit);
+
+    const fallRatio = (fallTimeLimit - (fallTimeLimit - fallTime.value)) / fallTimeLimit;
+
+    velocity *= fallRatio;
     collision.updateVerticalBounds(velocity);
   };
 
@@ -444,6 +456,7 @@ export const useMegaMan = () => {
     jumping.value = false;
     grounded.value = true;
     jumpTime.value = 0;
+    fallTime.value = 0;
   };
 
   /**
