@@ -1,7 +1,7 @@
 import { Bounds } from './useBounds';
 
 const list: DeathParticle[] = [];
-const movingSpeed = 1;
+const movingSpeed = 2;
 const maxFrames = 2000;
 const offsetParticleTimer = 50;
 const secondParticleOffset = 300;
