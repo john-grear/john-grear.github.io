@@ -42,10 +42,10 @@ export const useBounds = () => {
     const rect = element.getBoundingClientRect();
     if (!rect) return;
 
-    bounds.top = rect.top;
-    bounds.bottom = rect.bottom;
-    bounds.left = rect.left;
-    bounds.right = rect.right;
+    bounds.top = rect.top + window.scrollY;
+    bounds.bottom = rect.bottom + window.scrollY;
+    bounds.left = rect.left + window.scrollX;
+    bounds.right = rect.right + window.scrollX;
   };
 
   return {

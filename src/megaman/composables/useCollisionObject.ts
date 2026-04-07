@@ -1,4 +1,6 @@
-import { Bounds } from './useBounds';
+import { Bounds, useBounds } from './useBounds';
+
+const { updateBounds } = useBounds();
 
 const list: CollisionObject[] = [];
 
@@ -34,11 +36,7 @@ export const useCollisionObjects = () => {
    * Only to be used during resize event and constructor to prevent constant refresh of the document
    */
   const update = (collisionObject: CollisionObject) => {
-    const rect = collisionObject.element.getBoundingClientRect();
-    collisionObject.bounds.top = rect.top;
-    collisionObject.bounds.bottom = rect.bottom;
-    collisionObject.bounds.left = rect.left;
-    collisionObject.bounds.right = rect.right;
+    updateBounds(collisionObject.element, collisionObject.bounds);
   };
 
   return { list, createCollisionObject, update };

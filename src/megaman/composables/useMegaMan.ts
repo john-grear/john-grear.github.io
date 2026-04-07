@@ -12,7 +12,7 @@ import { useWindow } from './useWindow';
 
 const { activeKeys, resetActiveKeys } = useInput();
 const { deltaTime } = useTime();
-const { isOffScreen, resizeWindow } = useWindow();
+const { isOffScreen, isOffScreenX, resizeWindow } = useWindow();
 const { createBounds } = useBounds();
 
 export type MegaMan = ReturnType<typeof useMegaMan>;
@@ -91,7 +91,11 @@ export const useMegaMan = () => {
   animation.updateVisibility();
   collision.updateCollisionBounds();
 
-  window.addEventListener('resize', () => {
+  /**
+   * Resizes the screens and updates bounds. If mega man is off screen, starts the death sequence,
+   * otherwise enables falling.
+   */
+  const recalculateScreen = () => {
     resetActiveKeys();
 
     resizeWindow(horizontalCollisionDistance, verticalCollisionDistance);
@@ -106,7 +110,7 @@ export const useMegaMan = () => {
     // Kill mega man if off screen, otherwise set into fall state
     // TODO: Need to check if there is even possible ground below him to stop him from falling forever
     // or have some form of death plane
-    if (isOffScreen(collision.bounds.value)) {
+    if (isOffScreenX(collision.bounds.value)) {
       die();
     } else {
       grounded.value = false;
@@ -115,7 +119,18 @@ export const useMegaMan = () => {
     }
 
     resetActiveKeys();
-  });
+  };
+
+  window.addEventListener('resize', recalculateScreen);
+
+  window.addEventListener('scrollend', recalculateScreen);
+
+  // TODO: Cool concept, but not for my portfolio because you can't scroll without him being on screen
+  // window.addEventListener('scroll', () => {
+  //   if (isOffScreenY(collision.bounds.value)) {
+  //     window.scrollTo({ top: collision.bounds.value.top });
+  //   }
+  // });
 
   /**
    * Shortcut for coordinate access

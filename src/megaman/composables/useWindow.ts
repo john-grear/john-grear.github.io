@@ -26,23 +26,36 @@ export const useWindow = () => {
   };
 
   /**
+   * Check if left / right bounds are past the Window's bounds.
+   *
+   * @param {Bounds} bounds - Bounds to check.
+   * @returns {boolean} True if off screen.
+   */
+  const isOffScreenX = (bounds: Bounds): boolean =>
+    bounds.left < windowBounds.left || bounds.right > windowBounds.right;
+
+  /**
+   * Check if top / bottom bounds are past the Window's bounds.
+   *
+   * @param {Bounds} bounds - Bounds to check.
+   * @returns {boolean} True if off screen.
+   */
+  const isOffScreenY = (bounds: Bounds): boolean =>
+    bounds.top < windowBounds.top || bounds.bottom > windowBounds.bottom;
+
+  /**
    * Check if bounds are past any of the Window's bounds.
    *
    * @param {Bounds} bounds - Bounds to check.
    * @returns {boolean} True if off screen.
    */
-  const isOffScreen = (bounds: Bounds): boolean => {
-    return (
-      bounds.left < windowBounds.left ||
-      bounds.right > windowBounds.right ||
-      bounds.top < windowBounds.top ||
-      bounds.bottom > windowBounds.bottom
-    );
-  };
+  const isOffScreen = (bounds: Bounds): boolean => isOffScreenX(bounds) || isOffScreenY(bounds);
 
   return {
     windowBounds,
     resizeWindow,
+    isOffScreenX,
+    isOffScreenY,
     isOffScreen,
   };
 };
