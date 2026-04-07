@@ -173,7 +173,7 @@ export const useMegaMan = () => {
     animation.updateVisibility();
 
     const updatePosition = () => {
-      if (bounds.bottom < screenY) {
+      if (bounds.bottom + spawnSpeed < screenY) {
         collision.updateVerticalBounds(spawnSpeed);
         requestAnimationFrame(updatePosition);
       } else {
