@@ -144,7 +144,7 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
     isAttemptingSlide: boolean = false
   ): boolean => {
     let top = bounds.value.top;
-    const bottom = bounds.value.bottom - verticalCollisionDistance;
+    const bottom = bounds.value.bottom;
 
     const objectTop = object.bounds.top;
     const objectBottom = object.bounds.bottom;
