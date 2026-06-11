@@ -39,7 +39,7 @@
       class="rounded-xl! w-full max-w-2xl select-none"
       draggable="false"
     />
-    <Spawn class="size-30 absolute -mb-3 self-end" />
+    <Spawn class="size-30 absolute -mb-5 self-end" />
   </div>
 
   <CustomCard class="ground">
