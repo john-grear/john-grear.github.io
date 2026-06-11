@@ -181,10 +181,9 @@ spawnFrames++;
         collision.updateVerticalBounds(spawnSpeed);
         requestAnimationFrame(updatePosition);
       } else {
-console.log('spawn frames', spawnFrames);
-        collision.updateVerticalBounds(bounds.bottom + spawnSpeed - screenY);
-        // TODO: This should offset the distance to the bottom of the thing, but it's not always the case?
-        // Maybe if the distance is greater than spawn speed then it needs to do 20 less... but that doesn't make sense either
+        const distanceToSpawn = screenY - bounds.bottom;
+        collision.updateVerticalBounds(distanceToSpawn);
+
         animation.triggerSpawnAnimation();
       }
     };
