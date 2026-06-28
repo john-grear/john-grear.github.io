@@ -55,7 +55,7 @@ export const useMegaManAnimation = (
     setTimeout(() => (delayedAfterIdle.value = true), blinkStepFrameDelay);
   });
 
-  const attackTimeout = ref<NodeJS.Timeout | null>();
+  let attackTimeout: ReturnType<typeof setTimeout>;
 
   /**
    * Update horizontal position on screen
@@ -128,12 +128,12 @@ export const useMegaManAnimation = (
   watch(
     () => activeStates.value.attack,
     (value) => {
-      if (attackTimeout.value) clearTimeout(attackTimeout.value);
+      if (attackTimeout) clearTimeout(attackTimeout);
 
       if (!value) return;
 
       // Wait before disabling attack animation
-      attackTimeout.value = setTimeout(() => (attacking.value = false), attackAnimationTime);
+      attackTimeout = setTimeout(() => (attacking.value = false), attackAnimationTime);
     }
   );
 
