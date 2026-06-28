@@ -18,7 +18,8 @@ const bullets = ref<Bullets>();
 const deathParticles = ref<DeathParticles>();
 const collisionObjects = useCollisionObjects();
 
-const { resizeWindow } = useWindow();
+const windowService = useWindow();
+const { resizeWindow } = windowService;
 const Time = useTime();
 useInput();
 
@@ -26,7 +27,7 @@ useInput();
  * Starts the megaman game loop and all other necessary startup steps.
  */
 const start = () => {
-  megaMan.value = useMegaMan();
+  megaMan.value = useMegaMan(windowService);
   bullets.value = megaMan.value.bullets;
   deathParticles.value = megaMan.value.deathParticles;
 

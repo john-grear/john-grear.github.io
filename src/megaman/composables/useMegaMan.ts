@@ -12,7 +12,6 @@ import { useWindow } from './useWindow';
 
 const { activeKeys, resetActiveKeys } = useInput();
 const { deltaTime } = useTime();
-const { isOffScreen, isOffScreenX, resizeWindow } = useWindow();
 const { createBounds } = useBounds();
 
 export type MegaMan = ReturnType<typeof useMegaMan>;
@@ -33,7 +32,7 @@ export const maxChargeValue = 1000;
 export const chargeIntervalRate = 20 / 1000;
 export const chargeRate = 2000;
 
-export const useMegaMan = () => {
+export const useMegaMan = (windowService: ReturnType<typeof useWindow>) => {
   // reactive state
   const spawning = ref(true);
   const spawned = ref(false);
@@ -58,6 +57,8 @@ export const useMegaMan = () => {
   const gameContainerElement = ref<HTMLElement | null>();
   const collisionBoxElement = ref<HTMLElement | null>();
   const spawnElement = ref<HTMLElement | null>();
+
+  const { isOffScreen, isOffScreenX, resizeWindow } = windowService;
 
   // DOM elements
   element.value = document.getElementById('mega-man') as HTMLElement | null;
@@ -85,10 +86,11 @@ export const useMegaMan = () => {
   const collision: MegaManCollision = useMegaManCollision(
     collisionBoxElement.value,
     transform,
-    grounded
+    grounded,
+    windowService
   );
 
-  const bullets = useBullets(gameContainerElement.value, collision.bounds.value);
+  const bullets = useBullets(gameContainerElement.value, collision.bounds.value, windowService);
   const deathParticles = useDeathParticles(gameContainerElement.value, collision.bounds.value);
 
   animation.updateVisibility();

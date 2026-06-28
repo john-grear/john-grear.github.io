@@ -1,11 +1,13 @@
+import { computed } from 'vue';
+
 import { Bounds } from './useBounds';
 import { lowChargeValue, maxChargeValue } from './useMegaMan';
 import { useTime } from './useTime';
+import { useWindow } from './useWindow';
 
 const { lastTime } = useTime();
 
 const list: Bullet[] = [];
-const maxBullets = 3;
 let lastBulletTime = 0;
 const shootDelay = 100;
 
@@ -25,7 +27,17 @@ export type Bullet = {
 
 export type Bullets = ReturnType<typeof useBullets>;
 
-export const useBullets = (gameContainerElement: HTMLElement, megaManBounds: Bounds) => {
+export const useBullets = (
+  gameContainerElement: HTMLElement,
+  megaManBounds: Bounds,
+  windowService: ReturnType<typeof useWindow>
+) => {
+  const maxBullets = computed(() => {
+    const numBulletsForWidth = 3 + (windowService.windowWidth.value - 1440) / 300;
+
+    return Math.ceil(Math.max(3, Math.min(10, numBulletsForWidth)));
+  });
+
   let bulletContainerElement = document.getElementById('bullet-container');
 
   if (!bulletContainerElement) {
@@ -67,7 +79,7 @@ export const useBullets = (gameContainerElement: HTMLElement, megaManBounds: Bou
    */
   const canSpawn = (): boolean => {
     const timeSinceCreation = lastTime.value - lastBulletTime;
-    return list.length < maxBullets && timeSinceCreation >= shootDelay;
+    return list.length < maxBullets.value && timeSinceCreation >= shootDelay;
   };
 
   /**

@@ -6,7 +6,6 @@ import { MegaManTransform } from './useMegaManTransform';
 import { useWindow } from './useWindow';
 
 const collisionObjects = useCollisionObjects();
-const { windowBounds } = useWindow();
 const { createBounds, updateBounds } = useBounds();
 
 export type MegaManCollision = ReturnType<typeof useMegaManCollision>;
@@ -14,9 +13,12 @@ export type MegaManCollision = ReturnType<typeof useMegaManCollision>;
 export const useMegaManCollision = (
   element: HTMLElement,
   transform: MegaManTransform,
-  grounded: Ref<boolean>
+  grounded: Ref<boolean>,
+  windowService: ReturnType<typeof useWindow>
 ) => {
   const bounds = ref<Bounds>(createBounds(element));
+
+  const { windowBounds } = windowService;
 
   /**
    * Calculates distance to any collisions with either the window edges or any of the collisionObjects,

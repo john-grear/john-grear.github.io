@@ -1,3 +1,5 @@
+import { ref } from 'vue';
+
 import { Bounds, useBounds } from '../composables/useBounds';
 import { useCollisionObjects } from '../composables/useCollisionObject';
 
@@ -10,6 +12,8 @@ const windowBounds = createBounds();
  * Composable for managing global window bounds and collision updates.
  */
 export const useWindow = () => {
+  const windowWidth = ref(0);
+
   /**
    * Update the bounds for the Window as well as all objects in it to ensure collisions function correctly.
    */
@@ -20,6 +24,8 @@ export const useWindow = () => {
     windowBounds.right = window.innerWidth + scrollX;
 
     collisionObjects.list.forEach((object) => collisionObjects.update(object));
+
+    windowWidth.value = window.innerWidth;
   };
 
   /**
@@ -50,6 +56,7 @@ export const useWindow = () => {
 
   return {
     windowBounds,
+    windowWidth,
     resizeWindow,
     isOffScreenX,
     isOffScreenY,
