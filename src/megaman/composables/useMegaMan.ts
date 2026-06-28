@@ -32,8 +32,6 @@ export const lowChargeValue = 500;
 export const maxChargeValue = 1000;
 export const chargeIntervalRate = 20 / 1000;
 export const chargeRate = 2000;
-export const horizontalCollisionDistance = 5; // TODO: Trying to get this to be as small as possible so collisions are tighter
-export const verticalCollisionDistance = 30;
 
 export const useMegaMan = () => {
   // reactive state
@@ -83,7 +81,11 @@ export const useMegaMan = () => {
     attacking
   );
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);
-  const collision: MegaManCollision = useMegaManCollision(collisionBoxElement.value, transform);
+  const collision: MegaManCollision = useMegaManCollision(
+    collisionBoxElement.value,
+    transform,
+    grounded
+  );
 
   const bullets = useBullets(gameContainerElement.value, collision.bounds.value);
   const deathParticles = useDeathParticles(gameContainerElement.value, collision.bounds.value);
@@ -98,7 +100,7 @@ export const useMegaMan = () => {
   const recalculateScreen = () => {
     resetActiveKeys();
 
-    resizeWindow(horizontalCollisionDistance, verticalCollisionDistance);
+    resizeWindow();
 
     if (!element.value) return;
 
@@ -135,12 +137,12 @@ export const useMegaMan = () => {
   /**
    * Shortcut for coordinate access
    */
-  const coords = computed(() => transform?.coords);
+  const coords = computed(() => transform.coords);
 
   /**
    * Shortcut for direction access
    */
-  const direction = computed(() => transform?.direction.value);
+  const direction = computed(() => transform.direction.value);
 
   watch(walking, (v) => {
     wasWalking.value = !((v as boolean | undefined) ?? false);
@@ -168,21 +170,20 @@ export const useMegaMan = () => {
     const screenY = window.screenY + rect.bottom;
 
     collision.updateHorizontalBounds(screenX);
-    collision.updateVerticalBounds(-bounds.bottom);
+    collision.updateVerticalBounds(-Math.abs(bounds.bottom));
 
     animation.updateVisibility();
 
     let spawnFrames = 0;
 
     const updatePosition = () => {
-spawnFrames++;
+      spawnFrames++;
 
-      if (bounds.bottom + spawnSpeed < screenY) {
+      if (bounds.bottom + spawnSpeed <= screenY) {
         collision.updateVerticalBounds(spawnSpeed);
         requestAnimationFrame(updatePosition);
       } else {
-        const distanceToSpawn = screenY - bounds.bottom;
-        collision.updateVerticalBounds(distanceToSpawn);
+        collision.attemptUpdateVerticalBounds(spawnSpeed);
 
         animation.triggerSpawnAnimation();
       }
@@ -268,12 +269,8 @@ spawnFrames++;
     walking.value = true;
     transform.updateDirection(leftPressed);
 
-    if (collision.checkHorizontalCollision()) return;
-
-    if (direction.value === undefined) return;
-
     const velocity = walkingSpeed * direction.value * deltaTime.value;
-    collision.updateHorizontalBounds(velocity);
+    collision.attemptUpdateHorizontalBounds(velocity);
 
     if (!jumping.value && !collision.checkOnGround()) {
       enableFalling();
@@ -344,16 +341,15 @@ spawnFrames++;
       transform.updateDirection(leftPressed || !rightPressed);
     }
 
+    const velocity = slideSpeed * direction.value * deltaTime.value;
+
+    collision.attemptUpdateHorizontalBounds(velocity, true);
+
     // Disable slide when colliding
     if (collision.checkHorizontalCollision(true)) {
       disableSlide(isHittingCeiling);
       return;
     }
-
-    if (direction.value === undefined) return;
-
-    const velocity = slideSpeed * direction.value * deltaTime.value;
-    collision.updateHorizontalBounds(velocity);
 
     // Disable slide and start falling when no longer on ground
     if (!collision.checkOnGround()) {
@@ -382,11 +378,8 @@ spawnFrames++;
   /**
    * Reset slide conditions and animation
    */
-  const disableSlide = (isHittingCeiling: boolean = false) => {
-    // Checks ceiling collision param if recalculating with function is unnecessary
+  const disableSlide = (isHittingCeiling: boolean) => {
     if (isHittingCeiling) return;
-
-    if (collision.checkHitCeiling()) return;
 
     sliding.value = false;
     slideTime.value = 0;
@@ -404,7 +397,7 @@ spawnFrames++;
 
     // Don't allow jumping when sliding with a ceiling above
     if (!jumping.value && jumpButtonReleased.value) {
-      const willHitCeiling = collision.checkHitCeiling(true);
+      const willHitCeiling = collision.checkHitCeiling();
 
       if (willHitCeiling) return;
 
@@ -413,7 +406,9 @@ spawnFrames++;
 
     if (!jumping.value && !grounded.value) return;
 
-    if ((jumping.value && collision.checkHitCeiling()) || jumpTime.value >= jumpTimeLimit) {
+    if (!jumping.value) return;
+
+    if (jumpTime.value >= jumpTimeLimit) {
       jumping.value = false;
       return;
     }
@@ -425,7 +420,15 @@ spawnFrames++;
 
     velocity *= jumpRatio > 0.5 ? 1 : jumpRatio;
 
-    collision.updateVerticalBounds(-velocity);
+    const newTop = collision.bounds.value.top - velocity;
+    const newBottom = collision.bounds.value.bottom - velocity;
+
+    if (collision.checkHitCeiling(newTop, newBottom)) {
+      jumping.value = false;
+      return;
+    }
+
+    collision.attemptUpdateVerticalBounds(-velocity);
     grounded.value = false;
   };
 
@@ -471,7 +474,7 @@ spawnFrames++;
     const fallRatio = (fallTimeLimit - (fallTimeLimit - fallTime.value)) / fallTimeLimit;
 
     velocity *= fallRatio;
-    collision.updateVerticalBounds(velocity);
+    collision.attemptUpdateVerticalBounds(velocity);
   };
 
   /**
@@ -540,8 +543,6 @@ spawnFrames++;
     lowChargeValue,
     minChargeValue,
     maxChargeValue,
-    horizontalCollisionDistance,
-    verticalCollisionDistance,
     bullets,
     deathParticles,
     spawn,

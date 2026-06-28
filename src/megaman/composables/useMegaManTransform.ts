@@ -5,12 +5,12 @@ import { MegaManAnimation } from './useMegaManAnimation';
 export type MegaManTransform = ReturnType<typeof useMegaManTransform>;
 
 export const useMegaManTransform = (element: HTMLElement, animation: MegaManAnimation) => {
-  const direction = ref(1); // Left = -1, right = 1
-  const spawnCoordinates = reactive({ x: 0, y: 0 });
-  const coords = reactive({ x: 0, y: 0 });
-
   const LEFT = -1;
   const RIGHT = 1;
+
+  const direction = ref<typeof LEFT | typeof RIGHT>(1);
+  const spawnCoordinates = reactive({ x: 0, y: 0 });
+  const coords = reactive({ x: 0, y: 0 });
 
   const isWalkingRight = computed(() => direction.value === RIGHT);
 

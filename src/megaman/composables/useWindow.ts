@@ -12,15 +12,12 @@ const windowBounds = createBounds();
 export const useWindow = () => {
   /**
    * Update the bounds for the Window as well as all objects in it to ensure collisions function correctly.
-   *
-   * @param {number} horizontalCollisionDistance - Distance to shrink horizontal bounds for collision detection.
-   * @param {number} verticalCollisionDistance - Distance to shrink vertical bounds for collision detection.
    */
-  const resizeWindow = (horizontalCollisionDistance: number, verticalCollisionDistance: number) => {
+  const resizeWindow = () => {
     windowBounds.top = 0;
-    windowBounds.bottom = window.innerHeight + scrollY - verticalCollisionDistance;
+    windowBounds.bottom = window.innerHeight + scrollY;
     windowBounds.left = 0;
-    windowBounds.right = window.innerWidth + scrollX - horizontalCollisionDistance;
+    windowBounds.right = window.innerWidth + scrollX;
 
     collisionObjects.list.forEach((object) => collisionObjects.update(object));
   };

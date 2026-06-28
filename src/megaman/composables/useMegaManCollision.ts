@@ -1,8 +1,7 @@
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 
 import { Bounds, useBounds } from './useBounds';
 import { CollisionObject, useCollisionObjects } from './useCollisionObject';
-import { horizontalCollisionDistance, verticalCollisionDistance } from './useMegaMan';
 import { MegaManTransform } from './useMegaManTransform';
 import { useWindow } from './useWindow';
 
@@ -12,132 +11,217 @@ const { createBounds, updateBounds } = useBounds();
 
 export type MegaManCollision = ReturnType<typeof useMegaManCollision>;
 
-export const useMegaManCollision = (element: HTMLElement, transform: MegaManTransform) => {
+export const useMegaManCollision = (
+  element: HTMLElement,
+  transform: MegaManTransform,
+  grounded: Ref<boolean>
+) => {
   const bounds = ref<Bounds>(createBounds(element));
 
   /**
-   * Check for collisions either the edges of the window or any of the collisionObjects by
-   * calculating the distance to each, ensuring they are within the collidable bounds, and
-   * that Mega Man is moving towards them to prevent sticking to walls after colliding and
-   * jittery jumps from distance comparisons.
-   * @returns {boolean}
+   * Calculates distance to any collisions with either the window edges or any of the collisionObjects,
+   * ensuring they are within the collidable bounds, and that mega man is moving towards them to
+   * prevent sticking to walls after colliding and jittery jumps from distance comparisons.
+   *
+   * @param isAttemptingSlide - Whether mega man is attempting to slide and needs their
+   *                            height lowered in the vertical calculation.
+   * @param newLeft           - Left bound to check collision with.
+   * @param newRight          - Right bound to check collision with.
+   * @returns Distance to collision object (or window) if found, otherwise `NaN`.
    */
-  const checkHorizontalCollision = (isAttemptingSlide: boolean = false): boolean => {
-    // Window edges
-    const leftDistance = bounds.value.left - windowBounds.left;
-    const rightDistance = windowBounds.right - bounds.value.right;
+  const getHorizontalCollision = (
+    isAttemptingSlide: boolean = false,
+    newLeft: number = bounds.value.left,
+    newRight: number = bounds.value.right
+  ): number => {
+    const getCollision = (objectLeft: number, objectRight: number, isWindow: boolean = false) => {
+      const distToRight = newLeft - objectRight; // MegaMan left → object’s right
+      const distToLeft = newRight - objectLeft; // MegaMan right → object’s left
 
-    if (
-      (leftDistance <= horizontalCollisionDistance && !transform.isWalkingRight.value) ||
-      (rightDistance <= horizontalCollisionDistance && transform.isWalkingRight.value)
-    ) {
-      return true;
-    }
+      const currentDistToRight = bounds.value.left - objectRight;
+      const currentDistToLeft = bounds.value.right - objectLeft;
+
+      if (distToRight <= 0 && (isWindow || distToLeft > 0) && !transform.isWalkingRight.value) {
+        // Current distance to right will be opposite direction of distance to right
+        return -currentDistToRight;
+      }
+
+      if (distToLeft >= 0 && (isWindow || distToRight < 0) && transform.isWalkingRight.value) {
+        // Current distance to left will be opposite direction of distance to left
+        return -currentDistToLeft;
+      }
+
+      return NaN;
+    };
+
+    // Window edges
+    const windowCollisionDistance = getCollision(windowBounds.right, windowBounds.left, true);
+    if (!Number.isNaN(windowCollisionDistance)) return windowCollisionDistance;
 
     // Collidable objects
     for (const object of collisionObjects.list) {
       // Only consider objects that overlap vertically
-      if (checkWithinVerticalBounds(object, isAttemptingSlide)) continue;
+      if (!checkWithinVerticalBounds(object, isAttemptingSlide)) continue;
 
-      const objectLeft = object.bounds.left;
-      const objectRight = object.bounds.right;
-
-      const distToLeft = Math.abs(bounds.value.right - objectLeft); // MegaMan → object’s left
-      const distToRight = Math.abs(objectRight - bounds.value.left); // MegaMan → object’s right
-
-      if (
-        (distToRight <= horizontalCollisionDistance && !transform.isWalkingRight.value) ||
-        (distToLeft <= horizontalCollisionDistance && transform.isWalkingRight.value)
-      ) {
-        return true;
-      }
+      const collisionDistance = getCollision(object.bounds.left, object.bounds.right);
+      if (!Number.isNaN(collisionDistance)) return collisionDistance;
     }
 
-    return false;
+    return NaN;
   };
 
   /**
-   * Check for collisions either the top of the window or any of the collisionObjects by
-   * calculating the distance to each and ensuring they are within the collidable bounds.
-   * @returns {boolean}
+   * Checks if there is a collision by getting the distance to a horizontal collision and returning
+   * whether the distance is NaN or not.
+   *
+   * @param isAttemptingSlide - Whether mega man is attempting to slide and needs their
+   *                            height lowered in the vertical calculation.
+   * @param newLeft           - Left bound to check collision with.
+   * @param newRight          - Right bound to check collision with.
+   * @returns True if there is a collision detected, otherwise false.
    */
-  const checkHitCeiling = (isAttemptingJump: boolean = false): boolean => {
-    const collisionDistance = isAttemptingJump
-      ? verticalCollisionDistance + 5
-      : verticalCollisionDistance;
-
-    const distance = Math.abs(windowBounds.top - bounds.value.top);
-    if (distance <= collisionDistance) return true;
-
-    const possibleCeilingObjects = collisionObjects.list
-      .filter(
-        (object) =>
-          bounds.value.bottom >= object.bounds.bottom && !checkWithinHorizontalBounds(object)
-      )
-      .sort((a, b) => b.bounds.top - a.bounds.top);
-
-    if (possibleCeilingObjects.length === 0) return false;
-
-    const closestObject = possibleCeilingObjects[0];
-    const distanceToClosestObject = Math.abs(
-      closestObject.bounds.bottom - bounds.value.top - verticalCollisionDistance
-    );
-
-    if (distanceToClosestObject <= collisionDistance) return true;
-
-    return false;
+  const checkHorizontalCollision = (
+    isAttemptingSlide: boolean = false,
+    newLeft: number = bounds.value.left,
+    newRight: number = bounds.value.right
+  ) => {
+    const collisionDistance = getHorizontalCollision(isAttemptingSlide, newLeft, newRight);
+    return !Number.isNaN(collisionDistance);
   };
 
   /**
-   * Check for collisions either the bottom of the window or any of the collisionObjects by
-   * calculating the distance to each and ensuring they are within the collidable bounds.
-   * @returns {boolean}
+   * Calculates distance to any collisions with either the window top or any of the collisionObjects
+   * above mega man, ensuring they are within the horziontal bounds.
+   *
+   * @param newTop    - Top bound to check collision with.
+   * @param newBottom - Bottom bound to check collision with.
+   * @returns Distance to collision object (or window) if found, otherwise `NaN`.
    */
-  const checkOnGround = (): boolean => {
-    const distance = Math.abs(windowBounds.bottom - bounds.value.bottom);
-
-    if (distance <= verticalCollisionDistance) {
-      updateVerticalBounds(distance);
-      return true;
+  const getTopCollision = (
+    newTop: number = bounds.value.top,
+    newBottom: number = bounds.value.bottom
+  ) => {
+    if (!grounded.value) {
+      const height = newBottom - newTop;
+      const jumpHeight = height / 0.75;
+      const difference = height - jumpHeight;
+      newTop = newTop + difference;
     }
+
+    const distance = newTop - windowBounds.top;
+    const currentDistance = bounds.value.top - windowBounds.top;
+
+    if (distance <= 0) return currentDistance;
 
     for (const object of collisionObjects.list) {
-      const objectTop = object.bounds.top;
-      if (bounds.value.bottom > objectTop) continue;
-      if (checkWithinHorizontalBounds(object)) continue;
+      // Skip any objects below mega man
+      if (bounds.value.bottom < object.bounds.bottom) continue;
 
-      const distance = Math.abs(objectTop - bounds.value.bottom);
-      if (distance > verticalCollisionDistance) continue;
+      // Skip any objects where not in horizontal bounds
+      if (!checkWithinHorizontalBounds(object)) continue;
 
-      updateVerticalBounds(distance);
-      return true;
+      const objectBottom = object.bounds.bottom;
+      const distance = newTop - objectBottom;
+
+      if (distance > 0) continue;
+
+      const currentDistance = bounds.value.top - objectBottom;
+      return -currentDistance;
     }
 
-    return false;
+    return NaN;
   };
 
   /**
-   * Check if the given object is within the horizontal bounds of Mega Man.
+   * Checks if there is a collision by getting the distance to a collision above mega man and returning
+   * whether the distance is NaN or not.
    *
-   * @param {DOMRect} object - Bounding rectangle of the object to check.
-   * @returns {boolean} - True if the object is within Mega Man's X bounds, false otherwise.
+   * @param newTop    - Top bound to check collision with.
+   * @param newBottom - Bottom bound to check collision with.
+   * @returns True if there is a collision detected, otherwise false.
    */
-  const checkWithinHorizontalBounds = (object: CollisionObject): boolean => {
-    const left = bounds.value.left + horizontalCollisionDistance;
-    const right = bounds.value.right - horizontalCollisionDistance;
-
-    const objectLeft = object.bounds.left;
-    const objectRight = object.bounds.right;
-
-    return (right < objectLeft || left > objectRight) && (left < objectRight || right > objectLeft);
+  const checkHitCeiling = (
+    newTop: number = bounds.value.top,
+    newBottom: number = bounds.value.bottom
+  ): boolean => {
+    const collisionDistance = getTopCollision(newTop, newBottom);
+    return !Number.isNaN(collisionDistance);
   };
 
   /**
-   * Check if the given object is within the vertical bounds of Mega Man, adjusting for the
-   * slide height if attempting to slide.
+   * Calculates distance to any collisions with either the window bottom or any of the collisionObjects
+   * below mega man, ensuring they are within the horziontal bounds.
    *
-   * @param {DOMRect} object - Bounding rectangle of the object to check.
-   * @returns {boolean} - True if the object is within Mega Man's Y bounds, otherwise false.
+   * @param newBottom - Bottom bound to check collision with.
+   * @returns Distance to collision object (or window) if found, otherwise `NaN`.
+   */
+  const getGroundCollision = (newBottom: number = bounds.value.bottom): number => {
+    const distance = newBottom - windowBounds.bottom;
+    const currentDistance = bounds.value.bottom - windowBounds.bottom;
+
+    if (distance >= 0) return -currentDistance;
+
+    for (const object of collisionObjects.list) {
+      // Skip any objects above mega man
+      if (bounds.value.bottom > object.bounds.bottom) continue;
+
+      // Skip any objects where not in horizontal bounds
+      if (!checkWithinHorizontalBounds(object)) continue;
+
+      const objectTop = object.bounds.top;
+      const distance = newBottom - objectTop;
+
+      if (distance < 0) continue;
+
+      const currentDistance = bounds.value.bottom - objectTop;
+      return -currentDistance;
+    }
+
+    return NaN;
+  };
+
+  /**
+   * Checks if there is a collision by getting the distance to a collision below mega man and returning
+   * whether the distance is NaN or not.
+   *
+   * @param newBottom - Bottom bound to check collision with.
+   * @returns True if there is a collision detected, otherwise false.
+   */
+  const checkOnGround = (newBottom: number = bounds.value.bottom): boolean => {
+    const collisionDistance = getGroundCollision(newBottom);
+    return !Number.isNaN(collisionDistance);
+  };
+
+  /**
+   * Check if the given object is within the horizontal bounds of mega man.
+   *
+   * @param object    - Bounding rectangle of the object to check.
+   * @param inclusive - Whether the bounds should be inclusive or not.
+   * @returns True if the object is within mega man's X bounds, false otherwise.
+   */
+  const checkWithinHorizontalBounds = (
+    object: CollisionObject,
+    inclusive: boolean = false
+  ): boolean => {
+    const isWithinBounds = (coord: number, bounds: Bounds) =>
+      inclusive
+        ? coord >= bounds.left && coord <= bounds.right
+        : coord > bounds.left && coord < bounds.right;
+
+    return (
+      isWithinBounds(bounds.value.left, object.bounds) ||
+      isWithinBounds(bounds.value.right, object.bounds) ||
+      isWithinBounds(object.bounds.left, bounds.value) ||
+      isWithinBounds(object.bounds.right, bounds.value)
+    );
+  };
+
+  /**
+   * Check if the given object is within the vertical bounds of mega man, adjusting for the
+   * slide height if attempting to slide or is in the air.
+   *
+   * @param object - Bounding rectangle of the object to check.
+   * @returns True if the object is within mega man's Y bounds, otherwise false.
    */
   const checkWithinVerticalBounds = (
     object: CollisionObject,
@@ -149,20 +233,34 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
     const objectTop = object.bounds.top;
     const objectBottom = object.bounds.bottom;
 
+    // Offset sliding / in air height
     if (isAttemptingSlide) {
       const height = bottom - top;
       const slideHeight = height * (0.65 / 0.75);
       const difference = height - slideHeight;
       top = top + difference;
+    } else if (!grounded.value) {
+      const height = bottom - top;
+      const jumpHeight = height / 0.75;
+      const difference = height - jumpHeight;
+      top = top - difference;
     }
 
-    return (top < objectBottom || bottom > objectTop) && (bottom < objectTop || top > objectBottom);
+    const isWithinBounds = (coord: number, topBound: number, bottomBound: number) =>
+      coord > topBound && coord < bottomBound;
+
+    return (
+      isWithinBounds(top, objectTop, objectBottom) ||
+      isWithinBounds(bottom, objectTop, objectBottom) ||
+      isWithinBounds(objectTop, top, bottom) ||
+      isWithinBounds(objectBottom, top, bottom)
+    );
   };
 
   /**
    * Update x-coordinate for positioning and horizontal bounds for collision detection.
    *
-   * @param {number} deltaX
+   * @param deltaX - Change in X position that mega man is moving.
    */
   const updateHorizontalBounds = (deltaX: number) => {
     transform.updateX(deltaX);
@@ -173,7 +271,7 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
   /**
    * Update the y-coordinate for positioning and vertical bounds for collision detection.
    *
-   * @param {number} deltaY
+   * @param deltaY - Change in Y position that mega man is moving.
    */
   const updateVerticalBounds = (deltaY: number) => {
     transform.updateY(deltaY);
@@ -190,6 +288,41 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
     updateBounds(element, bounds.value);
   };
 
+  /**
+   * Checks if there is a collision, getting the distance to the object to collide with. If there is,
+   * move to the object, otherwise move using `deltaX`.
+   *
+   * @param deltaX - Change in X position that mega man is attempting to move.
+   */
+  const attemptUpdateHorizontalBounds = (deltaX: number, isAttemptingSlide: boolean = false) => {
+    const newLeft = bounds.value.left + deltaX;
+    const newRight = bounds.value.right + deltaX;
+
+    const collisionDistance = getHorizontalCollision(isAttemptingSlide, newLeft, newRight);
+
+    updateHorizontalBounds(!Number.isNaN(collisionDistance) ? collisionDistance : deltaX);
+  };
+
+  /**
+   * Checks if there is a collision, getting the distance to the object to collide with. If there is,
+   * move to the object, otherwise move using `deltaY`.
+   *
+   * @param deltaY - Change in Y position that mega man is attempting to move.
+   */
+  const attemptUpdateVerticalBounds = (deltaY: number) => {
+    const newTop = bounds.value.top + deltaY;
+    const newBottom = bounds.value.bottom + deltaY;
+
+    const collisionDistance =
+      deltaY < 0
+        ? getTopCollision(newTop, newBottom)
+        : deltaY > 0
+          ? getGroundCollision(newBottom)
+          : 0;
+
+    updateVerticalBounds(!Number.isNaN(collisionDistance) ? collisionDistance : deltaY);
+  };
+
   return {
     bounds,
     checkHorizontalCollision,
@@ -200,5 +333,7 @@ export const useMegaManCollision = (element: HTMLElement, transform: MegaManTran
     updateHorizontalBounds,
     updateVerticalBounds,
     updateCollisionBounds,
+    attemptUpdateHorizontalBounds,
+    attemptUpdateVerticalBounds,
   };
 };

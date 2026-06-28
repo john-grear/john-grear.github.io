@@ -39,7 +39,7 @@ const start = () => {
 
   findCollisionObjects();
 
-  resizeWindow(megaMan.value.horizontalCollisionDistance, megaMan.value.verticalCollisionDistance);
+  resizeWindow();
 
   running.value = true;
 
