@@ -78,6 +78,7 @@ export const useMegaMan = () => {
     walking,
     sliding,
     jumping,
+    grounded,
     attacking
   );
   const transform: MegaManTransform = useMegaManTransform(element.value, animation);

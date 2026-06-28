@@ -9,6 +9,7 @@ export const useMegaManAnimation = (
   walking: Ref<boolean>,
   sliding: Ref<boolean>,
   jumping: Ref<boolean>,
+  grounded: Ref<boolean>,
   attacking: Ref<boolean>
 ) => {
   // Spawn Constants
@@ -28,6 +29,7 @@ export const useMegaManAnimation = (
     spawn: spawning.value,
     walk: walking.value,
     jump: jumping.value,
+    falling: !grounded.value,
     slide: sliding.value,
     attack: attacking.value,
   }));
