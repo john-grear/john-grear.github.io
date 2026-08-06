@@ -86,7 +86,6 @@ export const useMegaMan = (windowService: ReturnType<typeof useWindow>) => {
   const collision: MegaManCollision = useMegaManCollision(
     collisionBoxElement.value,
     transform,
-    grounded,
     windowService
   );
 
@@ -424,10 +423,10 @@ export const useMegaMan = (windowService: ReturnType<typeof useWindow>) => {
     velocity *= jumpRatio > 0.5 ? 1 : jumpRatio;
 
     const newTop = collision.bounds.value.top - velocity;
-    const newBottom = collision.bounds.value.bottom - velocity;
 
-    if (collision.checkHitCeiling(newTop, newBottom)) {
+    if (collision.checkHitCeiling(newTop)) {
       jumping.value = false;
+      collision.attemptUpdateVerticalBounds(-velocity);
       return;
     }
 

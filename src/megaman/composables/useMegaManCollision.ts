@@ -1,4 +1,4 @@
-import { Ref, ref } from 'vue';
+import { ref } from 'vue';
 
 import { Bounds, useBounds } from './useBounds';
 import { CollisionObject, useCollisionObjects } from './useCollisionObject';
@@ -13,7 +13,6 @@ export type MegaManCollision = ReturnType<typeof useMegaManCollision>;
 export const useMegaManCollision = (
   element: HTMLElement,
   transform: MegaManTransform,
-  grounded: Ref<boolean>,
   windowService: ReturnType<typeof useWindow>
 ) => {
   const bounds = ref<Bounds>(createBounds(element));
@@ -96,20 +95,9 @@ export const useMegaManCollision = (
    * above mega man, ensuring they are within the horziontal bounds.
    *
    * @param newTop    - Top bound to check collision with.
-   * @param newBottom - Bottom bound to check collision with.
    * @returns Distance to collision object (or window) if found, otherwise `NaN`.
    */
-  const getTopCollision = (
-    newTop: number = bounds.value.top,
-    newBottom: number = bounds.value.bottom
-  ) => {
-    if (!grounded.value) {
-      const height = newBottom - newTop;
-      const jumpHeight = height / 0.75;
-      const difference = height - jumpHeight;
-      newTop = newTop + difference;
-    }
-
+  const getTopCollision = (newTop: number = bounds.value.top) => {
     const distance = newTop - windowBounds.top;
     const currentDistance = bounds.value.top - windowBounds.top;
 
@@ -139,14 +127,10 @@ export const useMegaManCollision = (
    * whether the distance is NaN or not.
    *
    * @param newTop    - Top bound to check collision with.
-   * @param newBottom - Bottom bound to check collision with.
    * @returns True if there is a collision detected, otherwise false.
    */
-  const checkHitCeiling = (
-    newTop: number = bounds.value.top,
-    newBottom: number = bounds.value.bottom
-  ): boolean => {
-    const collisionDistance = getTopCollision(newTop, newBottom);
+  const checkHitCeiling = (newTop: number = bounds.value.top): boolean => {
+    const collisionDistance = getTopCollision(newTop);
     return !Number.isNaN(collisionDistance);
   };
 
@@ -241,11 +225,6 @@ export const useMegaManCollision = (
       const slideHeight = height * (0.65 / 0.75);
       const difference = height - slideHeight;
       top = top + difference;
-    } else if (!grounded.value) {
-      const height = bottom - top;
-      const jumpHeight = height / 0.75;
-      const difference = height - jumpHeight;
-      top = top - difference;
     }
 
     const isWithinBounds = (coord: number, topBound: number, bottomBound: number) =>
@@ -316,11 +295,7 @@ export const useMegaManCollision = (
     const newBottom = bounds.value.bottom + deltaY;
 
     const collisionDistance =
-      deltaY < 0
-        ? getTopCollision(newTop, newBottom)
-        : deltaY > 0
-          ? getGroundCollision(newBottom)
-          : 0;
+      deltaY < 0 ? getTopCollision(newTop) : deltaY > 0 ? getGroundCollision(newBottom) : 0;
 
     updateVerticalBounds(!Number.isNaN(collisionDistance) ? collisionDistance : deltaY);
   };
