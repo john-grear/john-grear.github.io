@@ -61,7 +61,7 @@
 <template>
   <Menubar class="mb-25 h-15 z-1000 w-full! sticky top-0">
     <template #start>
-      <RouterLink to="/" class="p-button p-component p-button-text font-bold">
+      <RouterLink :to="{ name: 'projects' }" class="p-button p-component p-button-text font-bold">
         <i class="pi pi-address-book" />
         Portfolio
       </RouterLink>
