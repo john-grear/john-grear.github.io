@@ -21,7 +21,7 @@
   <Toast group="" />
   <DynamicDialog modal block-scroll />
 
-  <div class="min-h-screen">
+  <div class="flex min-h-screen flex-col">
     <MainMenubar />
 
     <Image
@@ -33,10 +33,10 @@
       class="dark:scale-120 not-2xl:hidden fixed left-[5%] top-[20%] z-[-1002] select-none blur-lg"
     />
 
-    <div class="flex grow flex-col items-center">
+    <div class="flex flex-1 flex-col items-center">
       <RouterView />
     </div>
-
-    <MainFooter />
   </div>
+
+  <MainFooter />
 </template>
