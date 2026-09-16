@@ -36,7 +36,7 @@
     <div class="flex flex-1 flex-col items-center">
       <RouterView />
     </div>
-
-    <MainFooter />
   </div>
+
+  <MainFooter />
 </template>
