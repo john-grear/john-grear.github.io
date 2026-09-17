@@ -169,19 +169,16 @@ export const useMegaMan = (windowService: ReturnType<typeof useWindow>) => {
     const collisionCenterOffset = (bounds.left + bounds.right) / -2;
 
     const screenX = collisionCenterOffset + spawnCenter;
-    const screenY = window.screenY + rect.bottom;
 
     collision.updateHorizontalBounds(screenX);
     collision.updateVerticalBounds(-Math.abs(bounds.bottom));
 
     animation.updateVisibility();
 
-    let spawnFrames = 0;
+    const spawnBottom = window.scrollY + rect.bottom;
 
     const updatePosition = () => {
-      spawnFrames++;
-
-      if (bounds.bottom + spawnSpeed <= screenY) {
+      if (bounds.bottom + spawnSpeed <= spawnBottom) {
         collision.updateVerticalBounds(spawnSpeed);
         requestAnimationFrame(updatePosition);
       } else {
