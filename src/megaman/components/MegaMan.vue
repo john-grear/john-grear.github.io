@@ -64,7 +64,6 @@
         id="mega-man-collision"
         class="mega-man-collision"
         :class="{ 'border border-pink-500': debug }"
-        :debug="true"
       ></div>
       <div id="mega-man-charge-state" class="mega-man-charge-state"></div>
     </div>
